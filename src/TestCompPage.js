@@ -2,10 +2,12 @@ import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TextButton from './components/TextButton.js';
+import DspButton from './components/DspButton.js';
+import SwitchButton from './components/SwitchButton.js';
 
 const ce = React.createElement;
 
-class CalcPage extends React.Component {
+class TestCompPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,34 +33,15 @@ class CalcPage extends React.Component {
     }
 
     render() {
-      return ce('div', null,
-        ce('h2', {className: "font"}, 'Welcome to the Revenue Calculator'),
-            ce('input', {id: "estStreams", type: "text", placeholder: "Enter Est. Streams", onChange: e => this.changeStreams(e)}),
-            ce('br'),
-            ce('text', null, 'Role: '),
-            /*ce('select', {onChange: e => this.handleRoleSelect(e)},
-                this.state.roles.map(role => ce('option', {key: role.id}, role.name))
-                ),*/
-            ce('button', {onClick: e => this.handleRoleButton("artist")}, 'Artist Only'),
-            ce('button', {onClick: e => this.handleRoleButton("writer")}, 'Writer Only'),
-            ce('button', {onClick: e => this.handleRoleButton("both")}, 'Writer & Artist'),
-            ce('br'),
-            ce('text', null, 'Record Deal Type: '),
-            ce('select', {onChange: e => this.handleRecDealSelect(e)},
-                this.state.recordDeal.map(deal => ce('option', {key: deal.id}, deal.name))
-                ),
-            ce('br'),
-            ce('text', null, 'Publishing Deal Type: '),
-            ce('select', {onChange: e => this.handlePublishingDealSelect(e)},
-                this.state.publishDeal.map(deal => ce('option', {key: deal.id}, deal.name))
-                ),
-            ce('br'),
-            ce('text', null, 'Deal Split: '),
-            ce('input', {type: 'range', min: '1', max: '100', id: 'splitSlider', onChange: e => this.updateSlider(e)}),
-            ce('text', null, 'Guaranteed Income: '),
-            ce('input', {id: "fromAdvance", placeholder: "From Advance"})
-
+      return (
+        <div>
+        <TextButton buttonText="TEXT Button" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px', background: 'red' }} onClick={() => console.log("TEXT")} />
+        <DspButton buttonText="DSP Button" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px', background: 'yellow' }} onClick={() => console.log("DSP")} />
+        <SwitchButton onChange={this.handleChange} checked={this.state.checked} className="Recoup-Switch"/>
+        <SmallText text="Sample Small Text" style={{ fontSize: '18px', fontWeight: 600, lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+        </div>
         )
+
 
     }
 
@@ -145,4 +128,4 @@ class CalcPage extends React.Component {
 }
 
 
-export default CalcPage;
+export default TestCompPage;
