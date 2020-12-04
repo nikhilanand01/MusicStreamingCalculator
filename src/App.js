@@ -1,16 +1,16 @@
-import logo from './logo.svg';
+import React from 'react';
+
 import './App.css';
+import CalcPage from './CalcPage.js';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Hellooooooo
-        </p>
-      </header>
+      <CalcPage/>
     </div>
   );
 }
+
 
 export default App;
