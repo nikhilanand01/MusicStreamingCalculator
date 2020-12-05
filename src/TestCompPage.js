@@ -4,7 +4,7 @@ import SmallText from './components/SmallText.js';
 import TextButton from './components/TextButton.js';
 import DspButton from './components/DspButton.js';
 import SwitchButton from './components/SwitchButton.js';
-import Input from './components/NumberInput.js';
+import NumberInput from './components/NumberInput.js';
 
 const ce = React.createElement;
 
@@ -47,24 +47,24 @@ class TestCompPage extends React.Component {
           <div>
             <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
             <div style={{display: 'flex', justifyContent: 'center'}}>
-              <Input id={1} label="Recording Costs" locked={false} active={false} />
+              <NumberInput id={1} label="Recording Costs" locked={false} active={false} />
               <SwitchButton/>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
-              <Input id={2} label="Marketing Costs" locked={false} active={false} />
+              <NumberInput id={2} label="Marketing Costs" locked={false} active={false} />
               <SwitchButton/>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
-              <Input id={3} label="Distrubtion Costs" locked={false} active={false} />
+              <NumberInput id={3} label="Distrubtion Costs" locked={false} active={false} />
               <SwitchButton/>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
-              <Input id={4} label="Misc. Costs" locked={false} active={false} />
+              <NumberInput id={4} label="Misc. Costs" locked={false} active={false} />
               <SwitchButton/>
             </div>
             <SmallText text="Guaranteed Income" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
             <div style={{display: 'flex', justifyContent: 'center'}}>
-              <Input id={5} label="From Advance" locked={false} active={false} />
+              <NumberInput id={5} label="From Advance" locked={false} active={false} />
               <SwitchButton/>
             </div>
           </div>

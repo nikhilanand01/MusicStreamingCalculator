@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import {TransitionMotion, spring } from 'react-motion';
 import "../stylesheets/NumberInput.css";
 
-class Input extends React.Component {
+class NumberInput extends React.Component {
   constructor(props) {
     super(props);
 
@@ -55,4 +55,4 @@ class Input extends React.Component {
   }
 }
 
-export default Input;
+export default NumberInput;
