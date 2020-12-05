@@ -4,6 +4,7 @@ import SmallText from './components/SmallText.js';
 import TextButton from './components/TextButton.js';
 import DspButton from './components/DspButton.js';
 import SwitchButton from './components/SwitchButton.js';
+import Input from './components/NumberInput.js';
 
 const ce = React.createElement;
 
@@ -34,11 +35,39 @@ class TestCompPage extends React.Component {
 
     render() {
       return (
-        <div>
-        <TextButton buttonText="TEXT Button" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px', background: 'red' }} onClick={() => console.log("TEXT")} />
-        <DspButton buttonText="DSP Button" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px', background: 'yellow' }} onClick={() => console.log("DSP")} />
-        <SwitchButton onChange={this.handleChange} checked={this.state.checked} className="Recoup-Switch"/>
-        <SmallText text="Sample Small Text" style={{ fontSize: '18px', fontWeight: 600, lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+        <div style={{marginTop: '5%'}}>
+          <div style={{display: 'flex', justifyContent:'center'}}>
+            <TextButton buttonText="Recording Artist Only" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("artist")} />
+            <TextButton buttonText="Writer Only" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("writer")} />
+            <TextButton buttonText="Recording Artist & Writer" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("both")} />
+          </div>
+          <div style={{display: 'flex', justifyContent:'center', margin: '2%'}}>
+            <DspButton/>
+          </div>
+          <div>
+            <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              <Input id={1} label="Recording Costs" locked={false} active={false} />
+              <SwitchButton/>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              <Input id={2} label="Marketing Costs" locked={false} active={false} />
+              <SwitchButton/>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              <Input id={3} label="Distrubtion Costs" locked={false} active={false} />
+              <SwitchButton/>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              <Input id={4} label="Misc. Costs" locked={false} active={false} />
+              <SwitchButton/>
+            </div>
+            <SmallText text="Guaranteed Income" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              <Input id={5} label="From Advance" locked={false} active={false} />
+              <SwitchButton/>
+            </div>
+          </div>
         </div>
         )
 

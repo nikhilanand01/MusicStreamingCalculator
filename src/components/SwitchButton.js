@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import Switch from "react-switch";
 
+/*        <p>
+          <span>{this.state.checked ? 'Recoupable' : 'Non-Recoupable'}</span>
+        </p>*/
+
 export default class SwitchButton extends Component {
   constructor() {
     super();
@@ -12,6 +16,10 @@ export default class SwitchButton extends Component {
     this.setState({ checked });
   }
 
+  notiChange(){
+    console.log(this.state.checked ? 'Recoupable' : 'Non-Recoupable');
+  }
+
   render() {
     return (
       <div>
@@ -19,8 +27,9 @@ export default class SwitchButton extends Component {
         <Switch
           checked={this.state.checked}
           onChange={this.handleChange}
-          onColor="#86d3ff"
-          onHandleColor="#2693e6"
+          onClick={this.notiChange()}
+          onColor="#eb7060"
+          onHandleColor="#f7371e"
           handleDiameter={30}
           uncheckedIcon={false}
           checkedIcon={false}
@@ -28,12 +37,8 @@ export default class SwitchButton extends Component {
           activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
           height={20}
           width={48}
-          className="react-switch"
-          id="material-switch"
         />
         </label>
-        <p>
-        <span>{this.state.checked ? 'Recoupable' : 'Non-Recoupable'}</span>.</p>
       </div>
     );
   }
