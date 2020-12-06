@@ -1,16 +1,19 @@
 {
   "name": "MusicStreamingCalculator",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.5.0",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-motion": "^0.5.2",
     "react-redux": "^7.2.2",
     "react-router": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-switch": "^5.0.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -36,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "sass": "^1.29.0"
   }
 }

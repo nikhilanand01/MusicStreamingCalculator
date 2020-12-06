@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
+import TextButton from './components/TextButton.js';
 
 const ce = React.createElement;
 
@@ -131,7 +132,7 @@ class CalcPage extends React.Component {
             ce('input', {id: "estStreams", type: "text", placeholder: "Enter Est. Streams", onChange: e => this.changeStreams(e)}),
             ce('br'),
             ce('text', null, 'Role: '),
-            /*ce('select', {onChange: e => this.handleRoleSelect(e)}, 
+            /*ce('select', {onChange: e => this.handleRoleSelect(e)},
                 this.state.roles.map(role => ce('option', {key: role.id}, role.name))
                 ),*/
             ce('button', {onClick: e => this.handleRoleButton("artist")}, 'Artist Only'),
@@ -139,7 +140,7 @@ class CalcPage extends React.Component {
             ce('button', {onClick: e => this.handleRoleButton("both")}, 'Writer & Artist'),
             ce('br'),
             ce('text', null, 'Record Deal Type: '),
-            ce('select', {onChange: e => this.handleRecDealSelect(e)}, 
+            ce('select', {onChange: e => this.handleRecDealSelect(e)},
                 this.state.recordDeal.map(deal => ce('option', {key: deal.id}, deal.name))
                 ),
             ce('br'),

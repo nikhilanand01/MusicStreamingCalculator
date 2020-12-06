@@ -1,0 +1,33 @@
+button.buttonTrue {
+  width: 170px;
+  height: 43px;
+  background-color: #dae1f2;
+  box-shadow: 0 3px 0px 0 rgba(25, 142, 85, 0.32);
+  border-radius: 180px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  /* display: inline-block; */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+button.buttonFalse {
+  width: 170px;
+  height: 43px;
+  background-color: #c8cacf;
+  /* box-shadow: 0 6px 18px 0 rgba(25, 142, 85, 0.32); */
+  border-radius: 180px;
+  border: none;
+  color: black;
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  /* display: inline-block; */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}

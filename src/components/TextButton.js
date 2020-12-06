@@ -1,7 +1,7 @@
-'use strict';
 /* eslint-env browser, commonjs, jquery, es6 */
 
 import React from 'react';
+import '../stylesheets/TextButton.css';
 import SmallText from './SmallText';
 
 // import '../stylesheets/';
