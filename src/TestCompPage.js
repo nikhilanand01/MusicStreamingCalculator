@@ -47,7 +47,8 @@ class TestCompPage extends React.Component {
             <TabGroup/>
           </div>
           <div>
-            <SmallText text="Include" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+            <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0' }}/>
+            <SmallText text="(Select Which DSPs to include in Calculation)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey' }}/>
             <div style={{display: 'flex', justifyContent:'center', margin: '2%'}}>
               <DspButton text="Spotify"/> <DspButton text="Apple Music"/><DspButton text="Tidal"/>
             </div>

@@ -17,6 +17,7 @@ const Tab = styled.button`
     active &&
     `
     border-bottom: 2px solid black;
+    font-weight: bold;
     opacity: 1;
   `}
 `;
