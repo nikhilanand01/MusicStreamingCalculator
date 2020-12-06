@@ -5,6 +5,7 @@ import TextButton from './components/TextButton.js';
 import DspButton from './components/DspButton.js';
 import SwitchButton from './components/SwitchButton.js';
 import NumberInput from './components/NumberInput.js';
+import TabGroup from './components/ButtonGroup.js';
 
 const ce = React.createElement;
 
@@ -36,13 +37,30 @@ class TestCompPage extends React.Component {
     render() {
       return (
         <div style={{marginTop: '5%'}}>
+          <SmallText text="Your Role" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
           <div style={{display: 'flex', justifyContent:'center'}}>
+            {/*
             <TextButton buttonText="Recording Artist Only" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("artist")} />
             <TextButton buttonText="Writer Only" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("writer")} />
             <TextButton buttonText="Recording Artist & Writer" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("both")} />
+            */}
+            <TabGroup/>
           </div>
-          <div style={{display: 'flex', justifyContent:'center', margin: '2%'}}>
-            <DspButton/>
+          <div>
+            <SmallText text="Include" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+            <div style={{display: 'flex', justifyContent:'center', margin: '2%'}}>
+              <DspButton text="Spotify"/> <DspButton text="Apple Music"/><DspButton text="Tidal"/>
+            </div>
+            <div style={{display: 'flex', justifyContent:'center', margin: '1%'}}>
+              <DspButton text="Youtube (Contend ID)"/> <DspButton text="Amazon Unlimited"/><DspButton text="Google Play"/>
+            </div>
+            <div style={{display: 'flex', justifyContent:'center', margin: '1%'}}>
+              <DspButton text="Pandora"/> <DspButton text="Amazon Music"/><DspButton text="Rhapsody"/>
+            </div>
+          </div>
+          <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+            <SmallText text="Estimated Streams" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+            <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
           </div>
           <div>
             <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />

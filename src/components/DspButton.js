@@ -27,12 +27,12 @@ class DspButton extends React.Component {
   render(){
     return (
     <div className="container">
-      <button className={this.state.button ? "buttonTrue": "buttonFalse"} 
+      <button className={this.state.button ? "buttonTrue": "buttonFalse"}
             onClick={() => {
             this.handleClick();
             this.testButton();
             }}>
-        PASS IN DSP NAME HERE
+        {this.props.text}
       </button>
     </div>
     )
