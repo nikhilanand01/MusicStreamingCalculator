@@ -5,7 +5,6 @@ import TextButton from './components/TextButton.js';
 
 const ce = React.createElement;
 
-
 //average / approx payout for publishing for stream
 const avgPubPayout = 0.0007174565191
 
@@ -95,13 +94,15 @@ const avgPubPayout = 0.0007174565191
 class CalcPage extends React.Component {
     constructor(props) {
         super(props);
+        this.myRef = React.createRef();
+
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal, others],
             streamNumber: null,
             role: null,
             recordDeal: [],
             publishDeal: [],
-            sliderValue: null,
+            sliderValue: 50,
             recordDealSelected: null,
             publishingDealSelected: null,
             advance: 0,
@@ -126,8 +127,10 @@ class CalcPage extends React.Component {
         this.setInitialStates();
     }
 
+
+
     render() {
-      return ce('div', null,
+      return ce('div', {ref: 'this.myRef'},
         ce('h2', {className: "font"}, 'Welcome to the Revenue Calculator'),
             ce('input', {id: "estStreams", type: "text", placeholder: "Enter Est. Streams", onChange: e => this.changeStreams(e)}),
             ce('br'),
@@ -150,7 +153,7 @@ class CalcPage extends React.Component {
                 ),
             ce('br'),
             ce('text', null, 'Deal Split: '),
-            ce('input', {type: 'range', min: '1', max: '100', id: 'splitSlider', onChange: e => this.updateSlider(e)}),
+            ce('input', {type: 'range', ref: 'sliderRef', min: '1', max: '100', id: 'splitSlider', onChange: e => this.updateSlider(e)}),
             ce('text', null, 'Guaranteed Income: '),
             ce('input', {id: "fromAdvance", placeholder: "From Advance", onChange: e => this.updateAdvance(e)}),
             ce('br'),
@@ -192,6 +195,7 @@ class CalcPage extends React.Component {
 
     }
 
+
     testMap() {
       this.state.providers.map(provider => console.log(provider.name));
       //this.state.providers.map(provider => ce('tr', null, ce('td', null, ce('text', null, provider.name))), ce('tr', null, ce('td', null, ce('input', {type: 'checkbox', checked: provider.includeInCalculations, onClick: e => this.toggleMe(provider.id)}))))
@@ -227,6 +231,9 @@ class CalcPage extends React.Component {
         this.setState( {sliderValue: val});
         this.calculate();
     }
+
+    
+
     updateSlider(e) {
         console.log(e.target.value)
         //val = document.getElementById("splitSlider").value()
@@ -273,6 +280,19 @@ class CalcPage extends React.Component {
     handleRecDealSelect(e) {
         //console.log("selecting Roles");
         console.log(e.target.value);
+        if(e.target.value === "Royalty") {
+          this.setState({sliderValue: 20});
+        } else if (e.target.value === "Net Profit") {
+          this.setState({sliderValue: 50});
+        } else if (e.target.value === "Distribution Percent") {
+          this.setState({sliderValue: 70});
+        } else if (e.target.value === "Label Services") {
+          this.setState({sliderValue: 80});
+        }
+        //document.getElementById("splitSlider").value = this.state.sliderValue;
+        //console.log(this.myRef.current);
+        //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
+        console.log("sliderValue: " + this.state.sliderValue);
         this.setState({recordDealSelected: e.target.value})
         this.calculate();
     }
