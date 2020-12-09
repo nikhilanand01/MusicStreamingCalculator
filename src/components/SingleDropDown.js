@@ -19,7 +19,10 @@ const pubDealOptions = [
 */}
 
 
-class SingleDropDown extends React.Component {
+class SingleDropDown extends React.Component {sendData = () => {
+  this.props.parentCallBack(this.state.selectedOption)
+}
+
   state = {
     selectedOption: null,
   };
