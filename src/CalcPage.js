@@ -2,6 +2,39 @@ import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TextButton from './components/TextButton.js';
+import TabGroup from './components/ButtonGroup.js';
+import SingleDropDown from './components/SingleDropDown.js';
+
+const labelDealOptions = [
+  { value: 'royalty', label: 'Royalty' },
+  { value: 'netProfit', label: 'Net Profit' },
+  { value: 'distributionPercent', label: 'Distribution (%)' },
+  { value: 'distributionFee', label: 'Distribution (fee)' },
+  { value: 'labelServices', label: 'Label Services' }
+]
+
+const pubDealOptions = [
+  { value: 'FullTraditional', label: 'Full/Traditional' },
+  { value: 'co-publising', label: 'Co-publising' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'noDeal', label: 'No Deal' }
+]
+
+const marketingSplitOptions = [
+  { value: 0.0, label: '0%' },
+  { value: 0.5, label: '50%' },
+  { value: 1.0, label: '100%' }
+]
+
+const labelServicesOptions = [
+  { value: 'steamDistribution', label: 'Steam Distribution' },
+  { value: 'avertising', label: 'Avertising' },
+  { value: 'analytics', label: 'Analytics' },
+  { value: 'royaltyAccounting', label: 'Royalty Accounting' },
+  { value: 'splitPayments', label: 'Split Payments' },
+]
+
+const roleTypes = ["Recording Artist Only", "Writer Only", "Both"];
 
 const ce = React.createElement;
 
@@ -90,6 +123,7 @@ const avgPubPayout = 0.0007174565191
             includeInCalculations: true
         };
 
+//console.log(act)
 
 class CalcPage extends React.Component {
     constructor(props) {
@@ -116,6 +150,12 @@ class CalcPage extends React.Component {
 
     }
 
+    callbackFunction = (childData) => {
+      console.log("setting state: " + childData);
+      this.setState({recordDealSelected: childData})
+    }
+
+
     componentDidMount() {
         console.log("mounted");
         this.buildRecordDealSelect();
@@ -128,8 +168,32 @@ class CalcPage extends React.Component {
     }
 
 
-
     render() {
+      return (
+           <div>
+              <h2>Welcome to the revenue calculator</h2>
+              <input 
+                type = "text"
+                placeholder = "Enter Est Streams"
+                onChange = {e => this.changeStreams(e)}
+              />
+              <br />
+              <SmallText text="Role: "/>
+              <TabGroup
+                 //parentCallBack = {this.callbackFunction}
+                 //onChange = {e => this.handleRoleButton("test"/*active*/)}
+              />
+              <p> {this.state.role} </p>
+              <br />
+              <SmallText text="Record Deal Type: "/>
+              <SingleDropDown
+                  parentCallBack={this.callbackFunction}
+                  options={labelDealOptions}
+                  
+              />
+           </div>
+        );
+      /*<!--
       return ce('div', {ref: 'this.myRef'},
         ce('h2', {className: "font"}, 'Welcome to the Revenue Calculator'),
             ce('input', {id: "estStreams", type: "text", placeholder: "Enter Est. Streams", onChange: e => this.changeStreams(e)}),
@@ -137,7 +201,7 @@ class CalcPage extends React.Component {
             ce('text', null, 'Role: '),
             /*ce('select', {onChange: e => this.handleRoleSelect(e)},
                 this.state.roles.map(role => ce('option', {key: role.id}, role.name))
-                ),*/
+                ),*//*
             ce('button', {onClick: e => this.handleRoleButton("artist")}, 'Artist Only'),
             ce('button', {onClick: e => this.handleRoleButton("writer")}, 'Writer Only'),
             ce('button', {onClick: e => this.handleRoleButton("both")}, 'Writer & Artist'),
@@ -191,7 +255,7 @@ class CalcPage extends React.Component {
             ce('input', {value: this.state.totalEarnings}),
             ce('br')
             
-        )
+        )-->*/
 
     }
 
@@ -278,22 +342,22 @@ class CalcPage extends React.Component {
    // handleRecDealSelect(e)
 
     handleRecDealSelect(e) {
-        //console.log("selecting Roles");
-        console.log(e.target.value);
-        if(e.target.value === "Royalty") {
+        console.log("selecting Roles");
+        console.log(e);
+        if(e === "Royalty") {
           this.setState({sliderValue: 20});
-        } else if (e.target.value === "Net Profit") {
+        } else if (e === "Net Profit") {
           this.setState({sliderValue: 50});
-        } else if (e.target.value === "Distribution Percent") {
+        } else if (e === "Distribution Percent") {
           this.setState({sliderValue: 70});
-        } else if (e.target.value === "Label Services") {
+        } else if (e === "Label Services") {
           this.setState({sliderValue: 80});
         }
         //document.getElementById("splitSlider").value = this.state.sliderValue;
         //console.log(this.myRef.current);
         //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
         console.log("sliderValue: " + this.state.sliderValue);
-        this.setState({recordDealSelected: e.target.value})
+        this.setState({recordDealSelected: e})
         this.calculate();
     }
 
