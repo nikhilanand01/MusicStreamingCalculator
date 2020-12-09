@@ -1,13 +1,46 @@
 import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
-import TextButton from './components/TextButton.js';
 import DspButton from './components/DspButton.js';
 import SwitchButton from './components/SwitchButton.js';
 import NumberInput from './components/NumberInput.js';
 import TabGroup from './components/ButtonGroup.js';
+import SingleDropDown from './components/SingleDropDown.js';
+import MultiDropDown from './components/MultiDropDown.js';
+import TestChart from './components/Chart.js';
 
 const ce = React.createElement;
+
+const labelDealOptions = [
+  { value: 'royalty', label: 'Royalty' },
+  { value: 'netProfit', label: 'Net Profit' },
+  { value: 'distributionPercent', label: 'Distribution (%)' },
+  { value: 'distributionFee', label: 'Distribution (fee)' },
+  { value: 'labelServices', label: 'Label Services' }
+]
+
+const pubDealOptions = [
+  { value: 'FullTraditional', label: 'Full/Traditional' },
+  { value: 'co-publising', label: 'Co-publising' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'noDeal', label: 'No Deal' }
+]
+
+const marketingSplitOptions = [
+  { value: 0.0, label: '0%' },
+  { value: 0.5, label: '50%' },
+  { value: 1.0, label: '100%' }
+]
+
+const labelServicesOptions = [
+  { value: 'steamDistribution', label: 'Steam Distribution' },
+  { value: 'avertising', label: 'Avertising' },
+  { value: 'analytics', label: 'Analytics' },
+  { value: 'royaltyAccounting', label: 'Royalty Accounting' },
+  { value: 'splitPayments', label: 'Split Payments' },
+]
+
+const roleTypes = ["Recording Artist Only", "Writer Only", "Both"];
 
 class TestCompPage extends React.Component {
     constructor(props) {
@@ -37,14 +70,20 @@ class TestCompPage extends React.Component {
     render() {
       return (
         <div style={{marginTop: '5%'}}>
-          <SmallText text="Your Role" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-          <div style={{display: 'flex', justifyContent:'center'}}>
-            {/*
-            <TextButton buttonText="Recording Artist Only" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("artist")} />
-            <TextButton buttonText="Writer Only" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("writer")} />
-            <TextButton buttonText="Recording Artist & Writer" style={{ textAlign: 'center' }} buttonStyle={{ marginRight: '15px'}} onClick= {e => this.handleRoleButton("both")} />
-            */}
+          <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+          <div style={{justifyContent:'center'}}>
+            <div style={{display: 'flex', justifyContent:'center'}}>
+              <SmallText text="Your Role" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+            </div>
             <TabGroup/>
+          </div>
+          <div style={{width: '25%', justifyContent: 'center'}}>
+            <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+            <SingleDropDown options={labelDealOptions}/>
+            <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+            <SingleDropDown options={pubDealOptions}/>
+            <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+            <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
           </div>
           <div>
             <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0' }}/>
@@ -53,7 +92,7 @@ class TestCompPage extends React.Component {
               <DspButton text="Spotify"/> <DspButton text="Apple Music"/><DspButton text="Tidal"/>
             </div>
             <div style={{display: 'flex', justifyContent:'center', margin: '1%'}}>
-              <DspButton text="Youtube (Contend ID)"/> <DspButton text="Amazon Unlimited"/><DspButton text="Google Play"/>
+              <DspButton text="Youtube (Content ID)"/> <DspButton text="Amazon Unlimited"/><DspButton text="Google Play"/>
             </div>
             <div style={{display: 'flex', justifyContent:'center', margin: '1%'}}>
               <DspButton text="Pandora"/> <DspButton text="Amazon Music"/><DspButton text="Rhapsody"/>
@@ -71,7 +110,9 @@ class TestCompPage extends React.Component {
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
               <NumberInput id={2} label="Marketing Costs" locked={false} active={false} />
-              <SwitchButton/>
+              <div style={{width: '8%', marginLeft: '1%'}}>
+                <SingleDropDown options={marketingSplitOptions}/>
+              </div>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
               <NumberInput id={3} label="Distrubtion Costs" locked={false} active={false} />
@@ -86,6 +127,9 @@ class TestCompPage extends React.Component {
               <NumberInput id={5} label="From Advance" locked={false} active={false} />
               <SwitchButton/>
             </div>
+          </div>
+          <div>
+            <TestChart/>
           </div>
         </div>
         )
