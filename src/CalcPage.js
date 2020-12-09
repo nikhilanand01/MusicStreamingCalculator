@@ -2,6 +2,9 @@ import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TextButton from './components/TextButton.js';
+import TabGroup from './components/ButtonGroup.js';
+
+
 
 const ce = React.createElement;
 
@@ -90,6 +93,7 @@ const avgPubPayout = 0.0007174565191
             includeInCalculations: true
         };
 
+//console.log(act)
 
 class CalcPage extends React.Component {
     constructor(props) {
@@ -115,6 +119,10 @@ class CalcPage extends React.Component {
         };
 
     }
+    callbackFunction = (childData) => {
+      console.log(childData)
+      this.setState({role: childData})
+    }
 
     componentDidMount() {
         console.log("mounted");
@@ -128,8 +136,28 @@ class CalcPage extends React.Component {
     }
 
 
-
     render() {
+      return (
+           <div>
+              <h2>Welcome to the revenue calculator</h2>
+              <input 
+                type = "text"
+                placeholder = "Enter Est Streams"
+                onChange = {e => this.changeStreams(e)}
+              />
+              <br />
+              <SmallText text="Role: "/>
+              <TabGroup
+                 //parentCallBack = {this.callbackFunction}
+                 //onChange = {e => this.handleRoleButton("test"/*active*/)}
+              />
+              <p> {this.state.role} </p>
+              <br />
+              <SmallText text="Record Deal Type: "/>
+
+           </div>
+        );
+      /*<!--
       return ce('div', {ref: 'this.myRef'},
         ce('h2', {className: "font"}, 'Welcome to the Revenue Calculator'),
             ce('input', {id: "estStreams", type: "text", placeholder: "Enter Est. Streams", onChange: e => this.changeStreams(e)}),
@@ -137,7 +165,7 @@ class CalcPage extends React.Component {
             ce('text', null, 'Role: '),
             /*ce('select', {onChange: e => this.handleRoleSelect(e)},
                 this.state.roles.map(role => ce('option', {key: role.id}, role.name))
-                ),*/
+                ),*//*
             ce('button', {onClick: e => this.handleRoleButton("artist")}, 'Artist Only'),
             ce('button', {onClick: e => this.handleRoleButton("writer")}, 'Writer Only'),
             ce('button', {onClick: e => this.handleRoleButton("both")}, 'Writer & Artist'),
@@ -191,7 +219,7 @@ class CalcPage extends React.Component {
             ce('input', {value: this.state.totalEarnings}),
             ce('br')
             
-        )
+        )-->*/
 
     }
 

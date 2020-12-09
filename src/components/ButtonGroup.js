@@ -31,8 +31,9 @@ function TabGroup() {
           <Tab
             key={type}
             active={active === type}
-            onClick={() => {setActive(type);}}
+            onClick={() => {setActive(type)}}
           >
+
             {type}
           </Tab>
         ))}
@@ -48,5 +49,6 @@ export default function App() {
       <TabGroup
         types={types}
         />
+
   );
 }
