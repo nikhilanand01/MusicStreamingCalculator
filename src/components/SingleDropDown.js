@@ -19,17 +19,25 @@ const pubDealOptions = [
 */}
 
 
-class SingleDropDown extends React.Component {sendData = () => {
-  this.props.parentCallBack(this.state.selectedOption)
-}
+class SingleDropDown extends React.Component {
 
   state = {
     selectedOption: null,
   };
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     console.log(`Option selected:`, selectedOption);
+    //console.log('My state: ', this.state.selectedOption);
   };
+
+
+  componentDidUpdate() {
+    if (this.props.onChange) {
+      this.props.onChange(this.state);
+    }
+  }
+
   render() {
     const { selectedOption } = this.state;
 

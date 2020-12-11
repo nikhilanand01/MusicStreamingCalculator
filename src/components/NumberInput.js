@@ -15,6 +15,11 @@ class NumberInput extends React.Component {
       label: props.label || "Label"
     };
   }
+  componentDidUpdate() {
+    if (this.props.onChange) {
+      this.props.onChange(this.state);
+    }
+  }
 
   changeValue(event) {
     const value = event.target.value;
