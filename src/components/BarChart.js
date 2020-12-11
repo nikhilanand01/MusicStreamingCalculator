@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Chart from 'react-apexcharts';
 
 
-class TestChart extends React.Component {
+class BarChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,13 +32,6 @@ class TestChart extends React.Component {
         },
         responsive: [{
           breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
-              offsetX: -10,
-              offsetY: 0
-            }
-          }
         }],
         plotOptions: {
           bar: {
@@ -63,11 +56,16 @@ class TestChart extends React.Component {
   render() {
     return (
         <div id="chart">
-          <Chart options={this.state.options} series={this.state.series} type="bar" height={350}/>
+          <Chart
+            options={this.state.options}
+            series={this.state.series}
+            type="bar"
+            height={350}
+            width={650}/>
         </div>
     );
   }
 
 }
 
-export default TestChart;
+export default BarChart;

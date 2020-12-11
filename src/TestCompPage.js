@@ -7,7 +7,10 @@ import NumberInput from './components/NumberInput.js';
 import TabGroup from './components/ButtonGroup.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import MultiDropDown from './components/MultiDropDown.js';
-import TestChart from './components/Chart.js';
+import BarChart from './components/BarChart.js';
+import RadialChart from './components/RadialChart.js';
+import DealSplitSlider from './components/DealSplitSlider.js';
+import StreamSlider from './components/StreamSlider.js';
 
 const ce = React.createElement;
 
@@ -69,7 +72,7 @@ class TestCompPage extends React.Component {
 
     render() {
       return (
-        <div style={{marginTop: '5%'}}>
+        <div style={{margin: '3%'}}>
           <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
           <div style={{justifyContent:'center'}}>
             <div style={{display: 'flex', justifyContent:'center'}}>
@@ -101,6 +104,7 @@ class TestCompPage extends React.Component {
           <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
             <SmallText text="Estimated Streams" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
             <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
+            <StreamSlider />
           </div>
           <div>
             <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
@@ -129,7 +133,11 @@ class TestCompPage extends React.Component {
             </div>
           </div>
           <div>
-            <TestChart/>
+            <BarChart/>
+            <RadialChart />
+            <div style={{width: '33%'}}>
+              <DealSplitSlider/>
+            </div>
           </div>
         </div>
         )
