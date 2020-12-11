@@ -20,6 +20,13 @@ class DspButton extends React.Component {
     })
   }
 
+
+  componentDidUpdate() {
+    if (this.props.onChange) {
+      this.props.onChange(this.state);
+    }
+  }
+
   testButton(){
     console.log("DSP - MAKE VALUE TOGGLE ON/OFF")
   }
@@ -30,7 +37,6 @@ class DspButton extends React.Component {
       <button className={this.state.button ? "buttonTrue": "buttonFalse"}
             onClick={() => {
             this.handleClick();
-            this.testButton();
             }}>
         {this.props.text}
       </button>

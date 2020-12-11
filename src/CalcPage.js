@@ -4,6 +4,8 @@ import SmallText from './components/SmallText.js';
 import TextButton from './components/TextButton.js';
 import TabGroup from './components/ButtonGroup.js';
 import SingleDropDown from './components/SingleDropDown.js';
+import NumberInput from './components/NumberInput.js';
+import DspButton from './components/DspButton.js';
 
 const labelDealOptions = [
   { value: 'royalty', label: 'Royalty' },
@@ -14,10 +16,10 @@ const labelDealOptions = [
 ]
 
 const pubDealOptions = [
-  { value: 'FullTraditional', label: 'Full/Traditional' },
-  { value: 'co-publising', label: 'Co-publising' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'noDeal', label: 'No Deal' }
+  { value: 'Full/Traditional', label: 'Full/Traditional' },
+  { value: 'Co-Publishing', label: 'Co-publising' },
+  { value: 'Admin', label: 'Admin' },
+  { value: 'No Deal', label: 'No Deal' }
 ]
 
 const marketingSplitOptions = [
@@ -44,6 +46,7 @@ const avgPubPayout = 0.0007174565191
         //handling dsps
         let spotify = {
           id: 0,
+          ref: React.createRef(),
           name: "Spotify",
           payoutPerStream: 0.00331,
           marketShareStreams: .2922,
@@ -52,6 +55,7 @@ const avgPubPayout = 0.0007174565191
         };
         let apple = {
           id: 1,
+          ref: React.createRef(),
           name: "Apple Music",
           payoutPerStream: 0.00495,
           marketShareStreams: .0995,
@@ -60,6 +64,7 @@ const avgPubPayout = 0.0007174565191
         };
         let youtube = {
           id: 2,
+          ref: React.createRef(),
           name: "Youtube Content ld",
           payoutPerStream: 0.00028,
           marketShareStreams: .4858,
@@ -68,6 +73,7 @@ const avgPubPayout = 0.0007174565191
         };
         let amazon = {
           id: 3,
+          ref: React.createRef(),
           name: "Amazon Unlimited",
           payoutPerStream: 0.01175,
           marketShareStreams: .0068,
@@ -76,6 +82,7 @@ const avgPubPayout = 0.0007174565191
         };
         let google = {
           id: 4,
+          ref: React.createRef(),
           name: "Google Play",
           payoutPerStream: 0.00543,
           marketShareStreams: .0112,
@@ -84,6 +91,7 @@ const avgPubPayout = 0.0007174565191
         };
         let pandora = {
           id: 5,
+          ref: React.createRef(),
           name: "Pandora",
           payoutPerStream: 0.00155,
           marketShareStreams: .0386,
@@ -93,6 +101,7 @@ const avgPubPayout = 0.0007174565191
         let deezer = {
           id: 6,
           name: "Deezer",
+          ref: React.createRef(),
           payoutPerStream: 0.00567,
           marketShareStreams: .0091,
             marketShareDollars: .026,
@@ -100,6 +109,7 @@ const avgPubPayout = 0.0007174565191
         };
         let amazonDig = {
           id: 7,
+          ref: React.createRef(),
           name: "Amazon Digital Services",
           payoutPerStream: 0.00395,
           marketShareStreams: .0095,
@@ -108,6 +118,7 @@ const avgPubPayout = 0.0007174565191
         };
         let tidal = {
           id: 8,
+          ref: React.createRef(),
           name: "TIDAL",
           payoutPerStream: 0.00927,
           marketShareStreams: 0.0021,
@@ -116,6 +127,7 @@ const avgPubPayout = 0.0007174565191
         };
         let others = {
           id: 9,
+          ref: React.createRef(),
           name: "Napster / Rhapsody",
           payoutPerStream: 0.0111,
           marketShareStreams: 0.0014,
@@ -128,7 +140,15 @@ const avgPubPayout = 0.0007174565191
 class CalcPage extends React.Component {
     constructor(props) {
         super(props);
-        this.myRef = React.createRef();
+        this.dealTypeRef = React.createRef();
+        this.tabGroupRef = React.createRef();
+        this.pubTypeRef = React.createRef();
+        this.advanceRef = React.createRef();
+        this.costsRef = React.createRef();
+        this.artistButtonRef = React.createRef();
+        this.writerButtonRef = React.createRef();
+        this.bothButtonRef = React.createRef();
+        
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal, others],
@@ -150,20 +170,16 @@ class CalcPage extends React.Component {
 
     }
 
-    callbackFunction = (childData) => {
-      console.log("setting state: " + childData);
-      this.setState({recordDealSelected: childData})
-    }
-
 
     componentDidMount() {
-        console.log("mounted");
+        //console.log("mounted");
         this.buildRecordDealSelect();
         this.handleRoleButton("Writer & Artist");
         this.buildPublishingDealSelect();
         this.setSliderValue(50);
         this.testMap();
         //this.buildDspsArr();
+        this.setInitialRoleState();
         this.setInitialStates();
     }
 
@@ -179,20 +195,77 @@ class CalcPage extends React.Component {
               />
               <br />
               <SmallText text="Role: "/>
-              <TabGroup
-                 //parentCallBack = {this.callbackFunction}
-                 //onChange = {e => this.handleRoleButton("test"/*active*/)}
+              <DspButton ref={this.artistButtonRef}
+                text = "Artist"
+                key="artButton"
+                onChange={e => this.getRoleButton("artist")}
+              />
+              <DspButton ref={this.writerButtonRef}
+                text = "Writer"
+                key="writeButton"
+                onChange={e => this.getRoleButton("writer")}
+              />
+              <DspButton ref={this.bothButtonRef}
+                text = "Both"
+                key="bothButton"
+                onChange={e => this.getRoleButton("both")}
               />
               <p> {this.state.role} </p>
               <br />
               <SmallText text="Record Deal Type: "/>
-              <SingleDropDown
-                  parentCallBack={this.callbackFunction}
-                  options={labelDealOptions}
+              <SingleDropDown ref={this.dealTypeRef}
                   
+                  options={labelDealOptions}
+                  onChange = {e => this.getStateRecDeal(e)}
               />
+              <br />
+              <SmallText text="Publishing Deal Type: "/>
+              <SingleDropDown ref={this.pubTypeRef}
+                  options={pubDealOptions}
+                  onChange = {e => this.getStatePubDeal(e)}
+              />
+              <br />
+              <SmallText text="Deal Split: "/>
+
+              <br />
+              <SmallText text="Guaranteed Income: "/>
+              <NumberInput ref={this.advanceRef}
+                id= {"numInput"} 
+                label = "From Advance"
+                locked = {false}
+                active = {false}
+                onChange = {e => this.getStateAdvance(e)}
+              />
+              <br />
+              <SmallText text="Costs: "/>
+              <NumberInput ref={this.costsRef} 
+                id = {"costInput"}
+                label = "Costs"
+                locked = {false}
+                active = {false}
+                onChange = {e => this.getStateCosts(e)}
+              />
+              <br />
+              <SmallText text="Recoupable: "/>
+              <input
+                 type="checkbox"
+              />
+              <br />
+              <SmallText text="DSPs"/>
+              <div>
+                {this.state.providers.map((provider) =>
+                   <DspButton ref={provider.ref}
+                     key={provider.id}
+                     text={provider.name}
+                     onChange = {e => this.getButtonClick(provider.id)}
+                   />
+                )}
+              </div>
            </div>
         );
+
+
+
       /*<!--
       return ce('div', {ref: 'this.myRef'},
         ce('h2', {className: "font"}, 'Welcome to the Revenue Calculator'),
@@ -258,8 +331,75 @@ class CalcPage extends React.Component {
         )-->*/
 
     }
+    setInitialRoleState() {
+      /*this.artistButtonRef.current.setState({button: false});
+      this.writerButtonRef.current.setState({button: false});
+      this.bothButtonRef.current.setState({button: true});
+      */
+    }
+    getRoleButton(name) {
+         console.log(name);
+         console.log(this.artistButtonRef.current.state.button);
+         console.log(this.writerButtonRef.current.state.button);
+         console.log(this.bothButtonRef.current.state.button);
 
+         if(name === "artist" && !this.artistButtonRef.current.state.button) {
+            this.handleRoleButton("artist");
+            this.writerButtonRef.current.setState({button: false});
+            this.bothButtonRef.current.setState({button: false});
+            //this.state.
+         } else if (name === "writer" && !this.writerButtonRef.current.state.button) {
+            this.handleRoleButton("writer");
+            this.artistButtonRef.current.setState({button: false});
+            this.bothButtonRef.current.setState({button: false});
+         } else if (name === "both" && !this.bothButtonRef.current.state.button) {
+            this.handleRoleButton("both");
+            this.writerButtonRef.current.setState({button: false});
+            this.artistButtonRef.current.setState({button: false});
+         }
+    }
+    getButtonClick(id) {
+      //console.log("clicked: " + id);
+      //console.log(this.state.providers[id].ref.current.state);
+      if(this.state.providers[id].ref.current.state.button != null && this.state.providers[id].ref.current.state.button != this.state.providers[id].includeInCalculations) {
+        this.toggleMe(id);
+      }
 
+    }
+    getStateCosts() {
+      console.log(this.costsRef.current.state)
+      if(this.costsRef.current.state.value != "" && parseInt(this.costsRef.current.state.value) != this.state.costs) {
+        const e = parseInt(this.costsRef.current.state.value);
+        this.updateCosts(e);
+      }
+    }
+    getStateAdvance() {
+      console.log(this.advanceRef.current.state)
+      if(this.advanceRef.current.state.value != "" && parseInt(this.advanceRef.current.state.value) != this.state.advance) {
+          const e = parseInt(this.advanceRef.current.state.value);
+          this.updateAdvance(e);
+      }
+    }
+    getStatePubDeal() {
+      //console.log("getting state rec deal");
+      if(this.pubTypeRef.current.state.selectedOption != null && this.pubTypeRef.current.state.selectedOption.value != this.state.publishingDealSelected) {
+        //console.log(this.dealTypeRef.current.state.selectedOption.value);
+        const e = this.pubTypeRef.current.state.selectedOption.value;
+        this.handlePublishingDealSelect(e);
+      }
+      //const node = this.dealTypeRef.current;
+      //console.log("Node: " + node);
+    }
+    getStateRecDeal() {
+      //console.log("getting state rec deal");
+      if(this.dealTypeRef.current.state.selectedOption != null && this.dealTypeRef.current.state.selectedOption.value != this.state.recordDealSelected) {
+        //console.log(this.dealTypeRef.current.state.selectedOption.value);
+        const e = this.dealTypeRef.current.state.selectedOption.value;
+        this.handleRecDealSelect(e);
+      }
+      //const node = this.dealTypeRef.current;
+      //console.log("Node: " + node);
+    }
     testMap() {
       this.state.providers.map(provider => console.log(provider.name));
       //this.state.providers.map(provider => ce('tr', null, ce('td', null, ce('text', null, provider.name))), ce('tr', null, ce('td', null, ce('input', {type: 'checkbox', checked: provider.includeInCalculations, onClick: e => this.toggleMe(provider.id)}))))
@@ -280,14 +420,14 @@ class CalcPage extends React.Component {
     }
 
     updateAdvance(e) {
-      console.log("changed advance to: " + e.target.value);
-      this.setState({advance: e.target.value});
+      console.log("changed advance to: " + e);
+      this.setState({advance: e});
       this.calculate();
     }
 
     updateCosts(e) {
-        console.log("changed costs to: " + e.target.value);
-        this.setState({costs: e.target.value});
+        console.log("changed costs to: " + e);
+        this.setState({costs: e});
         this.calculate();
     }
 
@@ -327,8 +467,8 @@ class CalcPage extends React.Component {
     }
 
     handlePublishingDealSelect(e) {
-        console.log(e.target.value);
-        this.setState({publishingDealSelected: e.target.value});
+        console.log(e);
+        this.setState({publishingDealSelected: e});
         this.calculate();
     }
 
@@ -344,13 +484,13 @@ class CalcPage extends React.Component {
     handleRecDealSelect(e) {
         console.log("selecting Roles");
         console.log(e);
-        if(e === "Royalty") {
+        if(e === "royalty") {
           this.setState({sliderValue: 20});
-        } else if (e === "Net Profit") {
+        } else if (e === "netProfit") {
           this.setState({sliderValue: 50});
-        } else if (e === "Distribution Percent") {
+        } else if (e === "distributionPercent") {
           this.setState({sliderValue: 70});
-        } else if (e === "Label Services") {
+        } else if (e === "labelServices") {
           this.setState({sliderValue: 80});
         }
         //document.getElementById("splitSlider").value = this.state.sliderValue;
@@ -384,98 +524,6 @@ class CalcPage extends React.Component {
         this.setState( {recordDeal: rls} );
     }
 
-    ///////// DSP Stuff ///////
-
-    buildDspsArr() {
-
-        //handling dsps
-        let spotify = {
-          id: 0,
-          name: "Spotify",
-          payoutPerStream: 0.00331,
-          marketShareStreams: .2922,
-            marketShareDollars: .4893,
-            includeInCalculations: true
-        };
-        let apple = {
-          id: 1,
-          name: "Apple Music",
-          payoutPerStream: 0.00495,
-          marketShareStreams: .0995,
-            marketShareDollars: .2497,
-            includeInCalculations: true
-        };
-        let youtube = {
-          id: 2,
-          name: "Youtube Content ld",
-          payoutPerStream: 0.00028,
-          marketShareStreams: .4858,
-            marketShareDollars: .0699,
-            includeInCalculations: true
-        };
-        let amazon = {
-          id: 3,
-          name: "Amazon Unlimited",
-          payoutPerStream: 0.01175,
-          marketShareStreams: .0068,
-            marketShareDollars: .0404,
-            includeInCalculations: true
-        };
-        let google = {
-          id: 4,
-          name: "Google Play",
-          payoutPerStream: 0.00543,
-          marketShareStreams: .0112,
-            marketShareDollars: .0308,
-            includeInCalculations: true
-        };
-        let pandora = {
-          id: 5,
-          name: "Pandora",
-          payoutPerStream: 0.00155,
-          marketShareStreams: .0386,
-            marketShareDollars: .0303,
-            includeInCalculations: true
-        };
-        let deezer = {
-          id: 6,
-          name: "Deezer",
-          payoutPerStream: 0.00567,
-          marketShareStreams: .0091,
-            marketShareDollars: .026,
-            includeInCalculations: true
-        };
-        let amazonDig = {
-          id: 7,
-          name: "Amazon Digital Services",
-          payoutPerStream: 0.00395,
-          marketShareStreams: .0095,
-            marketShareDollars: .019,
-            includeInCalculations: true
-        };
-        let tidal = {
-          id: 8,
-          name: "TIDAL",
-          payoutPerStream: 0.00927,
-          marketShareStreams: 0.0021,
-            marketShareDollars: 0.0098,
-            includeInCalculations: true
-        };
-        let others = {
-          id: 9,
-          name: "Napster / Rhapsody",
-          payoutPerStream: 0.0111,
-          marketShareStreams: 0.0014,
-            marketShareDollars: 0.0080,
-            includeInCalculations: true
-        };
-        let dsps = [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal, others];
-        console.log(dsps)
-
-        this.setState( {providers: dsps} );
-
-    }
-
     toggleMe(index) {
       this.state.providers[index].includeInCalculations = !this.state.providers[index].includeInCalculations;
       //console.log(dsps[index].name);
@@ -493,13 +541,13 @@ class CalcPage extends React.Component {
         // Why are there double semi-colons?
                    //prob a typo
         let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costs);
-        console.log(totalMoneyToRecoupe)
+        //console.log(totalMoneyToRecoupe)
         let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
-        console.log("grossRevenue: " + grossRevenue)
+        //console.log("grossRevenue: " + grossRevenue)
         //checkDSPs();
         //console.log(estStreams.value * avgPayout);
         //console.log(estStreams.value * weightedAverageOfSelected());
-        if (this.state.recordDealSelected === "Royalty") {
+        if (this.state.recordDealSelected === "royalty") {
             // Artist Split
             if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
               console.log("unrecouped");
@@ -509,7 +557,7 @@ class CalcPage extends React.Component {
             }
             labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
 
-        } else if (this.state.recordDealSelected === "Net Profit" || this.state.recordDealSelected === "Distribution Percent" || this.state.recordDealSelected === "Distribution Fee") {
+        } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "Distribution Fee") {
             //net profit deals are generally guaranteed 50/50, distribution are generally 70/30 artist/label
             let profit = (grossRevenue - this.state.costs);
             // Artist Split
@@ -520,7 +568,7 @@ class CalcPage extends React.Component {
               artistShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
             }
             // Label Split Net Profit, Distributions
-            if(this.state.recordDealSelected === "Net Profit" || this.state.recordDealSelected === "Distribution Percent") {
+            if(this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent") {
                 if(profit < 0){
                     labelShare = 0;
                 } else {
@@ -536,7 +584,7 @@ class CalcPage extends React.Component {
             }
             */
 
-        } else if (this.state.recordDealSelected === "Label Services") {
+        } else if (this.state.recordDealSelected === "labelServices") {
             // Artist Split
             if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
               console.log("unrecouped");
@@ -589,16 +637,22 @@ class CalcPage extends React.Component {
     }
 
     weightedAverageOfSelected() {
+
         let sum = 0.0;
         for(let i=0; i < this.state.providers.length; i++) {
           if(this.state.providers[i].includeInCalculations) {
                 sum += (this.state.providers[i].payoutPerStream * this.state.providers[i].marketShareStreams)
             }
         }
+        console.log(sum)
         let sumOfWeights = 0.0;
         for(let i=0;i < this.state.providers.length; i++) {
+          if(this.state.providers[i].includeInCalculations) {
             sumOfWeights += this.state.providers[i].marketShareStreams
+          }
         }
+        if(sumOfWeights <= 0.0) return 0.0
+        //console.log(sum)
         console.log(sum/sumOfWeights);
         return sum/sumOfWeights;
     }
