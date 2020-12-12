@@ -47,6 +47,9 @@ const roleTypes = ["Recording Artist Only", "Writer Only", "Both"];
 {/* LABEL SERVICES RENDER CODE....
   <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
   <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
+  <div style={{textAlign: 'right'}}>
+    <SmallText text="Created By: Nikhil Anand, Sam Vincent, Alexandre Perrin, Peter Dyson"/>
+  </div>
   */}
 
 
@@ -179,16 +182,16 @@ class TestCompPage extends React.Component{
 
     render() {
       return (
-        <div style={{margin: '2%', display: 'flex', flexDirection: 'column'}}>
+        <div style={{padding: '2%', display: 'flex', flexDirection: 'column'}}>
 
             <div style={{textAlign: 'center'}}>
-              <TitleText text="The Streaming Calculator" style={{color: '#111', fontFamily: 'Open Sans Condensed, sans-serif', fontSize: '48px', fontWeight: '700', lineHeight: '48px', margin: '0 0 24px', padding: '0 30px', textAlign: 'center', textTransform: 'uppercase'}}/>
+              <TitleText text="The Streaming Calculator" style={{color: '#111', fontSize: '48px', fontWeight: '700', lineHeight: '48px', margin: '0 0 24px', padding: '0 30px', textAlign: 'center', textTransform: 'uppercase'}}/>
             </div>
 
             <div style={{display: 'flex', flexDirection: 'row'}}>
 
-                <div style={{width: '33%', flexDirection: 'column', marginRight: '2%'}}>
-                    <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline' }}/>
+                <div style={{width: '33%', flexDirection: 'column', paddingRight: '.5%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
+                    <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                       <TabGroup />
@@ -201,9 +204,9 @@ class TestCompPage extends React.Component{
                           ref={this.dealTypeRef}
                           options={labelDealOptions}
                           onChange = {e => this.getStateRecDeal(e)}/>
-                      <SmallText text="Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
+                      <SmallText text="Record Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
                       <DealSplitSlider/>
-                      <SmallText text="Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
+                      <SmallText text="Record Deal Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                       <div style={{display: 'flex', justifyContent: 'center'}}>
                         <NumberInput ref={this.advanceRef}
                           id= {"numInput"}
@@ -222,8 +225,8 @@ class TestCompPage extends React.Component{
                     />
                   </div>
 
-                  <div>
-                    <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0' }}/>
+                  <div style={{borderTop: 'thin dotted #b3d0ff', marginTop: '2%'}}>
+                    <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0', marginTop: 5 }}/>
                     <SmallText text="(Select Which DSPs to include in Calculation)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey' }}/>
                       <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
                         {this.state.providers.map((provider) =>
@@ -238,37 +241,37 @@ class TestCompPage extends React.Component{
                 </div>
 
 
-                <div style={{width: '32%', flexDirection: 'column', marginRight: '1%'}}>
-                    <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline' }}/>
-                    <div style={{alignItems: 'center'}}>
+                <div style={{width: '32%', flexDirection: 'column', paddingRight: '1%'}}>
+                    <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0 }}/>
+                    <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                       <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                       <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
                       <StreamSlider />
                     </div>
                     <div>
-                      <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+                      <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0 }} />
                       <SmallText text="Recoupable" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'right', color: 'grey', paddingRight: '5%' }}/>
                       <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
                         <NumberInput id={1} label="Recording Costs" locked={false} active={false} />
-                        <div style={{width: '28%'}}>
+                        <div style={{width: '30%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
                       <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
                         <NumberInput id={2} label="Marketing Costs" locked={false} active={false} />
-                        <div style={{marginLeft: '1%', width: '27%'}}>
+                        <div style={{marginLeft: '1%', width: '29%'}}>
                           <SingleDropDown options={marketingSplitOptions}/>
                         </div>
                       </div>
                       <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
                         <NumberInput id={3} label="Distrubtion Costs" locked={false} active={false} />
-                        <div style={{width: '28%'}}>
+                        <div style={{width: '30%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
                       <div style={{display: 'flex', flexDirection: 'row'}}>
                         <NumberInput id={4} label="Misc. Costs" locked={false} active={false} />
-                        <div style={{width: '28%'}}>
+                        <div style={{width: '30%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
@@ -285,21 +288,35 @@ class TestCompPage extends React.Component{
                 </div>
 
                 <div style={{flexDirection: 'column', width: '35%', borderLeft: 'thin solid #b3d0ff'}}>
-                  <div>
-                    <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline' }}/>
-                    <SmallText text="You've Earned: #####" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                    <SmallText text="Total Revenue Created: #####" style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                    <SmallText text="Total Recoupable Costs: #####" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                  <div style={{backgroundColor: '#f2f6ff'}}>
+                    <div>
+                      <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0 }}/>
+                      <SmallText text="You've Earned: #####" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      <SmallText text="Total Revenue Created: #####" style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      <SmallText text="Total Recoupable Costs: #####" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                    </div>
+                    <div style={{borderBottom: 'thin solid #b3d0ff'}}>
+                      <BarChart/>
+                    </div>
                   </div>
                   <div>
-                    <BarChart/>
+                    <SmallText text="Advanced Calculations" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: 0}}/>
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                      <div style={{flexDirection: 'column', marginRight: '5%'}}>
+                        <DspButton text="Auto Recoup" />
+                        <SmallText text="Streams Needed: #####" style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      </div>
+                      <div style={{flexDirection: 'column'}}>
+                        <DspButton text="Money Goal" />
+                        <NumberInput id={6} label="I want to Make...." locked={false} active={false} />
+                        <SmallText text="Streams Needed: #####" style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
             </div>
-            <div style={{textAlign: 'right'}}>
-              <SmallText text="Created By: Nikhil Anand, Sam Vincent, Alexandre Perrin, Peter Dyson"/>
-            </div>
+
         </div>
 
         )

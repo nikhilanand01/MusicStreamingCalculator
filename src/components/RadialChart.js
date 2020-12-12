@@ -59,7 +59,7 @@ class RadialChart extends Component {
            },
            labels: ["Recouped"]
          },
-         seriesRadial: [100],
+         seriesRadial: [90],
        };
     }
 

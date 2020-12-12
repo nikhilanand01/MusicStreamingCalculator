@@ -14,7 +14,7 @@ const railStyle = {
   height: 10,
   marginTop: 35,
   borderRadius: 5,
-  backgroundColor: '#d5eddc',
+  backgroundColor: '#CBDCFC',
   zIndex: 0
 }
 
@@ -39,12 +39,12 @@ export function Handle({
         textAlign: 'center',
         cursor: 'pointer',
         borderRadius: '50%',
-        backgroundColor: '#2b753f',
+        backgroundColor: '#1971ff',
         color: '#333',
       }}
       {...getHandleProps(id)}
     >
-      <div style={{fontSize: 11, marginTop: 35 }}>
+      <div style={{fontSize: 14, marginTop: 35, fontWeight: '500'}}>
         {value}
       </div>
     </div>
@@ -59,7 +59,7 @@ function Track({ source, target, getTrackProps }) {
         height: 10,
         zIndex: 1,
         marginTop: 35,
-        backgroundColor: '#49cc6c',
+        backgroundColor: '#3665d6',
         borderRadius: 5,
         cursor: 'pointer',
         left: `${source.percent}%`,

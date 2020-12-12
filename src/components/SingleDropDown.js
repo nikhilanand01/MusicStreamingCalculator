@@ -27,6 +27,9 @@ class SingleDropDown extends React.Component {
 
     return (
       <Select
+      styles={{
+        menu: provided => ({ ...provided, zIndex: 10 })
+        }}
         value={selectedOption}
         onChange={this.handleChange}
         options={this.props.options}

@@ -9,13 +9,13 @@ class BarChart extends React.Component {
     this.state = {
       series: [{
         name: 'From Recording',
-        data: [10000, 55000, 0]
+        data: [16255, 100558, 0]
       }, {
         name: 'From Writing',
-        data: [13000, 1000, 23000]
+        data: [17371, 3191, 3700]
       },{
         name: 'From Advance',
-        data: [5000, 0, 0]
+        data: [10000, 0, 0]
       }
 
     ],

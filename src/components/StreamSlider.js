@@ -14,7 +14,7 @@ const railStyle = {
   height: 10,
   marginTop: 35,
   borderRadius: 5,
-  backgroundColor: '#d5eddc',
+  backgroundColor: '#CBDCFC',
 }
 
 function GetMiddleValue(min, max) {
@@ -49,12 +49,12 @@ export function Handle({
         textAlign: 'center',
         cursor: 'pointer',
         borderRadius: '50%',
-        backgroundColor: '#2b753f',
+        backgroundColor: '#1971ff',
         color: '#333',
       }}
       {...getHandleProps(id)}
     >
-      <div style={{fontSize: 11, marginTop: 35 }}>
+      <div style={{fontSize: 12, marginTop: 35 }}>
         {value}
       </div>
     </div>
@@ -69,7 +69,7 @@ function Track({ source, target, getTrackProps }) {
         height: 10,
         zIndex: 1,
         marginTop: 35,
-        backgroundColor: '#49cc6c',
+        backgroundColor: '#3665d6',
         borderRadius: 5,
         cursor: 'pointer',
         left: `${source.percent}%`,
@@ -101,7 +101,7 @@ export class StreamSlider extends Component {
     } = this
 
     return (
-      <div style={{ height: 70, width: '85%' }}>
+      <div style={{ height: 70, width: '100%' }}>
         <Slider
           rootStyle={sliderStyle}
           domain={domain}
