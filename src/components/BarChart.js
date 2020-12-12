@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Chart from 'react-apexcharts';
+import RadialChart from './RadialChart.js';
 
 
 class BarChart extends React.Component {
@@ -8,20 +9,18 @@ class BarChart extends React.Component {
     this.state = {
       series: [{
         name: 'From Recording',
-        data: [44, 55]
+        data: [10000, 55000, 0]
       }, {
         name: 'From Writing',
-        data: [13, 23]
+        data: [13000, 1000, 23000]
       },{
         name: 'From Advance',
-        data: [13, 0]
+        data: [5000, 0, 0]
       }
 
     ],
       options: {
         chart: {
-          type: 'bar',
-          height: 350,
           stacked: true,
           toolbar: {
             show: true
@@ -40,11 +39,11 @@ class BarChart extends React.Component {
         },
         xaxis: {
           type: 'Who',
-          categories: ['Artist', 'Partners'],
+          categories: ['Artist', 'Record Label', 'Publiser'],
         },
         legend: {
-          position: 'right',
-          offsetY: 40
+          position: 'bottom',
+          horizontalAlign: 'right',
         },
         fill: {
           opacity: 1
@@ -60,8 +59,8 @@ class BarChart extends React.Component {
             options={this.state.options}
             series={this.state.series}
             type="bar"
-            height={350}
-            width={650}/>
+            height={400}
+            width={'95%'}/>
         </div>
     );
   }

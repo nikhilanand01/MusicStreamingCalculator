@@ -12,7 +12,7 @@ class RadialChart extends Component {
                endAngle: 225,
                hollow: {
                  margin: 0,
-                 size: "70%",
+                 size: "45%",
                  background: "#fff",
                  image: undefined,
                  imageOffsetX: 0,
@@ -28,7 +28,7 @@ class RadialChart extends Component {
                },
                track: {
                  background: "#fff",
-                 strokeWidth: "60%",
+                 strokeWidth: "50%",
                  margin: 0, // margin is in pixels
                  dropShadow: {
                    enabled: true,
@@ -46,13 +46,13 @@ class RadialChart extends Component {
                shade: "dark",
                type: "horizontal",
                shadeIntensity: 0.5,
-               gradientToColors: ['#32a852'],
+               gradientToColors: ['#1971ff'],
                inverseColors: false,
                opacityFrom: 1,
                opacityTo: 1,
-               stops: [0, 50, 100]
+               stops: [22]
              },
-             colors: ['#000']
+             colors: ['#CBDCFC']
            },
            stroke: {
              lineCap: "round"
@@ -72,8 +72,8 @@ class RadialChart extends Component {
           options={this.state.optionsRadial}
           series={this.state.seriesRadial}
           type="radialBar"
-          height={350}
-          width={300}/>
+          height={200}
+          width={200}/>
       </div>
       );
     }

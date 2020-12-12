@@ -3,20 +3,20 @@ import styled from "styled-components";
 
 
 const Tab = styled.button`
-  padding: 10px 30px;
+  padding: 10px 20px;
   cursor: pointer;
   opacity: 0.6;
   background: white;
   border: 0;
   outline: 0;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
   border-bottom: 2px solid transparent;
   transition: ease border-bottom 250ms;
   ${({ active }) =>
     active &&
     `
-    border-bottom: 2px solid black;
+    border-bottom: 3px solid black;
     font-weight: bold;
     opacity: 1;
   `}

@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
+import TitleText from './components/TitleText.js';
 import DspButton from './components/DspButton.js';
 import SwitchButton from './components/SwitchButton.js';
 import NumberInput from './components/NumberInput.js';
@@ -12,8 +13,6 @@ import RadialChart from './components/RadialChart.js';
 import DealSplitSlider from './components/DealSplitSlider.js';
 import StreamSlider from './components/StreamSlider.js';
 
-const ce = React.createElement;
-
 const labelDealOptions = [
   { value: 'royalty', label: 'Royalty' },
   { value: 'netProfit', label: 'Net Profit' },
@@ -23,10 +22,10 @@ const labelDealOptions = [
 ]
 
 const pubDealOptions = [
-  { value: 'FullTraditional', label: 'Full/Traditional' },
-  { value: 'co-publising', label: 'Co-publising' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'noDeal', label: 'No Deal' }
+  { value: 'Full/Traditional', label: 'Full/Traditional' },
+  { value: 'Co-Publishing', label: 'Co-publising' },
+  { value: 'Admin', label: 'Admin' },
+  { value: 'No Deal', label: 'No Deal' }
 ]
 
 const marketingSplitOptions = [
@@ -45,186 +44,604 @@ const labelServicesOptions = [
 
 const roleTypes = ["Recording Artist Only", "Writer Only", "Both"];
 
-class TestCompPage extends React.Component {
+{/* LABEL SERVICES RENDER CODE....
+  <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+  <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
+  */}
+
+
+//average / approx payout for publishing for stream
+const avgPubPayout = 0.0007174565191
+
+//handling dsps
+let spotify = {
+  id: 0,
+  ref: React.createRef(),
+  name: "Spotify",
+  payoutPerStream: 0.00331,
+  marketShareStreams: .2922,
+    marketShareDollars: .4893,
+    includeInCalculations: true
+};
+let apple = {
+  id: 1,
+  ref: React.createRef(),
+  name: "Apple Music",
+  payoutPerStream: 0.00495,
+  marketShareStreams: .0995,
+    marketShareDollars: .2497,
+    includeInCalculations: true
+};
+let youtube = {
+  id: 2,
+  ref: React.createRef(),
+  name: "Youtube Content ld",
+  payoutPerStream: 0.00028,
+  marketShareStreams: .4858,
+    marketShareDollars: .0699,
+    includeInCalculations: true
+};
+let amazon = {
+  id: 3,
+  ref: React.createRef(),
+  name: "Amazon Unlimited",
+  payoutPerStream: 0.01175,
+  marketShareStreams: .0068,
+    marketShareDollars: .0404,
+    includeInCalculations: true
+};
+let google = {
+  id: 4,
+  ref: React.createRef(),
+  name: "Google Play",
+  payoutPerStream: 0.00543,
+  marketShareStreams: .0112,
+    marketShareDollars: .0308,
+    includeInCalculations: true
+};
+let pandora = {
+  id: 5,
+  ref: React.createRef(),
+  name: "Pandora",
+  payoutPerStream: 0.00155,
+  marketShareStreams: .0386,
+    marketShareDollars: .0303,
+    includeInCalculations: true
+};
+let deezer = {
+  id: 6,
+  name: "Deezer",
+  ref: React.createRef(),
+  payoutPerStream: 0.00567,
+  marketShareStreams: .0091,
+    marketShareDollars: .026,
+    includeInCalculations: true
+};
+let amazonDig = {
+  id: 7,
+  ref: React.createRef(),
+  name: "Amazon Digital Services",
+  payoutPerStream: 0.00395,
+  marketShareStreams: .0095,
+    marketShareDollars: .019,
+    includeInCalculations: true
+};
+let tidal = {
+  id: 8,
+  ref: React.createRef(),
+  name: "TIDAL",
+  payoutPerStream: 0.00927,
+  marketShareStreams: 0.0021,
+    marketShareDollars: 0.0098,
+    includeInCalculations: true
+};
+
+class TestCompPage extends React.Component{
     constructor(props) {
         super(props);
+        this.dealTypeRef = React.createRef();
+        this.tabGroupRef = React.createRef();
+        this.pubTypeRef = React.createRef();
+        this.advanceRef = React.createRef();
+        this.costsRef = React.createRef();
+        this.artistButtonRef = React.createRef();
+        this.writerButtonRef = React.createRef();
+        this.bothButtonRef = React.createRef();
+
         this.state = {
+            providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
             streamNumber: null,
             role: null,
             recordDeal: [],
             publishDeal: [],
-            sliderValue: null,
+            sliderValue: 50,
             recordDealSelected: null,
             publishingDealSelected: null,
-            advance: null
+            advance: 0,
+            costs: 0,
+            grossRev: 0,
+            totRecoupe: 0,
+            publisherShare: 0,
+            writerEarnings: 0,
+            totalEarnings: 0
         };
 
     }
 
     componentDidMount() {
-        console.log("mounted");
         this.buildRecordDealSelect();
         this.handleRoleButton("Writer & Artist");
         this.buildPublishingDealSelect();
         this.setSliderValue(50);
+        this.testMap();
         this.setInitialStates();
     }
 
     render() {
       return (
-        <div style={{margin: '3%'}}>
-          <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-          <div style={{justifyContent:'center'}}>
-            <div style={{display: 'flex', justifyContent:'center'}}>
-              <SmallText text="Your Role" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+        <div style={{margin: '2%', display: 'flex', flexDirection: 'column'}}>
+
+            <div style={{textAlign: 'center'}}>
+              <TitleText text="The Streaming Calculator" style={{color: '#111', fontFamily: 'Open Sans Condensed, sans-serif', fontSize: '48px', fontWeight: '700', lineHeight: '48px', margin: '0 0 24px', padding: '0 30px', textAlign: 'center', textTransform: 'uppercase'}}/>
             </div>
-            <TabGroup/>
-          </div>
-          <div style={{width: '25%', justifyContent: 'center'}}>
-            <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-            <SingleDropDown options={labelDealOptions}/>
-            <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-            <SingleDropDown options={pubDealOptions}/>
-            <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-            <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
-          </div>
-          <div>
-            <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0' }}/>
-            <SmallText text="(Select Which DSPs to include in Calculation)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey' }}/>
-            <div style={{display: 'flex', justifyContent:'center', margin: '2%'}}>
-              <DspButton text="Spotify"/> <DspButton text="Apple Music"/><DspButton text="Tidal"/>
+
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+
+                <div style={{width: '33%', flexDirection: 'column', marginRight: '2%'}}>
+                    <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline' }}/>
+                    <div>
+                      <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
+                      <TabGroup />
+                    </div>
+
+                  <div>
+                    <div style={{marginBottom: '8%'}}>
+                      <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                      <SingleDropDown
+                          ref={this.dealTypeRef}
+                          options={labelDealOptions}
+                          onChange = {e => this.getStateRecDeal(e)}/>
+                      <SmallText text="Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
+                      <DealSplitSlider/>
+                      <SmallText text="Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
+                      <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <NumberInput ref={this.advanceRef}
+                          id= {"numInput"}
+                          label = "Advance on Earnings"
+                          locked = {false}
+                          active = {false}
+                          onChange = {e => this.getStateAdvance(e)}/>
+                      </div>
+                    </div>
+
+                    <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                    <SingleDropDown
+                        ref={this.pubTypeRef}
+                        options={pubDealOptions}
+                        onChange = {e => this.getStatePubDeal(e)}
+                    />
+                  </div>
+
+                  <div>
+                    <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0' }}/>
+                    <SmallText text="(Select Which DSPs to include in Calculation)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey' }}/>
+                      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
+                        {this.state.providers.map((provider) =>
+                           <DspButton ref={provider.ref}
+                             key={provider.id}
+                             text={provider.name}
+                             onChange = {e => this.getButtonClick(provider.id)}
+                           />
+                        )}
+                      </div>
+                  </div>
+                </div>
+
+
+                <div style={{width: '32%', flexDirection: 'column', marginRight: '1%'}}>
+                    <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline' }}/>
+                    <div style={{alignItems: 'center'}}>
+                      <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
+                      <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
+                      <StreamSlider />
+                    </div>
+                    <div>
+                      <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+                      <SmallText text="Recoupable" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'right', color: 'grey', paddingRight: '5%' }}/>
+                      <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
+                        <NumberInput id={1} label="Recording Costs" locked={false} active={false} />
+                        <div style={{width: '28%'}}>
+                          <SwitchButton/>
+                        </div>
+                      </div>
+                      <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
+                        <NumberInput id={2} label="Marketing Costs" locked={false} active={false} />
+                        <div style={{marginLeft: '1%', width: '27%'}}>
+                          <SingleDropDown options={marketingSplitOptions}/>
+                        </div>
+                      </div>
+                      <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
+                        <NumberInput id={3} label="Distrubtion Costs" locked={false} active={false} />
+                        <div style={{width: '28%'}}>
+                          <SwitchButton/>
+                        </div>
+                      </div>
+                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <NumberInput id={4} label="Misc. Costs" locked={false} active={false} />
+                        <div style={{width: '28%'}}>
+                          <SwitchButton/>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{display: 'flex', flexDirection: 'row',justifyContent: 'center',alignItems: 'center'}}>
+                      <div style={{flexDirection: 'column'}}>
+                        <SmallText text="Total Costs:" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <SmallText text="#####" style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      </div>
+                      <RadialChart />
+                    </div>
+
+                </div>
+
+                <div style={{flexDirection: 'column', width: '35%', borderLeft: 'thin solid #b3d0ff'}}>
+                  <div>
+                    <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline' }}/>
+                    <SmallText text="You've Earned: #####" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                    <SmallText text="Total Revenue Created: #####" style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                    <SmallText text="Total Recoupable Costs: #####" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                  </div>
+                  <div>
+                    <BarChart/>
+                  </div>
+                </div>
+
             </div>
-            <div style={{display: 'flex', justifyContent:'center', margin: '1%'}}>
-              <DspButton text="Youtube (Content ID)"/> <DspButton text="Amazon Unlimited"/><DspButton text="Google Play"/>
+            <div style={{textAlign: 'right'}}>
+              <SmallText text="Created By: Nikhil Anand, Sam Vincent, Alexandre Perrin, Peter Dyson"/>
             </div>
-            <div style={{display: 'flex', justifyContent:'center', margin: '1%'}}>
-              <DspButton text="Pandora"/> <DspButton text="Amazon Music"/><DspButton text="Rhapsody"/>
-            </div>
-          </div>
-          <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-            <SmallText text="Estimated Streams" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-            <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
-            <StreamSlider />
-          </div>
-          <div>
-            <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-              <NumberInput id={1} label="Recording Costs" locked={false} active={false} />
-              <SwitchButton/>
-            </div>
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-              <NumberInput id={2} label="Marketing Costs" locked={false} active={false} />
-              <div style={{width: '8%', marginLeft: '1%'}}>
-                <SingleDropDown options={marketingSplitOptions}/>
-              </div>
-            </div>
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-              <NumberInput id={3} label="Distrubtion Costs" locked={false} active={false} />
-              <SwitchButton/>
-            </div>
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-              <NumberInput id={4} label="Misc. Costs" locked={false} active={false} />
-              <SwitchButton/>
-            </div>
-            <SmallText text="Guaranteed Income" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-              <NumberInput id={5} label="From Advance" locked={false} active={false} />
-              <SwitchButton/>
-            </div>
-          </div>
-          <div>
-            <BarChart/>
-            <RadialChart />
-            <div style={{width: '33%'}}>
-              <DealSplitSlider/>
-            </div>
-          </div>
         </div>
+
         )
-
-
     }
 
-    setInitialStates() {
-        this.setState({streamNumber: 1000000000,role: "Writer & Artist", recordDealDelected: "Royalty", publishingDealSelected: "Full/Traditional", advance: 0})
+
+
+  getRoleButton(name) {
+       console.log(name);
+       console.log(this.artistButtonRef.current.state.button);
+       console.log(this.writerButtonRef.current.state.button);
+       console.log(this.bothButtonRef.current.state.button);
+
+       if(name === "artist" && !this.artistButtonRef.current.state.button) {
+          this.handleRoleButton("artist");
+          this.writerButtonRef.current.setState({button: false});
+          this.bothButtonRef.current.setState({button: false});
+          //this.state.
+       } else if (name === "writer" && !this.writerButtonRef.current.state.button) {
+          this.handleRoleButton("writer");
+          this.artistButtonRef.current.setState({button: false});
+          this.bothButtonRef.current.setState({button: false});
+       } else if (name === "both" && !this.bothButtonRef.current.state.button) {
+          this.handleRoleButton("both");
+          this.writerButtonRef.current.setState({button: false});
+          this.artistButtonRef.current.setState({button: false});
+       }
+  }
+
+  getButtonClick(id) {
+    //console.log("clicked: " + id);
+    //console.log(this.state.providers[id].ref.current.state);
+    if(this.state.providers[id].ref.current.state.button != null && this.state.providers[id].ref.current.state.button != this.state.providers[id].includeInCalculations) {
+      this.toggleMe(id);
     }
 
-    changeStreams(e) {
-        console.log("changed streams to: " + e.target.value);
-        this.setState({streamNumber: e.target.value});
-    }
+  }
 
-    setSliderValue(val) {
-        this.setState( {sliderValue: val})
+  getStateCosts() {
+    console.log(this.costsRef.current.state)
+    if(this.costsRef.current.state.value != "" && parseInt(this.costsRef.current.state.value) != this.state.costs) {
+      const e = parseInt(this.costsRef.current.state.value);
+      this.updateCosts(e);
     }
-    updateSlider(e) {
-        console.log(e.target.value)
-        //val = document.getElementById("splitSlider").value()
-        this.setState( {sliderValue: e.target.value})
-    }
+  }
 
-    buildPublishingDealSelect() {
-        let fullTrad = {
-            id: 0,
-            name: "Full/Traditional"
+  getStateAdvance() {
+    console.log(this.advanceRef.current.state)
+    if(this.advanceRef.current.state.value != "" && parseInt(this.advanceRef.current.state.value) != this.state.advance) {
+        const e = parseInt(this.advanceRef.current.state.value);
+        this.updateAdvance(e);
+    }
+  }
+
+  getStatePubDeal() {
+    //console.log("getting state rec deal");
+    if(this.pubTypeRef.current.state.selectedOption != null && this.pubTypeRef.current.state.selectedOption.value != this.state.publishingDealSelected) {
+      //console.log(this.dealTypeRef.current.state.selectedOption.value);
+      const e = this.pubTypeRef.current.state.selectedOption.value;
+      this.handlePublishingDealSelect(e);
+    }
+    //const node = this.dealTypeRef.current;
+    //console.log("Node: " + node);
+  }
+
+  getStateRecDeal() {
+    //console.log("getting state rec deal");
+    if(this.dealTypeRef.current.state.selectedOption != null && this.dealTypeRef.current.state.selectedOption.value != this.state.recordDealSelected) {
+      //console.log(this.dealTypeRef.current.state.selectedOption.value);
+      const e = this.dealTypeRef.current.state.selectedOption.value;
+      this.handleRecDealSelect(e);
+    }
+    //const node = this.dealTypeRef.current;
+    //console.log("Node: " + node);
+  }
+
+  testMap() {
+    this.state.providers.map(provider => console.log(provider.name));
+    //this.state.providers.map(provider => ce('tr', null, ce('td', null, ce('text', null, provider.name))), ce('tr', null, ce('td', null, ce('input', {type: 'checkbox', checked: provider.includeInCalculations, onClick: e => this.toggleMe(provider.id)}))))
+  }
+
+  setInitialStates() {
+
+    this.setState({streamNumber: 1000000000,role: "Writer & Artist", recordDealSelected: "Royalty", publishingDealSelected: "Full/Traditional", advance: 0, costs: 0, grossRev: 0, publisherShare: 0, writerEarnings: 0, totalEarnings: 0});
+
+    console.log(this.state.providers)
+    this.calculate();
+  }
+
+  changeStreams(e) {
+      console.log("changed streams to: " + e.target.value);
+      this.setState({streamNumber: e.target.value});
+      this.calculate();
+  }
+
+  updateAdvance(e) {
+    console.log("changed advance to: " + e);
+    this.setState({advance: e});
+    this.calculate();
+  }
+
+  updateCosts(e) {
+      console.log("changed costs to: " + e);
+      this.setState({costs: e});
+      this.calculate();
+  }
+
+  setSliderValue(val) {
+      this.setState( {sliderValue: val});
+      this.calculate();
+  }
+
+  updateSlider(e) {
+      console.log(e.target.value)
+      //val = document.getElementById("splitSlider").value()
+      this.setState( {sliderValue: e.target.value})
+      this.calculate();
+  }
+
+  buildPublishingDealSelect() {
+      let fullTrad = {
+          id: 0,
+          name: "Full/Traditional"
+      }
+      let coPublishing = {
+          id: 1,
+          name: "Co-Publishing"
+      }
+      let adminDeal = {
+          id: 2,
+          name: "Admin Deal"
+      }
+      let noDeal = {
+          id: 3,
+          name: "No Deal"
+      }
+      let deals = [fullTrad, coPublishing, adminDeal, noDeal]
+      this.setState( {publishDeal: deals})
+  }
+
+  handlePublishingDealSelect(e) {
+      console.log(e);
+      this.setState({publishingDealSelected: e});
+      this.calculate();
+  }
+
+  handleRoleButton(which) {
+      console.log(which);
+      this.setState({role: which})
+      this.calculate();
+  }
+
+ // handleRecDealSelect(e)
+
+  handleRecDealSelect(e) {
+      console.log("selecting Roles");
+      console.log(e);
+      if(e === "royalty") {
+        this.setState({sliderValue: 20});
+      } else if (e === "netProfit") {
+        this.setState({sliderValue: 50});
+      } else if (e === "distributionPercent") {
+        this.setState({sliderValue: 70});
+      } else if (e === "labelServices") {
+        this.setState({sliderValue: 80});
+      }
+      //document.getElementById("splitSlider").value = this.state.sliderValue;
+      //console.log(this.myRef.current);
+      //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
+      console.log("sliderValue: " + this.state.sliderValue);
+      this.setState({recordDealSelected: e})
+      this.calculate();
+  }
+
+  buildRecordDealSelect() {
+      //console.log("Roles!");
+      let royalty = {
+          id: 0,
+          name: "Royalty"
+      };
+      let netProfit = {
+          id: 1,
+          name: "Net Profit"
+      };
+      let distributionPercent = {
+          id: 2,
+          name: "Distribution Percent"
+      };
+      let labelServices = {
+          id: 3,
+          name: "Label Services"
+      }
+
+      let rls = [royalty, netProfit, distributionPercent, labelServices];
+      this.setState( {recordDeal: rls} );
+  }
+
+  toggleMe(index) {
+    this.state.providers[index].includeInCalculations = !this.state.providers[index].includeInCalculations;
+    //console.log(dsps[index].name);
+    //console.log(dsps[index].includeInCalculations);
+    this.calculate();
+  }
+
+  /// MATH STUFF /////
+  calculate() {
+      this.getPublisherShare();
+
+      console.log("calculating");
+      let artistShare;
+      let labelShare;
+      // Why are there double semi-colons?
+                 //prob a typo
+      let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costs);
+      //console.log(totalMoneyToRecoupe)
+      let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
+      //console.log("grossRevenue: " + grossRevenue)
+      //checkDSPs();
+      //console.log(estStreams.value * avgPayout);
+      //console.log(estStreams.value * weightedAverageOfSelected());
+      if (this.state.recordDealSelected === "royalty") {
+          // Artist Split
+          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
+            console.log("unrecouped");
+            artistShare = 0;
+          } else {
+            artistShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
+          }
+          labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
+
+      } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "Distribution Fee") {
+          //net profit deals are generally guaranteed 50/50, distribution are generally 70/30 artist/label
+          let profit = (grossRevenue - this.state.costs);
+          // Artist Split
+          if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
+            console.log("unrecouped");
+            artistShare = 0;
+          } else {
+            artistShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
+          }
+          // Label Split Net Profit, Distributions
+          if(this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent") {
+              if(profit < 0){
+                  labelShare = 0;
+              } else {
+                  labelShare = (profit * (1-(parseFloat(this.state.sliderValue)/100)));
+              }
+          } else labelShare = grossRevenue - artistShare;
+
+          /* Nik Label Share for Net Profit, %Distribution Deals
+          if(profit < 0){
+            labelShare = 0;
+          } else {
+            labelShare = (profit * (1-(parseFloat(artistDeal.value)/100)));
+          }
+          */
+
+      } else if (this.state.recordDealSelected === "labelServices") {
+          // Artist Split
+          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
+            console.log("unrecouped");
+            artistShare = 0;
+          } else {
+            artistShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
+          }
+          labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costs;//extra menu items would be factored into costs
+      }
+
+      console.log("grossRevenue: " + grossRevenue)
+      console.log("totRecoupe: " + totalMoneyToRecoupe)
+      console.log("writerEarnings: " + artistShare)
+      console.log("publisherShare: " + labelShare)
+
+      this.setState({grossRev: grossRevenue, totRecoupe: totalMoneyToRecoupe, writerEarnings: artistShare, publisherShare: labelShare});
+
+      this.getTotalEarnings(artistShare);
+
+  }
+
+  getPublisherShare() {
+      //console.log("avgPubPayout: " + avgPubPayout)
+
+      let pubGrossRevenue = avgPubPayout * this.state.streamNumber;
+      let pubPerformanceRevenue = pubGrossRevenue * .5;
+      let pubMechanicalRevenue = pubGrossRevenue * .5;
+      let pubPROAdminFee = pubPerformanceRevenue * .165;
+      let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
+      let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
+
+      let publisherPercentage;
+
+      if(this.state.publishingDealSelected === "Full/Traditional") {
+          publisherPercentage = 1.0;
+          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
+          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+      } else if(this.state.publishingDealSelected === "Co-Publishing") {
+          publisherPercentage = 0.5;
+          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
+          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+      } else if(this.state.publishingDealSelected === "Admin Deal") {
+          publisherPercentage = 0.1;
+          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
+          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+      } else if(this.state.publishingDealSelected === "No Deal") {
+          publisherPercentage = 0.0;
+          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
+          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+      }
+  }
+
+  weightedAverageOfSelected() {
+
+      let sum = 0.0;
+      for(let i=0; i < this.state.providers.length; i++) {
+        if(this.state.providers[i].includeInCalculations) {
+              sum += (this.state.providers[i].payoutPerStream * this.state.providers[i].marketShareStreams)
+          }
+      }
+      console.log(sum)
+      let sumOfWeights = 0.0;
+      for(let i=0;i < this.state.providers.length; i++) {
+        if(this.state.providers[i].includeInCalculations) {
+          sumOfWeights += this.state.providers[i].marketShareStreams
         }
-        let coPublishing = {
-            id: 1,
-            name: "Co-Publishing"
-        }
-        let adminDeal = {
-            id: 2,
-            name: "Admin Deal"
-        }
-        let noDeal = {
-            id: 3,
-            name: "No Deal"
-        }
-        let deals = [fullTrad, coPublishing, adminDeal, noDeal]
-        this.setState( {publishDeal: deals})
-    }
+      }
+      if(sumOfWeights <= 0.0) return 0.0
+      //console.log(sum)
+      console.log(sum/sumOfWeights);
+      return sum/sumOfWeights;
+  }
 
-    handlePublishingDealSelect(e) {
-        console.log(e.target.value);
-        this.setState({publishingDealSelected: e.target.value})
-    }
+  getTotalEarnings(artistShare) {
+      if(this.state.role === "both") {
+          this.setState({totalEarnings: artistShare + parseFloat(this.state.writerEarnings)});
+      } else if(this.state.role === "artist") {
+          this.setState({totalEarnings: artistShare});
+      } else if(this.state.role === "writer") {
+          this.setState({totalEarnings: this.state.writerEarnings});
+      }
+  }
 
 
-    handleRoleButton(which) {
-        console.log(which);
-        this.setState({role: which})
-    }
-
-   // handleRecDealSelect(e)
-
-    handleRecDealSelect(e) {
-        //console.log("selecting Roles");
-        //console.log(e.target.value);
-        this.setState({recordDealSelected: e.target.value})
-    }
-
-    buildRecordDealSelect() {
-        //console.log("Roles!");
-        let royalty = {
-            id: 0,
-            name: "Royalty"
-        };
-        let netProfit = {
-            id: 1,
-            name: "Net Profit"
-        };
-        let distributionPercent = {
-            id: 2,
-            name: "Distribution Percent"
-        };
-        let labelServices = {
-            id: 3,
-            name: "Label Services"
-        }
-
-        let rls = [royalty, netProfit, distributionPercent, labelServices];
-        this.setState( {recordDeal: rls} );
-    }
 }
 
 

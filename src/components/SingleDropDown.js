@@ -1,23 +1,6 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-
-{/*
-  const labelDealOptions = [
-  { value: 'royalty', label: 'Royalty' },
-  { value: 'netProfit', label: 'Net Profit' },
-  { value: 'distributionPercent', label: 'Distribution (%)' },
-  { value: 'distributionFee', label: 'Distribution (fee)' },
-  { value: 'labelServices', label: 'Label Services' }
-]
-
-const pubDealOptions = [
-  { value: 'FullTraditional', label: 'Full/Traditional' },
-  { value: 'co-publising', label: 'Co-publising' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'noDeal', label: 'No Deal' }
-]
-*/}
-
+import styled from "styled-components";
 
 class SingleDropDown extends React.Component {
 
@@ -37,6 +20,7 @@ class SingleDropDown extends React.Component {
       this.props.onChange(this.state);
     }
   }
+
 
   render() {
     const { selectedOption } = this.state;

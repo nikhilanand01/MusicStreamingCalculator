@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
-import TextButton from './components/TextButton.js';
 import TabGroup from './components/ButtonGroup.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import NumberInput from './components/NumberInput.js';
@@ -148,7 +147,7 @@ class CalcPage extends React.Component {
         this.artistButtonRef = React.createRef();
         this.writerButtonRef = React.createRef();
         this.bothButtonRef = React.createRef();
-        
+
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal, others],
@@ -188,7 +187,7 @@ class CalcPage extends React.Component {
       return (
            <div>
               <h2>Welcome to the revenue calculator</h2>
-              <input 
+              <input
                 type = "text"
                 placeholder = "Enter Est Streams"
                 onChange = {e => this.changeStreams(e)}
@@ -214,7 +213,7 @@ class CalcPage extends React.Component {
               <br />
               <SmallText text="Record Deal Type: "/>
               <SingleDropDown ref={this.dealTypeRef}
-                  
+
                   options={labelDealOptions}
                   onChange = {e => this.getStateRecDeal(e)}
               />
@@ -230,7 +229,7 @@ class CalcPage extends React.Component {
               <br />
               <SmallText text="Guaranteed Income: "/>
               <NumberInput ref={this.advanceRef}
-                id= {"numInput"} 
+                id= {"numInput"}
                 label = "From Advance"
                 locked = {false}
                 active = {false}
@@ -238,7 +237,7 @@ class CalcPage extends React.Component {
               />
               <br />
               <SmallText text="Costs: "/>
-              <NumberInput ref={this.costsRef} 
+              <NumberInput ref={this.costsRef}
                 id = {"costInput"}
                 label = "Costs"
                 locked = {false}
@@ -302,7 +301,7 @@ class CalcPage extends React.Component {
             ce('br'),
             ce('text', null, 'DSPs'),
             ce('br'),
-            ce('table', {id: 'dspTable'}, 
+            ce('table', {id: 'dspTable'},
               ce('thead', null, ce('tr', null, ce('th', null, "Platform"), ce('th', null, "Include"))),
               ce('tbody', null, this.state.providers.map(provider => ce('tr', null, ce('td', null, ce('input', {placeholder: provider.name})), ce('td', null, ce('input', {type: 'checkbox', checked: provider.includeInCalculations, onChange: e => this.toggleMe(provider.id)})))))
             ),
@@ -327,7 +326,7 @@ class CalcPage extends React.Component {
             ce('text', null, 'TOTAL EARNINGS: '),
             ce('input', {value: this.state.totalEarnings}),
             ce('br')
-            
+
         )-->*/
 
     }
@@ -436,7 +435,7 @@ class CalcPage extends React.Component {
         this.calculate();
     }
 
-    
+
 
     updateSlider(e) {
         console.log(e.target.value)

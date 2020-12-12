@@ -101,7 +101,7 @@ export class StreamSlider extends Component {
     } = this
 
     return (
-      <div style={{ height: 120, width: '40%' }}>
+      <div style={{ height: 70, width: '85%' }}>
         <Slider
           rootStyle={sliderStyle}
           domain={domain}

@@ -4,7 +4,7 @@ import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider'
 const sliderStyle = {
   position: 'relative',
   width: '100%',
-  height: 80,
+  // height: 80,
   // touchAction: 'none',
 }
 
@@ -15,6 +15,7 @@ const railStyle = {
   marginTop: 35,
   borderRadius: 5,
   backgroundColor: '#d5eddc',
+  zIndex: 0
 }
 
 const domain = [0, 100]
@@ -43,7 +44,7 @@ export function Handle({
       }}
       {...getHandleProps(id)}
     >
-      <div style={{fontSize: 11, marginTop: -35 }}>
+      <div style={{fontSize: 11, marginTop: 35 }}>
         {value}
       </div>
     </div>
@@ -133,7 +134,7 @@ export class DealSplitSlider extends Component {
     } = this
 
     return (
-      <div style={{ height: 120, width: '100%' }}>
+      <div style={{ height: 70, width: '100%' }}>
         <Slider
           rootStyle={sliderStyle}
           domain={domain}
