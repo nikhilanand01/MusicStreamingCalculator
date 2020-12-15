@@ -22,8 +22,7 @@ const Tab = styled.button`
   `}
 `;
 
-
-function TabGroup({types}) {
+function TabGroupTwo({types}) {
   const [active, setActive] = useState(types[0]);
   return (
       <div>
@@ -41,14 +40,11 @@ function TabGroup({types}) {
   );
 }
 
-const types = ["Recording Artist Only", "Writer Only", "Both"]
 
-
-export default function App({types}) {
+export default function Child({types}) {
   return (
-      <TabGroup
+      <TabGroupTwo
         types={types}
-        />
-
+      />
   );
 }
