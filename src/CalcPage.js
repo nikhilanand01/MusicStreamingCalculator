@@ -43,7 +43,7 @@ let recArtist = {
   name: "Recording Artist Only",
   id: "artist",
   ref: React.createRef(),
-  selected: true
+  selected: false
 }
 let recWriter = {
   name: "Writer Only",
@@ -55,7 +55,7 @@ let recBoth = {
   name: "Both",
   id: "both",
   ref: React.createRef(),
-  selected: false
+  selected: true
 }
 
 const roleTypes = [recArtist, recWriter, recBoth];
@@ -191,7 +191,8 @@ class CalcPage extends React.Component {
             totRecoupe: 0,
             publisherShare: 0,
             writerEarnings: 0,
-            totalEarnings: 0
+            totalEarnings: 0,
+            roleTypes: roleTypes
         };
 
     }
@@ -221,12 +222,15 @@ class CalcPage extends React.Component {
               />
               <br />
               <SmallText text="Role: "/>
-                      <TabGroupTwo //ref={this.tabsRef}
-                      types={roleTypes}
-                      //onClick = {e => console.log(e.target.value)}
-                      onChange = {e => this.getRoleTypeClick()}
-                      />
-
+              {this.state.roleTypes.map(type => (
+                <DspButton ref={type.ref}
+                  key={type.id}
+                  //active={type.selected}
+                  onChange={e => this.handleMyClick(type.id)}
+                  text={type.name}
+                >
+            </DspButton>
+          ))}
               <p> {this.state.role} </p>
               <br />
               <SmallText text="Record Deal Type: "/>
@@ -372,6 +376,43 @@ class CalcPage extends React.Component {
 
         )-->*/
 
+    }
+
+    handleMyClick(id) {
+      //console.log("clicked on " + id);
+      //console.log(this.state.roleTypes[0].ref.current.state.button);
+
+      //this.setState({role: id});
+      if(id==="artist" && this.state.roleTypes[0].selected != this.state.roleTypes[0].ref.current.state.button) {
+        this.setState({role: "artist"});
+        this.state.roleTypes[0].selected = true;
+        this.state.roleTypes[0].ref.current.setState({button: true});
+        this.state.roleTypes[1].selected = false;
+        this.state.roleTypes[1].ref.current.setState({button: false});
+        this.state.roleTypes[2].selected = false;
+        this.state.roleTypes[2].ref.current.setState({button: false});
+        this.calculate();
+      }
+      if(id==="writer" && this.state.roleTypes[1].selected != this.state.roleTypes[1].ref.current.state.button) {
+        this.setState({role: "writer"});
+        this.state.roleTypes[0].selected = false;
+        this.state.roleTypes[0].ref.current.setState({button: false});
+        this.state.roleTypes[1].selected = true;
+        this.state.roleTypes[1].ref.current.setState({button: true});
+        this.state.roleTypes[2].selected = false;
+        this.state.roleTypes[2].ref.current.setState({button: false});
+        this.calculate();
+      }
+      if(id==="both" && this.state.roleTypes[2].selected != this.state.roleTypes[2].ref.current.state.button) {
+        this.setState({role: "both"});
+        this.state.roleTypes[0].selected = false;
+        this.state.roleTypes[0].ref.current.setState({button: false});
+        this.state.roleTypes[1].selected = false;
+        this.state.roleTypes[1].ref.current.setState({button: false});
+        this.state.roleTypes[2].selected = true;
+        this.state.roleTypes[2].ref.current.setState({button: true});
+        this.calculate();
+      }
     }
 
     getRoleTypeClick() {
