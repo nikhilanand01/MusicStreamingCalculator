@@ -28,26 +28,29 @@ function TabGroup({types}) {
   return (
       <div>
         {types.map(type => (
-          <Tab
-            key={type}
-            active={active === type}
+          <Tab ref={type.ref}
+            key={type.id}
+            active={active === type.selected}
             onClick={() => {setActive(type)}}
           >
 
-            {type}
+            {type.name}
           </Tab>
         ))}
       </div>
   );
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 6908490a8163adbdfc158beb9b2950b29d7fc380
 export default function App({types}) {
   return (
       <TabGroup
         types={types}
-        />
+      />
 
   );
 }

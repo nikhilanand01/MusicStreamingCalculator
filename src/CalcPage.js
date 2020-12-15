@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
 import SmallText from './components/SmallText.js';
-import TabGroup from './components/ButtonGroup.js';
+//import TabGroup from './components/ButtonGroup.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import NumberInput from './components/NumberInput.js';
 import DspButton from './components/DspButton.js';
-import DealSplitSlider from './components/DealSplitSlider.js'
-
+import DealSplitSlider from './components/DealSplitSlider.js';
+import TabGroupTwo from './components/ButtonGroupTest.js';
 
 
 
@@ -39,7 +39,26 @@ const labelServicesOptions = [
   { value: 'splitPayments', label: 'Split Payments' },
 ]
 
-const roleTypes = ["Recording Artist Only", "Writer Only", "Both"];
+let recArtist = {
+  name: "Recording Artist Only",
+  id: "artist",
+  ref: React.createRef(),
+  selected: true
+}
+let recWriter = {
+  name: "Writer Only",
+  id: "writer",
+  ref: React.createRef(),
+  selected: false
+}
+let recBoth = {
+  name: "Both",
+  id: "both",
+  ref: React.createRef(),
+  selected: false
+}
+
+const roleTypes = [recArtist, recWriter, recBoth];
 
 const ce = React.createElement;
 
@@ -138,6 +157,8 @@ const avgPubPayout = 0.0007174565191
             includeInCalculations: true
         };
 
+
+
 //console.log(act)
 
 class CalcPage extends React.Component {
@@ -200,9 +221,10 @@ class CalcPage extends React.Component {
               />
               <br />
               <SmallText text="Role: "/>
-                      <TabGroup ref={this.tabsRef}
+                      <TabGroupTwo //ref={this.tabsRef}
                       types={roleTypes}
-                      onChange = {e => console.log(e.target.value)}
+                      //onClick = {e => console.log(e.target.value)}
+                      onChange = {e => this.getRoleTypeClick()}
                       />
 
               <p> {this.state.role} </p>
@@ -259,7 +281,27 @@ class CalcPage extends React.Component {
                 )}
               </div>
               <br />
-              <SmallText text="Total Revenue: "/>
+              <SmallText text="Gross Revenue: "/>
+              <input
+                value = {this.state.grossRev}
+              />
+              <SmallText text="Total Earnings"/>
+              <input
+                value = {this.state.totalEarnings}
+              />
+              <SmallText text="total money needed to recoupe"/>
+              <input
+                value = {"0"}
+                />
+              <SmallText text="Label Earnings"/>
+              <input
+                value = {this.state.publisherShare}
+              />
+              <SmallText text="Writer Earnings"/>
+              <input
+                value = {this.state.writerEarnings}
+              />
+              <SmallText text="Unrecouped: "/>
 
            </div>
         );
@@ -330,6 +372,10 @@ class CalcPage extends React.Component {
 
         )-->*/
 
+    }
+
+    getRoleTypeClick() {
+      console.log("<<<<<<<<<<<" + roleTypes);
     }
 
     changeSliderVal(val) {
