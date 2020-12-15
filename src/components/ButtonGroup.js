@@ -41,7 +41,6 @@ function TabGroup({types}) {
   );
 }
 
-const types = ["Recording Artist Only", "Writer Only", "Both"]
 
 
 export default function App({types}) {

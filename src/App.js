@@ -8,7 +8,8 @@ import TestCompPage from './TestCompPage.js';
 function App() {
   return (
     <div className="App">
-      <CalcPage/>
+      {/*<CalcPage/>*/}
+      <TestCompPage/>
     </div>
   );
 }

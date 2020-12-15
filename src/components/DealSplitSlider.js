@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider'
+import React, { Component } from 'react';
+import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
+import SmallText from './SmallText.js';
 
 const sliderStyle = {
   position: 'relative',
@@ -70,49 +71,6 @@ function Track({ source, target, getTrackProps }) {
   )
 }
 
-{/*function Tick({ tick, count }) {
-  return (
-    <div>
-      <div
-        style={{
-          position: 'absolute',
-          marginTop: 52,
-          marginLeft: -0.5,
-          width: 1,
-          height: 8,
-          backgroundColor: 'silver',
-          left: `${tick.percent}%`,
-        }}
-      />
-
-      <div
-        style={{
-          position: 'absolute',
-          marginTop: 60,
-          fontSize: 10,
-          textAlign: 'center',
-          marginLeft: `${-(100 / count) / 2}%`,
-          width: `${100 / count}%`,
-          left: `${tick.percent}%`,
-        }}
-      >
-        {tick.value}
-      </div>
-    </div>
-  )
-}
-
-// MOVE TO RENDER IF WANTED
-<Ticks count={1}>
-  {({ ticks }) => (
-    <div className="slider-ticks">
-      {ticks.map(tick => (
-        <Tick key={tick.id} tick={tick} count={ticks.length} />
-      ))}
-    </div>
-  )}
-</Ticks> */}
-
 
 export class DealSplitSlider extends Component {
   state = {
@@ -136,12 +94,13 @@ export class DealSplitSlider extends Component {
 
   render() {
     const {
-      state: { values, update },
+      state: { values, update},
     } = this
 
     return (
-      <div style={{ height: 70, width: '100%' }}>
-        <Slider
+      <div>
+        <div style={{ height: 70, width: '100%' }}>
+          <Slider
           rootStyle={sliderStyle}
           domain={domain}
           onUpdate={this.onUpdate}
@@ -149,38 +108,40 @@ export class DealSplitSlider extends Component {
           values={values}
           mode={1}
           step={1}
-        >
-        <Rail>
-          {({ getRailProps }) => (<div style={railStyle} {...getRailProps()} />)}
-        </Rail>
+          >
+          <Rail>
+            {({ getRailProps }) => (<div style={railStyle} {...getRailProps()} />)}
+          </Rail>
           <Handles>
             {({ handles, getHandleProps }) => (
-              <div className="slider-handles">
-                {handles.map(handle => (
-                  <Handle
-                    key={handle.id}
-                    handle={handle}
-                    getHandleProps={getHandleProps}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="slider-handles">
+              {handles.map(handle => (
+              <Handle
+              key={handle.id}
+              handle={handle}
+              getHandleProps={getHandleProps}
+              />
+              ))}
+            </div>)}
           </Handles>
           <Tracks right={false}>
             {({ tracks, getTrackProps }) => (
               <div className="slider-tracks">
                 {tracks.map(({ id, source, target }) => (
-                  <Track
-                    key={id}
-                    source={source}
-                    target={target}
-                    getTrackProps={getTrackProps}
-                  />
-                ))}
-              </div>
-            )}
+                <Track
+                key={id}
+                source={source}
+                target={target}
+                getTrackProps={getTrackProps}
+                />))}
+              </div>)}
           </Tracks>
-        </Slider>
+          </Slider>
+        </div>
+        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '0 2% 0'}}>
+          <SmallText text={`Artist:  ${parseInt(values)}`} style={{textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09'}}/>
+          <SmallText text={`${100-parseInt(values)} :Label`} style={{textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09',}}/>
+        </div>
       </div>
     )
   }

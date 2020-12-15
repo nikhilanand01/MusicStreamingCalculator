@@ -167,6 +167,7 @@ class TestCompPage extends React.Component{
             publisherShare: 0,
             writerEarnings: 0,
             totalEarnings: 0,
+            recoupStreamsNeeds: 0,
         };
 
     }
@@ -282,7 +283,7 @@ class TestCompPage extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row',justifyContent: 'center',alignItems: 'center'}}>
                       <div style={{flexDirection: 'column'}}>
                         <SmallText text="Total Costs:" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                        <SmallText text="#####" style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <SmallText text={`$${this.state.costs.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       </div>
                       <RadialChart />
                     </div>
@@ -294,9 +295,9 @@ class TestCompPage extends React.Component{
                     <div>
                       <SmallText text="(3. Here are your results!)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
-                      <SmallText text="You've Earned: #####" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                      <SmallText text="Total Revenue Created: #####" style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                      <SmallText text="Total Recoupable Costs: #####" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      <SmallText text={`You've Earned: $${this.state.totalEarnings}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      <SmallText text={`Total Revenue Generated: $${this.state.grossRev.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      <SmallText text={`Total Recoupable Costs: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                     </div>
                     <div style={{borderBottom: 'thin solid #b3d0ff'}}>
                       <BarChart/>
@@ -307,13 +308,13 @@ class TestCompPage extends React.Component{
                     <SmallText text="(If you are trying to achieve a certain goal. Select it here)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey'}}/>
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                       <div style={{flexDirection: 'column', marginRight: '5%'}}>
-                        <DspButton text="Auto Recoup" />
-                        <SmallText text="Streams Needed: #####" style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <SmallText text={`Streams Needed: ${this.state.recoupStreamsNeeds.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       </div>
                       <div style={{flexDirection: 'column'}}>
-                        <DspButton text="Money Goal" />
-                        <NumberInput id={6} label="I want to Make...." locked={false} active={false} />
-                        <SmallText text="Streams Needed: #####" style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <NumberInput id={6} label="I want to Make...." locked={false} active={false}/>
+                        <SmallText text={`Streams Needed: ${this.state.recoupStreamsNeeds.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       </div>
                     </div>
                   </div>
@@ -594,7 +595,11 @@ class TestCompPage extends React.Component{
       console.log("writerEarnings: " + artistShare)
       console.log("publisherShare: " + labelShare)
 
-      this.setState({grossRev: grossRevenue, totRecoupe: totalMoneyToRecoupe, writerEarnings: artistShare, publisherShare: labelShare});
+      this.setState({
+        grossRev: grossRevenue,
+        totRecoupe: totalMoneyToRecoupe,
+        writerEarnings: artistShare,
+        publisherShare: labelShare});
 
       this.getTotalEarnings(artistShare);
 
@@ -661,6 +666,17 @@ class TestCompPage extends React.Component{
           this.setState({totalEarnings: this.state.writerEarnings});
       }
   }
+
+  autoRecoup(){
+    let recoupStreamsNeeds;
+
+    if(this.state.recordDealSelected === "royalty" || this.state.recordDealSelected === "labelServices"){
+	     recoupStreamsNeeds = (this.state.totRecoupe/(parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
+     } else {
+       recoupStreamsNeeds = ((this.state.costs + this.state.advance) / (parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
+     }
+  }
+
 
 
 }
