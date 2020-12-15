@@ -194,21 +194,7 @@ class CalcPage extends React.Component {
               />
               <br />
               <SmallText text="Role: "/>
-              <DspButton ref={this.artistButtonRef}
-                text = "Artist"
-                key="artButton"
-                onChange={e => this.getRoleButton("artist")}
-              />
-              <DspButton ref={this.writerButtonRef}
-                text = "Writer"
-                key="writeButton"
-                onChange={e => this.getRoleButton("writer")}
-              />
-              <DspButton ref={this.bothButtonRef}
-                text = "Both"
-                key="bothButton"
-                onChange={e => this.getRoleButton("both")}
-              />
+
               <p> {this.state.role} </p>
               <br />
               <SmallText text="Record Deal Type: "/>
@@ -260,6 +246,9 @@ class CalcPage extends React.Component {
                    />
                 )}
               </div>
+              <br />
+              <SmallText text="Total Revenue: "/>
+
            </div>
         );
 
@@ -337,25 +326,27 @@ class CalcPage extends React.Component {
       */
     }
     getRoleButton(name) {
+
          console.log(name);
          console.log(this.artistButtonRef.current.state.button);
          console.log(this.writerButtonRef.current.state.button);
          console.log(this.bothButtonRef.current.state.button);
 
-         if(name === "artist" && !this.artistButtonRef.current.state.button) {
-            this.handleRoleButton("artist");
-            this.writerButtonRef.current.setState({button: false});
-            this.bothButtonRef.current.setState({button: false});
-            //this.state.
-         } else if (name === "writer" && !this.writerButtonRef.current.state.button) {
-            this.handleRoleButton("writer");
-            this.artistButtonRef.current.setState({button: false});
-            this.bothButtonRef.current.setState({button: false});
-         } else if (name === "both" && !this.bothButtonRef.current.state.button) {
-            this.handleRoleButton("both");
-            this.writerButtonRef.current.setState({button: false});
-            this.artistButtonRef.current.setState({button: false});
+         if(name==="artist" && this.artistButtonRef.current.state.button) {
+          //this.setState({role: "artist"});
+          this.writerButtonRef.current.setState({button: false});
+          this.bothButtonRef.current.setState({button: false});
+         } else if (name=="writer" && this.writerButtonRef.current.state.button) {
+          //this.handleRoleButton("writer");
+          this.artistButtonRef.current.setState({button:false});
+          this.bothButtonRef.current.setState({button:false});
+         } else if (name=="both" && this.bothButtonRef.current.state.button) {
+          //this.handleRoleButton("both");
+          this.artistButtonRef.current.setState({button:false});
+          this.writerButtonRef.current.setState({button:false});
          }
+       
+
     }
     getButtonClick(id) {
       //console.log("clicked: " + id);
