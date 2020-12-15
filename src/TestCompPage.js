@@ -150,6 +150,7 @@ class TestCompPage extends React.Component{
         this.artistButtonRef = React.createRef();
         this.writerButtonRef = React.createRef();
         this.bothButtonRef = React.createRef();
+        this.moneyGoalInputRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -168,6 +169,20 @@ class TestCompPage extends React.Component{
             writerEarnings: 0,
             totalEarnings: 0,
             recoupStreamsNeeds: 0,
+            moneyGoalInput: 0,
+            moneyGoalStreamsNeeded: 0,
+            seriesBar: [{
+              name: 'From Recording',
+              data: [16255, 100558, 0]
+            }, {
+              name: 'From Writing',
+              data: [17371, 3191, 3700]
+            },{
+              name: 'From Advance',
+              data: [10000, 0, 0]
+            }
+          ],
+          seriesRadial: [90]
         };
 
     }
@@ -285,7 +300,7 @@ class TestCompPage extends React.Component{
                         <SmallText text="Total Costs:" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                         <SmallText text={`$${this.state.costs.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       </div>
-                      <RadialChart />
+                      <RadialChart series={this.state.seriesRadial}/>
                     </div>
 
                 </div>
@@ -300,7 +315,7 @@ class TestCompPage extends React.Component{
                       <SmallText text={`Total Recoupable Costs: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                     </div>
                     <div style={{borderBottom: 'thin solid #b3d0ff'}}>
-                      <BarChart/>
+                      <BarChart series={this.state.seriesBar}/>
                     </div>
                   </div>
                   <div>
@@ -313,8 +328,14 @@ class TestCompPage extends React.Component{
                       </div>
                       <div style={{flexDirection: 'column'}}>
                         <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                        <NumberInput id={6} label="I want to Make...." locked={false} active={false}/>
-                        <SmallText text={`Streams Needed: ${this.state.recoupStreamsNeeds.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <NumberInput
+                          id= {"moneyGoalInput"}
+                          ref = {this.moneyGoalInputRef}
+                          label="I want to Make...."
+                          locked={false}
+                          active={false}
+                          onChange = {e => this.getStateMoneyGoalInput(e)}/>
+                        <SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       </div>
                     </div>
                   </div>
@@ -677,6 +698,33 @@ class TestCompPage extends React.Component{
      }
   }
 
+  getStateMoneyGoalInput(){
+    console.log(this.moneyGoalInputRef.current.state);
+    if(this.moneyGoalInputRef.current.state.value != "" && parseInt(this.moneyGoalInputRef.current.state.value) != this.state.moneyGoalInput)
+      {
+       const e = parseInt(this.moneyGoalInputRef.current.state.value);
+       this.updateMoneyGoal(e);
+      }
+  }
+
+  updateMoneyGoal(e) {
+    console.log("changed Money Goals to: " + e);
+    console.log("*********" + this.state.moneyGoalStreamsNeeded)
+    this.setState({moneyGoalInput: e});
+    this.calculate();
+  }
+
+  moneyGoal(){
+    let moneyGoalInput = parseFloat(this.state.moneyGoalInput);
+    let moneyGoalStreamsNeeded;
+
+    if(this.state.recordDealSelected === "royalty" || this.state.recordDealSelected === "labelServices"){
+      moneyGoalStreamsNeeded = (moneyGoalInput - parseFloat(this.state.advance) + (this.state.totRecoupe)) / ((parseFloat(this.state.sliderValue)/100) * this.weightedAverageOfSelected())
+    } else {
+      moneyGoalStreamsNeeded = ((moneyGoalInput / (parseFloat(this.state.sliderValue)/100)) + parseFloat(this.state.advance)) / this.weightedAverageOfSelected()
+    }
+    console.log("*********" + moneyGoalStreamsNeeded)
+  }
 
 
 }

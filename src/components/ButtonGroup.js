@@ -41,11 +41,7 @@ function TabGroup({types}) {
   );
 }
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 6908490a8163adbdfc158beb9b2950b29d7fc380
 export default function App({types}) {
   return (
       <TabGroup

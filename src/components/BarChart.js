@@ -7,18 +7,6 @@ class BarChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      series: [{
-        name: 'From Recording',
-        data: [16255, 100558, 0]
-      }, {
-        name: 'From Writing',
-        data: [17371, 3191, 3700]
-      },{
-        name: 'From Advance',
-        data: [10000, 0, 0]
-      }
-
-    ],
       options: {
         chart: {
           stacked: true,
@@ -57,7 +45,7 @@ class BarChart extends React.Component {
         <div id="chart">
           <Chart
             options={this.state.options}
-            series={this.state.series}
+            series={this.props.series}
             type="bar"
             height={400}
             width={'95%'}/>

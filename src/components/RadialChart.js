@@ -59,7 +59,6 @@ class RadialChart extends Component {
            },
            labels: ["Recouped"]
          },
-         seriesRadial: [90],
        };
     }
 
@@ -70,7 +69,7 @@ class RadialChart extends Component {
       <div id="chart-radial">
         <Chart
           options={this.state.optionsRadial}
-          series={this.state.seriesRadial}
+          series={this.props.series}
           type="radialBar"
           height={200}
           width={200}/>
