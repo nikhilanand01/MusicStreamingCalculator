@@ -42,7 +42,26 @@ const labelServicesOptions = [
   { value: 'splitPayments', label: 'Split Payments' },
 ]
 
-const roleTypes = ["Recording Artist Only", "Writer Only", "Both"];
+let recArtist = {
+  name: "Recording Artist Only",
+  id: "artist",
+  ref: React.createRef(),
+  selected: false
+}
+let recWriter = {
+  name: "Writer Only",
+  id: "writer",
+  ref: React.createRef(),
+  selected: false
+}
+let recBoth = {
+  name: "Both",
+  id: "both",
+  ref: React.createRef(),
+  selected: true
+}
+
+const roleTypes = [recArtist, recWriter, recBoth];
 
 {/* LABEL SERVICES RENDER CODE....
   <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
@@ -146,11 +165,15 @@ class TestCompPage extends React.Component{
         this.tabGroupRef = React.createRef();
         this.pubTypeRef = React.createRef();
         this.advanceRef = React.createRef();
-        this.costsRef = React.createRef();
         this.artistButtonRef = React.createRef();
         this.writerButtonRef = React.createRef();
         this.bothButtonRef = React.createRef();
         this.moneyGoalInputRef = React.createRef();
+        // this.costsTotalRef = React.createRef();
+        this.costsRecordingRef = React.createRef();
+        this.costsMarketingRef = React.createRef();
+        this.costsDistributionRef = React.createRef();
+        this.costsMiscRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -162,7 +185,6 @@ class TestCompPage extends React.Component{
             recordDealSelected: null,
             publishingDealSelected: null,
             advance: 0,
-            costs: 0,
             grossRev: 0,
             totRecoupe: 0,
             publisherShare: 0,
@@ -179,10 +201,16 @@ class TestCompPage extends React.Component{
               data: [17371, 3191, 3700]
             },{
               name: 'From Advance',
-              data: [10000, 0, 0]
+              data: [1000, 0, 0]
             }
           ],
-          seriesRadial: [90]
+          seriesRadial: [60],
+          roleTypes: roleTypes,
+          costsTotal: 0,
+          costsRecording: 0,
+          costsMarketing: 0,
+          costsDistribution: 0,
+          costsMisc: 0,
         };
 
     }
@@ -193,7 +221,6 @@ class TestCompPage extends React.Component{
         this.buildPublishingDealSelect();
         this.setSliderValue(50);
         this.testMap();
-        this.setInitialStates();
     }
 
     render() {
@@ -211,7 +238,15 @@ class TestCompPage extends React.Component{
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                      <TabGroup types={roleTypes}/>
+                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                        {this.state.roleTypes.map(type => (
+                          <DspButton ref={type.ref}
+                            key={type.id}
+                            //active={type.selected}
+                            onChange={e => this.handleMyClick(type.id)}
+                            text={type.name}
+                          />))}
+                        </div>
                     </div>
 
                   <div>
@@ -270,25 +305,49 @@ class TestCompPage extends React.Component{
                       <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0 }} />
                       <SmallText text="Recoupable" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'right', color: 'grey', paddingRight: '5%' }}/>
                       <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
-                        <NumberInput id={1} label="Recording Costs" locked={false} active={false} />
+                        <NumberInput
+                          id= {"costsRecording"}
+                          ref = {this.costsRecordingRef}
+                          label="Recording Costs"
+                          locked={false}
+                          active={false}
+                          onChange = {e => this.getStateCostsRecording(e)}/>
                         <div style={{width: '30%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
                       <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
-                        <NumberInput id={2} label="Marketing Costs" locked={false} active={false} />
+                        <NumberInput
+                          id= {"costsMarketing"}
+                          ref = {this.costsMarketingRef}
+                          label="Marketing Costs"
+                          locked={false}
+                          active={false}
+                          onChange = {e => this.getStateCostsMarketing(e)}/>
                         <div style={{marginLeft: '1%', width: '29%'}}>
                           <SingleDropDown options={marketingSplitOptions}/>
                         </div>
                       </div>
                       <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
-                        <NumberInput id={3} label="Distrubtion Costs" locked={false} active={false} />
+                        <NumberInput
+                          id= {"costsDistribution"}
+                          ref = {this.costsDistributionRef}
+                          label="Distrubtion Costs"
+                          locked={false}
+                          active={false}
+                          onChange = {e => this.getStateCostsDistribution(e)}/>
                         <div style={{width: '30%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
                       <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <NumberInput id={4} label="Misc. Costs" locked={false} active={false} />
+                        <NumberInput
+                          id= {"costsMisc"}
+                          ref = {this.costsMiscRef}
+                          label="Misc. Costs"
+                          locked={false}
+                          active={false}
+                          onChange = {e => this.getStateCostsMisc(e)}/>
                         <div style={{width: '30%'}}>
                           <SwitchButton/>
                         </div>
@@ -298,7 +357,7 @@ class TestCompPage extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row',justifyContent: 'center',alignItems: 'center'}}>
                       <div style={{flexDirection: 'column'}}>
                         <SmallText text="Total Costs:" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                        <SmallText text={`$${this.state.costs.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <SmallText text={`$${this.state.costsTotal.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       </div>
                       <RadialChart series={this.state.seriesRadial}/>
                     </div>
@@ -312,7 +371,7 @@ class TestCompPage extends React.Component{
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                       <SmallText text={`You've Earned: $${this.state.totalEarnings}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       <SmallText text={`Total Revenue Generated: $${this.state.grossRev.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                      <SmallText text={`Total Recoupable Costs: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      <SmallText text={`Total Recoupable Money: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                     </div>
                     <div style={{borderBottom: 'thin solid #b3d0ff'}}>
                       <BarChart series={this.state.seriesBar}/>
@@ -381,12 +440,87 @@ class TestCompPage extends React.Component{
 
   }
 
-  getStateCosts() {
-    console.log(this.costsRef.current.state)
-    if(this.costsRef.current.state.value != "" && parseInt(this.costsRef.current.state.value) != this.state.costs) {
-      const e = parseInt(this.costsRef.current.state.value);
-      this.updateCosts(e);
+/*
+  getStateCostsTotal() {
+    console.log(this.costsTotalRef.current.state)
+    if(this.costsTotalRef.current.state.value != "" && parseInt(this.costsTotalRef.current.state.value) != this.state.costsTotal) {
+      const e = parseInt(this.costsTotalRef.current.state.value);
+      this.updateCostsTotal(e);
     }
+  }
+
+  updateCostsTotal(e) {
+      console.log("changed TOTAL costs to: " + e);
+      this.setState({costsTotal: e});
+      this.calculate();
+  }
+
+  calcTotalCosts(){
+    let costsTotal;
+    costsTotal = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+
+    console.log("TOTAL COSTS " + costsTotal)
+
+    this.setState({
+      costsTotal: costsTotal
+    })
+  }
+*/
+
+  getStateCostsRecording() {
+    console.log(this.costsRecordingRef.current.state)
+    if(this.costsRecordingRef.current.state.value != "" && parseInt(this.costsRecordingRef.current.state.value) != this.state.costsRecording) {
+      const e = parseInt(this.costsRecordingRef.current.state.value);
+      this.updateCostsRecording(e);
+    }
+  }
+
+  updateCostsRecording(e) {
+      console.log("changed RECORDING costs to: " + e);
+      this.setState({costsRecording: e});
+      this.calculate();
+  }
+
+  getStateCostsMarketing() {
+    console.log(this.costsMarketingRef.current.state)
+    if(this.costsMarketingRef.current.state.value != "" && parseInt(this.costsMarketingRef.current.state.value) != this.state.costsMarketing) {
+      const e = parseInt(this.costsMarketingRef.current.state.value);
+      this.updateCostsMarketing(e);
+    }
+  }
+
+  updateCostsMarketing(e) {
+      console.log("changed MARKETING costs to: " + e);
+      this.setState({costsMarketing: e});
+      this.calculate();
+  }
+
+  getStateCostsDistribution() {
+    console.log(this.costsDistributionRef.current.state)
+    if(this.costsDistributionRef.current.state.value != "" && parseInt(this.costsDistributionRef.current.state.value) != this.state.costsDistribution) {
+      const e = parseInt(this.costsDistributionRef.current.state.value);
+      this.updateCostsDistribution(e);
+    }
+  }
+
+  updateCostsDistribution(e) {
+      console.log("changed DISTRIBUTION costs to: " + e);
+      this.setState({costsDistribution: e});
+      this.calculate();
+  }
+
+  getStateCostsMisc() {
+    console.log(this.costsMiscRef.current.state)
+    if(this.costsMiscRef.current.state.value != "" && parseInt(this.costsMiscRef.current.state.value) != this.state.costsMisc) {
+      const e = parseInt(this.costsMiscRef.current.state.value);
+      this.updateCostsMisc(e);
+    }
+  }
+
+  updateCostsMisc(e) {
+      console.log("changed MISC costs to: " + e);
+      this.setState({costsMisc: e});
+      this.calculate();
   }
 
   getStateAdvance() {
@@ -424,12 +558,41 @@ class TestCompPage extends React.Component{
     //this.state.providers.map(provider => ce('tr', null, ce('td', null, ce('text', null, provider.name))), ce('tr', null, ce('td', null, ce('input', {type: 'checkbox', checked: provider.includeInCalculations, onClick: e => this.toggleMe(provider.id)}))))
   }
 
-  setInitialStates() {
+  handleMyClick(id) {
+    //console.log("clicked on " + id);
+    //console.log(this.state.roleTypes[0].ref.current.state.button);
 
-    this.setState({streamNumber: 1000000000,role: "Writer & Artist", recordDealSelected: "Royalty", publishingDealSelected: "Full/Traditional", advance: 0, costs: 0, grossRev: 0, publisherShare: 0, writerEarnings: 0, totalEarnings: 0});
-
-    console.log(this.state.providers)
-    this.calculate();
+    //this.setState({role: id});
+    if(id==="artist" && this.state.roleTypes[0].selected != this.state.roleTypes[0].ref.current.state.button) {
+      this.setState({role: "artist"});
+      this.state.roleTypes[0].selected = true;
+      this.state.roleTypes[0].ref.current.setState({button: true});
+      this.state.roleTypes[1].selected = false;
+      this.state.roleTypes[1].ref.current.setState({button: false});
+      this.state.roleTypes[2].selected = false;
+      this.state.roleTypes[2].ref.current.setState({button: false});
+      this.calculate();
+    }
+    if(id==="writer" && this.state.roleTypes[1].selected != this.state.roleTypes[1].ref.current.state.button) {
+      this.setState({role: "writer"});
+      this.state.roleTypes[0].selected = false;
+      this.state.roleTypes[0].ref.current.setState({button: false});
+      this.state.roleTypes[1].selected = true;
+      this.state.roleTypes[1].ref.current.setState({button: true});
+      this.state.roleTypes[2].selected = false;
+      this.state.roleTypes[2].ref.current.setState({button: false});
+      this.calculate();
+    }
+    if(id==="both" && this.state.roleTypes[2].selected != this.state.roleTypes[2].ref.current.state.button) {
+      this.setState({role: "both"});
+      this.state.roleTypes[0].selected = false;
+      this.state.roleTypes[0].ref.current.setState({button: false});
+      this.state.roleTypes[1].selected = false;
+      this.state.roleTypes[1].ref.current.setState({button: false});
+      this.state.roleTypes[2].selected = true;
+      this.state.roleTypes[2].ref.current.setState({button: true});
+      this.calculate();
+    }
   }
 
   changeStreams(e) {
@@ -442,12 +605,6 @@ class TestCompPage extends React.Component{
     console.log("changed advance to: " + e);
     this.setState({advance: e});
     this.calculate();
-  }
-
-  updateCosts(e) {
-      console.log("changed costs to: " + e);
-      this.setState({costs: e});
-      this.calculate();
   }
 
   setSliderValue(val) {
@@ -620,7 +777,9 @@ class TestCompPage extends React.Component{
         grossRev: grossRevenue,
         totRecoupe: totalMoneyToRecoupe,
         writerEarnings: artistShare,
-        publisherShare: labelShare});
+        publisherShare: labelShare,
+        });
+
 
       this.getTotalEarnings(artistShare);
 
@@ -724,6 +883,17 @@ class TestCompPage extends React.Component{
       moneyGoalStreamsNeeded = ((moneyGoalInput / (parseFloat(this.state.sliderValue)/100)) + parseFloat(this.state.advance)) / this.weightedAverageOfSelected()
     }
     console.log("*********" + moneyGoalStreamsNeeded)
+  }
+
+  percentRecouped(artistShare){
+    let recoupPercent;
+
+    if ((artistShare / this.totRecoupe) > 1){
+      recoupPercent = 100
+    } else {
+      recoupPercent = ((artistShare / this.totRecoupe) * 100)
+      recoupPercent.toFixed(0);
+    }
   }
 
 

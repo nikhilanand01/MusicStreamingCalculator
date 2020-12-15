@@ -228,8 +228,8 @@ class CalcPage extends React.Component {
                   //active={type.selected}
                   onChange={e => this.handleMyClick(type.id)}
                   text={type.name}
-                >
-            </DspButton>
+                />
+
           ))}
               <p> {this.state.role} </p>
               <br />
@@ -457,7 +457,7 @@ class CalcPage extends React.Component {
           this.artistButtonRef.current.setState({button:false});
           this.writerButtonRef.current.setState({button:false});
          }
-       
+         
 
     }
     getButtonClick(id) {
