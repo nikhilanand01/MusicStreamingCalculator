@@ -5,6 +5,10 @@ import TabGroup from './components/ButtonGroup.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import NumberInput from './components/NumberInput.js';
 import DspButton from './components/DspButton.js';
+import DealSplitSlider from './components/DealSplitSlider.js'
+
+
+
 
 const labelDealOptions = [
   { value: 'royalty', label: 'Royalty' },
@@ -147,6 +151,8 @@ class CalcPage extends React.Component {
         this.artistButtonRef = React.createRef();
         this.writerButtonRef = React.createRef();
         this.bothButtonRef = React.createRef();
+        this.tabsRef = React.createRef();
+        this.dealSliderRef = React.createRef();
 
 
         this.state = {
@@ -194,6 +200,10 @@ class CalcPage extends React.Component {
               />
               <br />
               <SmallText text="Role: "/>
+                      <TabGroup ref={this.tabsRef}
+                      types={roleTypes}
+                      onChange = {e => console.log(e.target.value)}
+                      />
 
               <p> {this.state.role} </p>
               <br />
@@ -211,7 +221,9 @@ class CalcPage extends React.Component {
               />
               <br />
               <SmallText text="Deal Split: "/>
-
+              <DealSplitSlider ref={this.dealSliderRef}
+                  onChange = {e => this.doSliderStuff(e)}
+              />
               <br />
               <SmallText text="Guaranteed Income: "/>
               <NumberInput ref={this.advanceRef}
@@ -318,6 +330,19 @@ class CalcPage extends React.Component {
 
         )-->*/
 
+    }
+
+    changeSliderVal(val) {
+        this.dealSliderRef.current.setState({values: [val]});
+    }
+
+    doSliderStuff(e) {
+      console.log(this.dealSliderRef.current.state.values);
+      if(this.dealSliderRef.current.state.values != null && this.dealSliderRef.current.state.values[0] != this.state.sliderValue) {
+        //console.log("setting slider state to: " + this.dealSliderRef.current.state.values[0]);
+        this.setState({sliderValue: this.dealSliderRef.current.state.values[0]});
+        this.calculate();
+      }
     }
     setInitialRoleState() {
       /*this.artistButtonRef.current.setState({button: false});
@@ -476,12 +501,16 @@ class CalcPage extends React.Component {
         console.log(e);
         if(e === "royalty") {
           this.setState({sliderValue: 20});
+          this.changeSliderVal(20);
         } else if (e === "netProfit") {
           this.setState({sliderValue: 50});
+          this.changeSliderVal(50);
         } else if (e === "distributionPercent") {
           this.setState({sliderValue: 70});
+          this.changeSliderVal(70);
         } else if (e === "labelServices") {
           this.setState({sliderValue: 80});
+          this.changeSliderVal(80);
         }
         //document.getElementById("splitSlider").value = this.state.sliderValue;
         //console.log(this.myRef.current);
