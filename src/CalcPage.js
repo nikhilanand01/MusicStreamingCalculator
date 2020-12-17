@@ -457,7 +457,7 @@ class CalcPage extends React.Component {
           this.artistButtonRef.current.setState({button:false});
           this.writerButtonRef.current.setState({button:false});
          }
-         
+
 
     }
     getButtonClick(id) {
@@ -595,6 +595,9 @@ class CalcPage extends React.Component {
         } else if (e === "distributionPercent") {
           this.setState({sliderValue: 70});
           this.changeSliderVal(70);
+        } else if (e === "distributionFee") {
+          this.setState({sliderValue: 100});
+          this.changeSliderVal(100);
         } else if (e === "labelServices") {
           this.setState({sliderValue: 80});
           this.changeSliderVal(80);

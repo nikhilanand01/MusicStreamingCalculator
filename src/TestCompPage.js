@@ -174,6 +174,7 @@ class TestCompPage extends React.Component{
         this.costsMarketingRef = React.createRef();
         this.costsDistributionRef = React.createRef();
         this.costsMiscRef = React.createRef();
+        this.dealSliderRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -257,7 +258,8 @@ class TestCompPage extends React.Component{
                           options={labelDealOptions}
                           onChange = {e => this.getStateRecDeal(e)}/>
                       <SmallText text="Record Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
-                      <DealSplitSlider/>
+                      <DealSplitSlider ref={this.dealSliderRef}
+                          onChange = {e => this.doSliderStuff(e)}/>
                       <SmallText text="Record Deal Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                       <div style={{display: 'flex', justifyContent: 'center'}}>
                         <NumberInput ref={this.advanceRef}
@@ -665,23 +667,43 @@ class TestCompPage extends React.Component{
  // handleRecDealSelect(e)
 
   handleRecDealSelect(e) {
-      console.log("selecting Roles");
-      console.log(e);
-      if(e === "royalty") {
-        this.setState({sliderValue: 20});
-      } else if (e === "netProfit") {
-        this.setState({sliderValue: 50});
-      } else if (e === "distributionPercent") {
-        this.setState({sliderValue: 70});
-      } else if (e === "labelServices") {
-        this.setState({sliderValue: 80});
-      }
-      //document.getElementById("splitSlider").value = this.state.sliderValue;
-      //console.log(this.myRef.current);
-      //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
-      console.log("sliderValue: " + this.state.sliderValue);
-      this.setState({recordDealSelected: e})
-      this.calculate();
+     console.log("selecting Roles");
+     console.log(e);
+     if(e === "royalty") {
+       this.setState({sliderValue: 20});
+       this.changeSliderVal(20);
+     } else if (e === "netProfit") {
+       this.setState({sliderValue: 50});
+       this.changeSliderVal(50);
+     } else if (e === "distributionPercent") {
+       this.setState({sliderValue: 70});
+       this.changeSliderVal(70);
+     } else if (e === "distributionFee") {
+       this.setState({sliderValue: 100});
+       this.changeSliderVal(100);
+     } else if (e === "labelServices") {
+       this.setState({sliderValue: 80});
+       this.changeSliderVal(80);
+     }
+     //document.getElementById("splitSlider").value = this.state.sliderValue;
+     //console.log(this.myRef.current);
+     //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
+     console.log("sliderValue: " + this.state.sliderValue);
+     this.setState({recordDealSelected: e})
+     this.calculate();
+  }
+
+  changeSliderVal(val) {
+      this.dealSliderRef.current.setState({values: [val]});
+  }
+
+  doSliderStuff(e) {
+   console.log(this.dealSliderRef.current.state.values);
+   if(this.dealSliderRef.current.state.values != null && this.dealSliderRef.current.state.values[0] != this.state.sliderValue) {
+     //console.log("setting slider state to: " + this.dealSliderRef.current.state.values[0]);
+     this.setState({sliderValue: this.dealSliderRef.current.state.values[0]});
+     this.calculate();
+   }
   }
 
   buildRecordDealSelect() {
@@ -723,7 +745,7 @@ class TestCompPage extends React.Component{
       let labelShare;
       // Why are there double semi-colons?
                  //prob a typo
-      let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseInt(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+      let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       //console.log(totalMoneyToRecoupe)
       let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
       //console.log("grossRevenue: " + grossRevenue)
@@ -742,7 +764,7 @@ class TestCompPage extends React.Component{
 
       } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "Distribution Fee") {
           //net profit deals are generally guaranteed 50/50, distribution are generally 70/30 artist/label
-          let profit = (grossRevenue - this.state.costs);
+          let profit = (grossRevenue - this.state.costsTotal);
           // Artist Split
           if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
             console.log("unrecouped");
@@ -775,7 +797,7 @@ class TestCompPage extends React.Component{
           } else {
             artistShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
           }
-          labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costs;//extra menu items would be factored into costs
+          labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
       }
 
       console.log("grossRevenue: " + grossRevenue)
@@ -863,7 +885,7 @@ class TestCompPage extends React.Component{
     if(this.state.recordDealSelected === "royalty" || this.state.recordDealSelected === "labelServices"){
 	     recoupStreamsNeeds = (this.state.totRecoupe/(parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
      } else {
-       recoupStreamsNeeds = ((this.state.costs + this.state.advance) / (parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
+       recoupStreamsNeeds = ((this.state.costsTotal + this.state.advance) / (parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
      }
   }
 
