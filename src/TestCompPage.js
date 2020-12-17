@@ -233,8 +233,8 @@ class TestCompPage extends React.Component{
 
             <div style={{display: 'flex', flexDirection: 'row'}}>
 
-                <div style={{width: '33%', flexDirection: 'column', paddingRight: '.5%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
-                    <SmallText text="(1. Start Here By Entering Information About Your Record & Publishing Deal)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
+                <div style={{width: '32%', flexDirection: 'column', paddingRight: '1.25%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
+                    <SmallText text="(1. Start Here By Entering Information About Your Record & Publishing Deal)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -293,8 +293,8 @@ class TestCompPage extends React.Component{
                 </div>
 
 
-                <div style={{width: '32%', flexDirection: 'column', paddingRight: '1%'}}>
-                    <SmallText text="(2. Now Entering Some Information About Your Song)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
+                <div style={{width: '34%', flexDirection: 'column', paddingRight: '1%'}}>
+                    <SmallText text="(2. Now Entering Some Information About Your Song)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                     <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                       <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -302,56 +302,66 @@ class TestCompPage extends React.Component{
                       <StreamSlider />
                     </div>
                     <div>
-                      <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0 }} />
-                      <SmallText text="Recoupable" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'right', color: 'grey', paddingRight: '5%' }}/>
-                      <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
-                        <NumberInput
-                          id= {"costsRecording"}
-                          ref = {this.costsRecordingRef}
-                          label="Recording Costs"
-                          locked={false}
-                          active={false}
-                          onChange = {e => this.getStateCostsRecording(e)}/>
-                        <div style={{width: '30%'}}>
+                      <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+
+                <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
+
+                    <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '5%'}}>
+                          <NumberInput
+                            id= {"costsRecording"}
+                            ref = {this.costsRecordingRef}
+                            label="Recording Costs"
+                            locked={false}
+                            active={false}
+                            onChange = {e => this.getStateCostsRecording(e)}/>
+                        <div style={{width: '15%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
-                      <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
-                        <NumberInput
-                          id= {"costsMarketing"}
-                          ref = {this.costsMarketingRef}
-                          label="Marketing Costs"
-                          locked={false}
-                          active={false}
-                          onChange = {e => this.getStateCostsMarketing(e)}/>
-                        <div style={{marginLeft: '1%', width: '29%'}}>
+
+                      <div style={{ flexDirection: 'row', marginBottom: '2%'}}>
+                          <NumberInput
+                            id= {"costsMarketing"}
+                            ref = {this.costsMarketingRef}
+                            label="Marketing Costs"
+                            locked={false}
+                            active={false}
+                            onChange = {e => this.getStateCostsMarketing(e)}/>
+                        <div style={{marginLeft: '1%', width: '50%'}}>
                           <SingleDropDown options={marketingSplitOptions}/>
                         </div>
                       </div>
-                      <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%'}}>
-                        <NumberInput
-                          id= {"costsDistribution"}
-                          ref = {this.costsDistributionRef}
-                          label="Distrubtion Costs"
-                          locked={false}
-                          active={false}
-                          onChange = {e => this.getStateCostsDistribution(e)}/>
-                        <div style={{width: '30%'}}>
+
+                      <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '5%'}}>
+                          <NumberInput
+                            id= {"costsDistribution"}
+                            ref = {this.costsDistributionRef}
+                            label="Distrubtion Costs"
+                            locked={false}
+                            active={false}
+                            onChange = {e => this.getStateCostsDistribution(e)}/>
+                        <div style={{width: '15%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
-                      <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <NumberInput
-                          id= {"costsMisc"}
-                          ref = {this.costsMiscRef}
-                          label="Misc. Costs"
-                          locked={false}
-                          active={false}
-                          onChange = {e => this.getStateCostsMisc(e)}/>
-                        <div style={{width: '30%'}}>
+
+                      <div style={{ flexDirection: 'row'}}>
+                          <NumberInput
+                            id= {"costsMisc"}
+                            ref = {this.costsMiscRef}
+                            label="Misc. Costs"
+                            locked={false}
+                            active={false}
+                            onChange = {e => this.getStateCostsMisc(e)}/>
+                        <div style={{width: '15%'}}>
                           <SwitchButton/>
                         </div>
                       </div>
+
+                </div>
+
+
+
                     </div>
 
                     <div style={{display: 'flex', flexDirection: 'row',justifyContent: 'center',alignItems: 'center'}}>
@@ -367,7 +377,7 @@ class TestCompPage extends React.Component{
                 <div style={{flexDirection: 'column', width: '35%', borderLeft: 'thin solid #b3d0ff'}}>
                   <div style={{backgroundColor: '#f2f6ff'}}>
                     <div>
-                      <SmallText text="(3. Here are your results!)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
+                      <SmallText text="(3. Here are your results!)" style={{ fontSize: '11px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                       <SmallText text={`You've Earned: $${this.state.totalEarnings}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       <SmallText text={`Total Revenue Generated: $${this.state.grossRev.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
@@ -713,7 +723,7 @@ class TestCompPage extends React.Component{
       let labelShare;
       // Why are there double semi-colons?
                  //prob a typo
-      let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costs);
+      let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseInt(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       //console.log(totalMoneyToRecoupe)
       let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
       //console.log("grossRevenue: " + grossRevenue)

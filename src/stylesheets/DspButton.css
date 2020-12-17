@@ -5,7 +5,7 @@ opacity: 0.6;
 background: white;
 border: 0;
 outline: 0;
-font-size: 16px;
+font-size: 14px;
 font-weight: bold;
 border-bottom: 2px solid transparent;
 transition: ease border-bottom 100ms;
@@ -14,7 +14,7 @@ opacity: 1;
 }
 
 button.buttonFalse{
-padding: 10px 20px;
+padding: 10px 14px;
 cursor: pointer;
 opacity: 0.6;
 background: white;
