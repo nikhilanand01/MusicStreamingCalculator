@@ -87,6 +87,13 @@ export class StreamSlider extends Component {
     update: defaultValues.slice(),
   }
 
+  
+  componentDidUpdate() {
+    if (this.props.onChange) {
+      this.props.onChange(this.state);
+    }
+  }
+
   onUpdate = update => {
     this.setState({ update })
   }

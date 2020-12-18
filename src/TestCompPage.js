@@ -176,6 +176,7 @@ class TestCompPage extends React.Component{
         this.costsMiscRef = React.createRef();
         this.dealSliderRef = React.createRef();
         this.estStreamsRef = React.createRef();
+        this.streamsSliderRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -311,7 +312,7 @@ class TestCompPage extends React.Component{
                        locked={false}
                        active={false}
                        onChange={e => this.changeStreams(e)}/>
-                    <StreamSlider />
+                    <StreamSlider ref={this.streamsSliderRef} onChange={e => this.updateStreamSlider(e)}/>
                   </div>
                   <div>
                     <SmallText text={`Costs: $${this.state.costsTotal.toFixed(0)}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
@@ -424,6 +425,11 @@ class TestCompPage extends React.Component{
         </div>
 
         )
+    }
+
+    updateStreamSlider(e) {
+      console.log("updating stream slider");
+      console.log(this.streamsSliderRef.current.state.values);
     }
 
 
