@@ -297,98 +297,92 @@ class TestCompPage extends React.Component{
                 </div>
 
 
-                <div style={{width: '34%', flexDirection: 'column', paddingRight: '1%'}}>
-                    <SmallText text="(2. Now Entering Some Information About Your Song)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
-                    <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
-                    <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
-                      <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                      <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
-                      <StreamSlider />
+              <div style={{width: '34%', flexDirection: 'column', paddingRight: '1%'}}>
+                  <SmallText text="(2. Now Entering Some Information About Your Song)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
+                  <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
+                  <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
+                    <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
+                    <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
+                    <StreamSlider />
+                  </div>
+                  <div>
+                    <SmallText text={`Costs: $${this.state.costsTotal.toFixed(0)}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
+                        <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
+                            <div style={{}}>
+                            <NumberInput
+                              id= {"costsRecording"}
+                              ref = {this.costsRecordingRef}
+                              label="Recording Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsRecording(e)}/>
+                            </div>
+                            <div style={{width: '15%'}}>
+                              <SwitchButton/>
+                            </div>
+                        </div>
+                        <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
+                            <NumberInput
+                              id= {"costsMarketing"}
+                              ref = {this.costsMarketingRef}
+                              label="Marketing Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsMarketing(e)}/>
+                          <div style={{marginLeft: '1%'}}>
+                            <SingleDropDown options={marketingSplitOptions}/>
+                          </div>
+                        </div>
+                        <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
+                            <NumberInput
+                              id= {"costsDistribution"}
+                              ref = {this.costsDistributionRef}
+                              label="Distrubtion Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsDistribution(e)}/>
+                          <div style={{width: '15%'}}>
+                            <SwitchButton/>
+                          </div>
+                        </div>
+                        <div style={{ flexDirection: 'row'}}>
+                            <NumberInput
+                              id= {"costsMisc"}
+                              ref = {this.costsMiscRef}
+                              label="Misc. Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsMisc(e)}/>
+                          <div style={{width: '15%'}}>
+                            <SwitchButton/>
+                          </div>
+                        </div>
                     </div>
-                    <div>
-                      <SmallText text="Costs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
-
-                <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
-
-                    <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
-                        <div style={{}}>
-                        <NumberInput
-                          id= {"costsRecording"}
-                          ref = {this.costsRecordingRef}
-                          label="Recording Costs"
-                          locked={false}
-                          active={false}
-                          onChange = {e => this.getStateCostsRecording(e)}/>
-                        </div>
-                        <div style={{width: '15%'}}>
-                          <SwitchButton/>
-                        </div>
-                    </div>
-
-                      <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
-                          <NumberInput
-                            id= {"costsMarketing"}
-                            ref = {this.costsMarketingRef}
-                            label="Marketing Costs"
-                            locked={false}
-                            active={false}
-                            onChange = {e => this.getStateCostsMarketing(e)}/>
-                        <div style={{marginLeft: '1%'}}>
-                          <SingleDropDown options={marketingSplitOptions}/>
-                        </div>
-                      </div>
-
-                      <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
-                          <NumberInput
-                            id= {"costsDistribution"}
-                            ref = {this.costsDistributionRef}
-                            label="Distrubtion Costs"
-                            locked={false}
-                            active={false}
-                            onChange = {e => this.getStateCostsDistribution(e)}/>
-                        <div style={{width: '15%'}}>
-                          <SwitchButton/>
-                        </div>
-                      </div>
-
-                      <div style={{ flexDirection: 'row'}}>
-                          <NumberInput
-                            id= {"costsMisc"}
-                            ref = {this.costsMiscRef}
-                            label="Misc. Costs"
-                            locked={false}
-                            active={false}
-                            onChange = {e => this.getStateCostsMisc(e)}/>
-                        <div style={{width: '15%'}}>
-                          <SwitchButton/>
-                        </div>
-                      </div>
-
-                </div>
-
-
-
-                    </div>
-
-                    <div style={{display: 'flex', flexDirection: 'row',justifyContent: 'center',alignItems: 'center'}}>
-                      <div style={{flexDirection: 'column'}}>
-                        <SmallText text="Total Costs:" style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                        <SmallText text={`$${this.state.costsTotal.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                      </div>
-                      <RadialChart series={this.state.seriesRadial}/>
-                    </div>
-
-                </div>
+                  </div>
+              </div>
 
                 <div style={{flexDirection: 'column', width: '35%', borderLeft: 'thin solid #b3d0ff'}}>
                   <div style={{backgroundColor: '#f2f6ff'}}>
+
+
                     <div>
                       <SmallText text="(3. Here are your results!)" style={{ fontSize: '11px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                       <SmallText text={`You've Earned: $${this.state.totalEarnings}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                      <SmallText text={`Total Revenue Generated: $${this.state.grossRev.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                      <SmallText text={`Total Recoupable Money: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+
+                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <div style={{flexDirection: 'column'}}>
+                          <SmallText text={`Total Revenue Generated: $${this.state.grossRev.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                          <SmallText text={`Total Recoupable Money: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        </div>
+                        <RadialChart series={this.state.seriesRadial}/>
+                      </div>
+
                     </div>
+
+
+
                     <div style={{borderBottom: 'thin solid #b3d0ff'}}>
                       <BarChart series={this.state.seriesBar}/>
                     </div>
@@ -456,21 +450,6 @@ class TestCompPage extends React.Component{
 
   }
 
-/*
-  getStateCostsTotal() {
-    console.log(this.costsTotalRef.current.state)
-    if(this.costsTotalRef.current.state.value != "" && parseInt(this.costsTotalRef.current.state.value) != this.state.costsTotal) {
-      const e = parseInt(this.costsTotalRef.current.state.value);
-      this.updateCostsTotal(e);
-    }
-  }
-
-  updateCostsTotal(e) {
-      console.log("changed TOTAL costs to: " + e);
-      this.setState({costsTotal: e});
-      this.calculate();
-  }
-*/
   calcTotalCosts(){
     let costsTotal;
     console.log("Costs of recording: " + this.state.costsRecording);
@@ -643,7 +622,7 @@ class TestCompPage extends React.Component{
       this.setState({advance: e}, () => {
           this.calculate();
       });
-  }
+   }
 
   setSliderValue(val) {
       this.setState( {sliderValue: val});
