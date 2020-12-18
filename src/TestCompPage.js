@@ -175,10 +175,11 @@ class TestCompPage extends React.Component{
         this.costsDistributionRef = React.createRef();
         this.costsMiscRef = React.createRef();
         this.dealSliderRef = React.createRef();
+        this.estStreamsRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
-            streamNumber: null,
+            streamNumber: 0,
             role: null,
             recordDeal: [],
             publishDeal: [],
@@ -190,6 +191,7 @@ class TestCompPage extends React.Component{
             totRecoupe: 0,
             publisherShare: 0,
             artistRecordEarnings: 0,
+            artistWriterEarnings: 0,
             totalEarnings: 0,
             recoupStreamsNeeds: 0,
             moneyGoalInput: 0,
@@ -297,12 +299,18 @@ class TestCompPage extends React.Component{
                 </div>
 
 
+
               <div style={{width: '34%', flexDirection: 'column', paddingRight: '1%'}}>
                   <SmallText text="(2. Now Entering Some Information About Your Song)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                   <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                   <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                    <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
+                    <NumberInput ref={this.estStreamsRef}
+                       id={0}
+                       label="Estimated Streams"
+                       locked={false}
+                       active={false}
+                       onChange={e => this.changeStreams(e)}/>
                     <StreamSlider />
                   </div>
                   <div>
@@ -310,13 +318,13 @@ class TestCompPage extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
                         <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
                             <div style={{}}>
-                            <NumberInput
-                              id= {"costsRecording"}
-                              ref = {this.costsRecordingRef}
-                              label="Recording Costs"
-                              locked={false}
-                              active={false}
-                              onChange = {e => this.getStateCostsRecording(e)}/>
+                              <NumberInput
+                                id= {"costsRecording"}
+                                ref = {this.costsRecordingRef}
+                                label="Recording Costs"
+                                locked={false}
+                                active={false}
+                                onChange = {e => this.getStateCostsRecording(e)}/>
                             </div>
                             <div style={{width: '15%'}}>
                               <SwitchButton/>
@@ -369,7 +377,8 @@ class TestCompPage extends React.Component{
                     <div>
                       <SmallText text="(3. Here are your results!)" style={{ fontSize: '11px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
-                      <SmallText text={`You've Earned: $${this.state.totalEarnings}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+
+                      <SmallText text={`You've Earned: $${this.state.totalEarnings.toFixed(0)}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
 
                       <div style={{display: 'flex', flexDirection: 'row'}}>
                         <div style={{flexDirection: 'column'}}>
@@ -611,10 +620,18 @@ class TestCompPage extends React.Component{
     }
   }
 
-  changeStreams(e) {
-      console.log("changed streams to: " + e.target.value);
-      this.setState({streamNumber: e.target.value});
-      this.calculate();
+    changeStreams(e) {
+
+        if(this.estStreamsRef.current.state.value != "" && parseInt(this.estStreamsRef.current.state.value) != this.state.streamNumber) {
+            const l = parseInt(this.estStreamsRef.current.state.value);
+            this.updateStreams(l);
+        }
+    }
+  updateStreams(e) {
+    console.log("changed estStreams to: " + e);
+      this.setState({streamNumber: e}, () => {
+          this.calculate();
+      });
   }
 
   updateAdvance(e) {
@@ -747,8 +764,8 @@ class TestCompPage extends React.Component{
       this.getPublisherShare();
 
       console.log("calculating");
-      let artistShare;
-      let labelShare;
+      let artistShare = 0;
+      let labelShare = 0;
 
       let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       //console.log(totalMoneyToRecoupe)
@@ -808,7 +825,7 @@ class TestCompPage extends React.Component{
         totRecoupe: totalMoneyToRecoupe,
         artistRecordEarnings: artistShare,
         publisherShare: labelShare,
-        });
+        }, () => {console.log("done calculating")});
 
 
       this.getTotalEarnings(artistShare);
@@ -869,7 +886,7 @@ class TestCompPage extends React.Component{
 
   getTotalEarnings(artistShare) {
       if(this.state.role === "both") {
-          this.setState({totalEarnings: artistShare + parseFloat(this.state.artistWriterEarnings)});
+          this.setState({totalEarnings: artistShare + this.state.artistWriterEarnings});
       } else if(this.state.role === "artist") {
           this.setState({totalEarnings: artistShare});
       } else if(this.state.role === "writer") {
