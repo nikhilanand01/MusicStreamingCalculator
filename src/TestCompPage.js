@@ -222,7 +222,9 @@ class TestCompPage extends React.Component{
         this.buildPublishingDealSelect();
         this.setSliderValue(50);
         this.testMap();
+        this.calculate();
     }
+
 
     render() {
       return (
@@ -468,18 +470,32 @@ class TestCompPage extends React.Component{
       this.setState({costsTotal: e});
       this.calculate();
   }
-
+*/
   calcTotalCosts(){
     let costsTotal;
+    console.log("Costs of recording: " + this.state.costsRecording);
+    console.log("Costs of marketing: " + this.state.costsMarketing);
+    console.log("Costs of Distribution: " + this.state.costsDistribution);
+    console.log("Misc costs: " + this.state.costsMic);
     costsTotal = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
 
     console.log("TOTAL COSTS " + costsTotal)
 
     this.setState({
       costsTotal: costsTotal
+    },() => {
+    console.log(this.state.costsTotal);
     })
+
+    this.updateRecoupable();
   }
-*/
+
+  updateRecoupable() {
+    let ret = this.state.costsTotal + this.state.advance;
+    console.log("ret: " + ret);
+    this.setState({totRecoupe: ret})
+
+  }
 
   getStateCostsRecording() {
     console.log(this.costsRecordingRef.current.state)
@@ -491,8 +507,11 @@ class TestCompPage extends React.Component{
 
   updateCostsRecording(e) {
       console.log("changed RECORDING costs to: " + e);
-      this.setState({costsRecording: e});
-      this.calculate();
+      this.setState({costsRecording: e}, () => {
+          this.calculate();
+      });
+      console.log("state: " + this.state.costsRecording);
+
   }
 
   getStateCostsMarketing() {
@@ -505,8 +524,9 @@ class TestCompPage extends React.Component{
 
   updateCostsMarketing(e) {
       console.log("changed MARKETING costs to: " + e);
-      this.setState({costsMarketing: e});
-      this.calculate();
+      this.setState({costsMarketing: e}, () => {
+          this.calculate();
+      });
   }
 
   getStateCostsDistribution() {
@@ -519,8 +539,9 @@ class TestCompPage extends React.Component{
 
   updateCostsDistribution(e) {
       console.log("changed DISTRIBUTION costs to: " + e);
-      this.setState({costsDistribution: e});
-      this.calculate();
+      this.setState({costsDistribution: e}, () => {
+          this.calculate();
+      });
   }
 
   getStateCostsMisc() {
@@ -533,8 +554,9 @@ class TestCompPage extends React.Component{
 
   updateCostsMisc(e) {
       console.log("changed MISC costs to: " + e);
-      this.setState({costsMisc: e});
-      this.calculate();
+      this.setState({costsMisc: e}, () => {
+          this.calculate();
+      });
   }
 
   getStateAdvance() {
@@ -617,8 +639,9 @@ class TestCompPage extends React.Component{
 
   updateAdvance(e) {
     console.log("changed advance to: " + e);
-    this.setState({advance: e});
-    this.calculate();
+      this.setState({advance: e}, () => {
+          this.calculate();
+      });
   }
 
   setSliderValue(val) {
@@ -740,6 +763,7 @@ class TestCompPage extends React.Component{
 
   /// MATH STUFF /////
   calculate() {
+      this.calcTotalCosts();
       this.getPublisherShare();
 
       console.log("calculating");
