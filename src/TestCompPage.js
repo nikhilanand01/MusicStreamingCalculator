@@ -191,6 +191,7 @@ class TestCompPage extends React.Component{
             totRecoupe: 0,
             publisherShare: 0,
             artistRecordEarnings: 0,
+            artistWriterEarnings: 0,
             totalEarnings: 0,
             recoupStreamsNeeds: 0,
             moneyGoalInput: 0,
@@ -391,7 +392,7 @@ class TestCompPage extends React.Component{
                     <div>
                       <SmallText text="(3. Here are your results!)" style={{ fontSize: '11px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
-                      <SmallText text={`You've Earned: $${this.state.totalEarnings}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                      <SmallText text={`You've Earned: $${this.state.totalEarnings.toFixed(0)}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       <SmallText text={`Total Revenue Generated: $${this.state.grossRev.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       <SmallText text={`Total Recoupable Money: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                     </div>
@@ -783,8 +784,8 @@ class TestCompPage extends React.Component{
       this.getPublisherShare();
 
       console.log("calculating");
-      let artistShare;
-      let labelShare;
+      let artistShare = 0;
+      let labelShare = 0;
 
       let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       //console.log(totalMoneyToRecoupe)
@@ -844,7 +845,7 @@ class TestCompPage extends React.Component{
         totRecoupe: totalMoneyToRecoupe,
         artistRecordEarnings: artistShare,
         publisherShare: labelShare,
-        });
+        }, () => {console.log("done calculating")});
 
 
       this.getTotalEarnings(artistShare);
@@ -905,7 +906,7 @@ class TestCompPage extends React.Component{
 
   getTotalEarnings(artistShare) {
       if(this.state.role === "both") {
-          this.setState({totalEarnings: artistShare + parseFloat(this.state.artistWriterEarnings)});
+          this.setState({totalEarnings: artistShare + this.state.artistWriterEarnings});
       } else if(this.state.role === "artist") {
           this.setState({totalEarnings: artistShare});
       } else if(this.state.role === "writer") {
