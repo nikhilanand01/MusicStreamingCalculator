@@ -175,10 +175,11 @@ class TestCompPage extends React.Component{
         this.costsDistributionRef = React.createRef();
         this.costsMiscRef = React.createRef();
         this.dealSliderRef = React.createRef();
+        this.estStreamsRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
-            streamNumber: null,
+            streamNumber: 0,
             role: null,
             recordDeal: [],
             publishDeal: [],
@@ -302,7 +303,12 @@ class TestCompPage extends React.Component{
                     <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                       <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                      <NumberInput id={0} label="Estimated Streams" locked={false} active={false} />
+                      <NumberInput ref={this.estStreamsRef} 
+                         id={0} 
+                         label="Estimated Streams" 
+                         locked={false} 
+                         active={false} 
+                         onChange={e => this.changeStreams(e)}/>
                       <StreamSlider />
                     </div>
                     <div>
@@ -465,8 +471,9 @@ class TestCompPage extends React.Component{
 
   updateCostsTotal(e) {
       console.log("changed TOTAL costs to: " + e);
-      this.setState({costsTotal: e});
-      this.calculate();
+      this.setState({costsRecording: e}, () => {
+          this.calculate();
+      });
   }
 */
   calcTotalCosts(){
@@ -629,10 +636,18 @@ class TestCompPage extends React.Component{
     }
   }
 
-  changeStreams(e) {
-      console.log("changed streams to: " + e.target.value);
-      this.setState({streamNumber: e.target.value});
-      this.calculate();
+    changeStreams(e) {
+
+        if(this.estStreamsRef.current.state.value != "" && parseInt(this.estStreamsRef.current.state.value) != this.state.streamNumber) {
+            const l = parseInt(this.estStreamsRef.current.state.value);
+            this.updateStreams(l);
+        }
+    }
+  updateStreams(e) {
+    console.log("changed estStreams to: " + e);
+      this.setState({streamNumber: e}, () => {
+          this.calculate();
+      });
   }
 
   updateAdvance(e) {
