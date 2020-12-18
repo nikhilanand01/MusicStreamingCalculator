@@ -190,7 +190,7 @@ class TestCompPage extends React.Component{
             grossRev: 0,
             totRecoupe: 0,
             publisherShare: 0,
-            writerEarnings: 0,
+            artistRecordEarnings: 0,
             totalEarnings: 0,
             recoupStreamsNeeds: 0,
             moneyGoalInput: 0,
@@ -206,7 +206,7 @@ class TestCompPage extends React.Component{
               data: [1000, 0, 0]
             }
           ],
-          seriesRadial: [60],
+          seriesRadial: [0],
           roleTypes: roleTypes,
           costsTotal: 0,
           costsRecording: 0,
@@ -242,7 +242,7 @@ class TestCompPage extends React.Component{
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         {this.state.roleTypes.map(type => (
                           <DspButton ref={type.ref}
                             key={type.id}
@@ -285,7 +285,7 @@ class TestCompPage extends React.Component{
                   <div style={{borderTop: 'thin dotted #b3d0ff', marginTop: '2%'}}>
                     <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0', marginTop: 5 }}/>
                     <SmallText text="(Select Which DSPs to include in Calculation)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey' }}/>
-                      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
+                      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
                         {this.state.providers.map((provider) =>
                            <DspButton ref={provider.ref}
                              key={provider.id}
@@ -316,20 +316,22 @@ class TestCompPage extends React.Component{
 
                 <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
 
-                    <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '5%'}}>
-                          <NumberInput
-                            id= {"costsRecording"}
-                            ref = {this.costsRecordingRef}
-                            label="Recording Costs"
-                            locked={false}
-                            active={false}
-                            onChange = {e => this.getStateCostsRecording(e)}/>
+                    <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
+                        <div style={{}}>
+                        <NumberInput
+                          id= {"costsRecording"}
+                          ref = {this.costsRecordingRef}
+                          label="Recording Costs"
+                          locked={false}
+                          active={false}
+                          onChange = {e => this.getStateCostsRecording(e)}/>
+                        </div>
                         <div style={{width: '15%'}}>
                           <SwitchButton/>
                         </div>
-                      </div>
+                    </div>
 
-                      <div style={{ flexDirection: 'row', marginBottom: '2%'}}>
+                      <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
                           <NumberInput
                             id= {"costsMarketing"}
                             ref = {this.costsMarketingRef}
@@ -337,12 +339,12 @@ class TestCompPage extends React.Component{
                             locked={false}
                             active={false}
                             onChange = {e => this.getStateCostsMarketing(e)}/>
-                        <div style={{marginLeft: '1%', width: '50%'}}>
+                        <div style={{marginLeft: '1%'}}>
                           <SingleDropDown options={marketingSplitOptions}/>
                         </div>
                       </div>
 
-                      <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '5%'}}>
+                      <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
                           <NumberInput
                             id= {"costsDistribution"}
                             ref = {this.costsDistributionRef}
@@ -489,6 +491,7 @@ class TestCompPage extends React.Component{
     this.setState({
       costsTotal: costsTotal
     },() => {
+    //this.calculate();
     console.log(this.state.costsTotal);
     })
 
@@ -782,8 +785,7 @@ class TestCompPage extends React.Component{
       console.log("calculating");
       let artistShare;
       let labelShare;
-      // Why are there double semi-colons?
-                 //prob a typo
+
       let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       //console.log(totalMoneyToRecoupe)
       let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
@@ -820,13 +822,6 @@ class TestCompPage extends React.Component{
               }
           } else labelShare = grossRevenue - artistShare;
 
-          /* Nik Label Share for Net Profit, %Distribution Deals
-          if(profit < 0){
-            labelShare = 0;
-          } else {
-            labelShare = (profit * (1-(parseFloat(artistDeal.value)/100)));
-          }
-          */
 
       } else if (this.state.recordDealSelected === "labelServices") {
           // Artist Split
@@ -841,13 +836,13 @@ class TestCompPage extends React.Component{
 
       console.log("grossRevenue: " + grossRevenue)
       console.log("totRecoupe: " + totalMoneyToRecoupe)
-      console.log("writerEarnings: " + artistShare)
+      console.log("ArtistRecordEarnings: " + artistShare)
       console.log("publisherShare: " + labelShare)
 
       this.setState({
         grossRev: grossRevenue,
         totRecoupe: totalMoneyToRecoupe,
-        writerEarnings: artistShare,
+        artistRecordEarnings: artistShare,
         publisherShare: labelShare,
         });
 
@@ -871,19 +866,19 @@ class TestCompPage extends React.Component{
       if(this.state.publishingDealSelected === "Full/Traditional") {
           publisherPercentage = 1.0;
           this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
       } else if(this.state.publishingDealSelected === "Co-Publishing") {
           publisherPercentage = 0.5;
           this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
       } else if(this.state.publishingDealSelected === "Admin Deal") {
           publisherPercentage = 0.1;
           this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
       } else if(this.state.publishingDealSelected === "No Deal") {
           publisherPercentage = 0.0;
           this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({writerEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
       }
   }
 
@@ -910,11 +905,11 @@ class TestCompPage extends React.Component{
 
   getTotalEarnings(artistShare) {
       if(this.state.role === "both") {
-          this.setState({totalEarnings: artistShare + parseFloat(this.state.writerEarnings)});
+          this.setState({totalEarnings: artistShare + parseFloat(this.state.artistWriterEarnings)});
       } else if(this.state.role === "artist") {
           this.setState({totalEarnings: artistShare});
       } else if(this.state.role === "writer") {
-          this.setState({totalEarnings: this.state.writerEarnings});
+          this.setState({totalEarnings: this.state.artistWriterEarnings});
       }
   }
 
@@ -956,16 +951,22 @@ class TestCompPage extends React.Component{
     console.log("*********" + moneyGoalStreamsNeeded)
   }
 
-  percentRecouped(artistShare){
-    let recoupPercent;
-
-    if ((artistShare / this.totRecoupe) > 1){
-      recoupPercent = 100
-    } else {
-      recoupPercent = ((artistShare / this.totRecoupe) * 100)
-      recoupPercent.toFixed(0);
+  percentRecouped(){
+    let recoupPercent = 0;
+    if(this.state.totRecoupe > 0) {
+      if ((this.state.artistRecordEarnings / this.state.totRecoupe) > 1){
+        recoupPercent = 100
+      } else {
+        recoupPercent = ((this.state.artistRecordEarnings / this.state.totRecoupe) * 100)
+        recoupPercent.toFixed(0);
+      }
     }
+    //return recoupPercent;
+    this.setState({seriesRadial: recoupPercent},() => {
+    this.calculate();
+  });
   }
+
 
 
 }
