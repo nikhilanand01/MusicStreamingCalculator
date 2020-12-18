@@ -239,7 +239,7 @@ class TestCompPage extends React.Component{
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         {this.state.roleTypes.map(type => (
                           <DspButton ref={type.ref}
                             key={type.id}
@@ -282,7 +282,7 @@ class TestCompPage extends React.Component{
                   <div style={{borderTop: 'thin dotted #b3d0ff', marginTop: '2%'}}>
                     <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0', marginTop: 5 }}/>
                     <SmallText text="(Select Which DSPs to include in Calculation)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey' }}/>
-                      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
+                      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
                         {this.state.providers.map((provider) =>
                            <DspButton ref={provider.ref}
                              key={provider.id}
@@ -308,20 +308,22 @@ class TestCompPage extends React.Component{
 
                 <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
 
-                    <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '5%'}}>
-                          <NumberInput
-                            id= {"costsRecording"}
-                            ref = {this.costsRecordingRef}
-                            label="Recording Costs"
-                            locked={false}
-                            active={false}
-                            onChange = {e => this.getStateCostsRecording(e)}/>
+                    <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
+                        <div style={{}}>
+                        <NumberInput
+                          id= {"costsRecording"}
+                          ref = {this.costsRecordingRef}
+                          label="Recording Costs"
+                          locked={false}
+                          active={false}
+                          onChange = {e => this.getStateCostsRecording(e)}/>
+                        </div>
                         <div style={{width: '15%'}}>
                           <SwitchButton/>
                         </div>
-                      </div>
+                    </div>
 
-                      <div style={{ flexDirection: 'row', marginBottom: '2%'}}>
+                      <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
                           <NumberInput
                             id= {"costsMarketing"}
                             ref = {this.costsMarketingRef}
@@ -329,12 +331,12 @@ class TestCompPage extends React.Component{
                             locked={false}
                             active={false}
                             onChange = {e => this.getStateCostsMarketing(e)}/>
-                        <div style={{marginLeft: '1%', width: '50%'}}>
+                        <div style={{marginLeft: '1%'}}>
                           <SingleDropDown options={marketingSplitOptions}/>
                         </div>
                       </div>
 
-                      <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '5%'}}>
+                      <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
                           <NumberInput
                             id= {"costsDistribution"}
                             ref = {this.costsDistributionRef}
