@@ -296,12 +296,8 @@ class TestCompPage extends React.Component{
                        locked={false}
                        active={false}
                        onChange={e => this.changeStreams(e)}/>
-<<<<<<< HEAD
-                    <StreamSlider />
-=======
                     <StreamSlider ref={this.streamsSliderRef} onChange={e => this.updateStreamSlider(e)}/>
                   </div>
->>>>>>> 4e3b56a8e6dbcdcedf483d0e42c5f19a5f1f64d5
                   <div>
                     <Accordion title="Which DSPs Are Included?"
                               body={
@@ -314,7 +310,8 @@ class TestCompPage extends React.Component{
                                     onChange = {e => this.getButtonClick(provider.id)}/>)}
                                 </div>}/>
                   </div>
-                  </div>
+
+                  
                   <div style={{borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
                     <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
