@@ -47,6 +47,7 @@ class NumberInput extends React.Component {
           type="text"
           value={value}
           placeholder={label}
+          maxLength={11}
           onChange={this.changeValue.bind(this)}
           onKeyPress={this.handleKeyPress.bind(this)}
           onFocus={() => !locked && this.setState({ active: true })}
