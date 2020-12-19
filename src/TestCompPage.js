@@ -210,7 +210,7 @@ class TestCompPage extends React.Component{
               data: [1000, 0, 0]
             }
           ],
-          seriesRadial: [0],
+          seriesRadial: [44],
           roleTypes: roleTypes,
           costsTotal: 0,
           costsRecording: 0,
@@ -239,7 +239,6 @@ class TestCompPage extends React.Component{
             </div>
             <div style={{display: 'flex', flexDirection: 'row'}}>
                 <div style={{width: '32%', flexDirection: 'column', paddingRight: '1.25%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
-                    <SmallText text="(1. Start Here By Entering Information About Your Record & Publishing Deal)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -286,7 +285,6 @@ class TestCompPage extends React.Component{
 
 
               <div style={{width: '34%', flexDirection: 'column', paddingRight: '1%'}}>
-                  <SmallText text="(2. Now Entering Some Information About Your Song)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                   <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                   <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -393,7 +391,6 @@ class TestCompPage extends React.Component{
                 <div style={{flexDirection: 'column', width: '35%', border: 'thin solid #b3d0ff', backgroundColor: '#f2f6ff'}}>
                   <div>
                     <div>
-                      <SmallText text="(3. Here are your results!)" style={{ fontSize: '11px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                       <NumberFormat value={`${this.state.totalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>

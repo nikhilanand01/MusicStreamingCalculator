@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Chart from 'react-apexcharts';
-import RadialChart from './RadialChart.js';
 
 
 class BarChart extends React.Component {
