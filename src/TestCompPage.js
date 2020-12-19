@@ -297,21 +297,21 @@ class TestCompPage extends React.Component{
                        active={false}
                        onChange={e => this.changeStreams(e)}/>
                     <StreamSlider ref={this.streamsSliderRef} onChange={e => this.updateStreamSlider(e)}/>
-                  </div>
-                  <div>
-                    <Accordion title="Which DSPs Are Included?"
-                              body={
-                                <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
-                                  {this.state.providers.map((provider) =>
-                                  <DspButton
-                                    ref={provider.ref}
-                                    key={provider.id}
-                                    text={provider.name}
-                                    onChange = {e => this.getButtonClick(provider.id)}/>)}
-                                </div>}/>
+                    <div>
+                      <Accordion
+                          title="Which DSPs Are Included?"
+                          body={
+                            <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
+                              {this.state.providers.map((provider) =>
+                              <DspButton
+                                ref={provider.ref}
+                                key={provider.id}
+                                text={provider.name}
+                                onChange = {e => this.getButtonClick(provider.id)}/>)}
+                            </div>}/>
+                    </div>
                   </div>
 
-                  
                   <div style={{borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
                     <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
