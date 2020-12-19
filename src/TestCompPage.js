@@ -12,6 +12,8 @@ import BarChart from './components/BarChart.js';
 import RadialChart from './components/RadialChart.js';
 import DealSplitSlider from './components/DealSplitSlider.js';
 import StreamSlider from './components/StreamSlider.js';
+import Accordion from './components/Accordion.js';
+import NumberFormat from 'react-number-format';
 
 const labelDealOptions = [
   { value: 'royalty', label: 'Royalty' },
@@ -231,13 +233,10 @@ class TestCompPage extends React.Component{
     render() {
       return (
         <div style={{padding: '2%', display: 'flex', flexDirection: 'column'}}>
-
             <div style={{textAlign: 'center'}}>
               <TitleText text="The Streaming Calculator" style={{color: '#111', fontSize: '48px', fontWeight: '700', lineHeight: '48px', margin: '0 0 24px', padding: '0 30px', textAlign: 'center', textTransform: 'uppercase'}}/>
             </div>
-
             <div style={{display: 'flex', flexDirection: 'row'}}>
-
                 <div style={{width: '32%', flexDirection: 'column', paddingRight: '1.25%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
                     <SmallText text="(1. Start Here By Entering Information About Your Record & Publishing Deal)" style={{ fontSize: '10px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
@@ -253,7 +252,6 @@ class TestCompPage extends React.Component{
                           />))}
                         </div>
                     </div>
-
                   <div>
                     <div style={{marginBottom: '8%'}}>
                       <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
@@ -282,20 +280,6 @@ class TestCompPage extends React.Component{
                         onChange = {e => this.getStatePubDeal(e)}
                     />
                   </div>
-
-                  <div style={{borderTop: 'thin dotted #b3d0ff', marginTop: '2%'}}>
-                    <SmallText text="DSPs" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'0', marginTop: 5 }}/>
-                    <SmallText text="(Select Which DSPs to include in Calculation)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey' }}/>
-                      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
-                        {this.state.providers.map((provider) =>
-                           <DspButton ref={provider.ref}
-                             key={provider.id}
-                             text={provider.name}
-                             onChange = {e => this.getButtonClick(provider.id)}
-                           />
-                        )}
-                      </div>
-                  </div>
                 </div>
 
 
@@ -312,9 +296,21 @@ class TestCompPage extends React.Component{
                        active={false}
                        onChange={e => this.changeStreams(e)}/>
                     <StreamSlider />
-                  </div>
                   <div>
-                    <SmallText text={`Costs: $${this.state.costsTotal.toFixed(0)}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }} />
+                    <Accordion title="Which DSPs Are Included?"
+                              body={
+                                <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
+                                  {this.state.providers.map((provider) =>
+                                  <DspButton
+                                    ref={provider.ref}
+                                    key={provider.id}
+                                    text={provider.name}
+                                    onChange = {e => this.getButtonClick(provider.id)}/>)}
+                                </div>}/>
+                  </div>
+                  </div>
+                  <div style={{borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
+                    <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
                     <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
                         <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
                             <div style={{}}>
@@ -368,37 +364,9 @@ class TestCompPage extends React.Component{
                         </div>
                     </div>
                   </div>
-              </div>
-
-                <div style={{flexDirection: 'column', width: '35%', borderLeft: 'thin solid #b3d0ff'}}>
-                  <div style={{backgroundColor: '#f2f6ff'}}>
-
-
-                    <div>
-                      <SmallText text="(3. Here are your results!)" style={{ fontSize: '11px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
-                      <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
-
-                      <SmallText text={`You've Earned: $${this.state.totalEarnings.toFixed(0)}`} style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-
-                      <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <div style={{flexDirection: 'column'}}>
-                          <SmallText text={`Total Revenue Generated: $${this.state.grossRev.toFixed(0)}`} style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                          <SmallText text={`Total Recoupable Money: $${this.state.totRecoupe.toFixed(0)}`} style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                        </div>
-                        <RadialChart series={this.state.seriesRadial}/>
-                      </div>
-
-                    </div>
-
-
-
-                    <div style={{borderBottom: 'thin solid #b3d0ff'}}>
-                      <BarChart series={this.state.seriesBar}/>
-                    </div>
-                  </div>
                   <div>
                     <SmallText text="Advanced Calculations" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: 0}}/>
-                    <SmallText text="(If you are trying to achieve a certain goal. Select it here)" style={{ fontSize: '12px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey'}}/>
+
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                       <div style={{flexDirection: 'column', marginRight: '5%'}}>
                         <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
@@ -413,10 +381,31 @@ class TestCompPage extends React.Component{
                           locked={false}
                           active={false}
                           onChange = {e => this.getStateMoneyGoalInput(e)}/>
-                        <SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        {/*<SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/> */}
                       </div>
                     </div>
                   </div>
+              </div>
+
+                <div style={{flexDirection: 'column', width: '35%', border: 'thin solid #b3d0ff', backgroundColor: '#f2f6ff'}}>
+                  <div>
+                    <div>
+                      <SmallText text="(3. Here are your results!)" style={{ fontSize: '11px', fontWeight: 'light', lineHeight: '1.09', textAlign: 'center', color: 'grey', marginTop: 0 }}/>
+                      <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
+                      <NumberFormat value={`${this.state.totalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
+                      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                          <NumberFormat value={`${this.state.grossRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
+                          <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
+                        </div>
+                          <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
+                      </div>
+                    </div>
+                    <div>
+                      <BarChart series={this.state.seriesBar}/>
+                    </div>
+                  </div>
+
                 </div>
 
             </div>
@@ -428,7 +417,7 @@ class TestCompPage extends React.Component{
 
 
 
-  getRoleButton(name) {
+  getRoleButton(name){
        console.log(name);
        console.log(this.artistButtonRef.current.state.button);
        console.log(this.writerButtonRef.current.state.button);
@@ -450,7 +439,7 @@ class TestCompPage extends React.Component{
        }
   }
 
-  getButtonClick(id) {
+  getButtonClick(id){
     //console.log("clicked: " + id);
     //console.log(this.state.providers[id].ref.current.state);
     if(this.state.providers[id].ref.current.state.button != null && this.state.providers[id].ref.current.state.button != this.state.providers[id].includeInCalculations) {
@@ -479,14 +468,14 @@ class TestCompPage extends React.Component{
     this.updateRecoupable();
   }
 
-  updateRecoupable() {
+  updateRecoupable(){
     let ret = this.state.costsTotal + this.state.advance;
     console.log("ret: " + ret);
     this.setState({totRecoupe: ret})
 
   }
 
-  getStateCostsRecording() {
+  getStateCostsRecording(){
     console.log(this.costsRecordingRef.current.state)
     if(this.costsRecordingRef.current.state.value != "" && parseInt(this.costsRecordingRef.current.state.value) != this.state.costsRecording) {
       const e = parseInt(this.costsRecordingRef.current.state.value);
@@ -494,7 +483,7 @@ class TestCompPage extends React.Component{
     }
   }
 
-  updateCostsRecording(e) {
+  updateCostsRecording(e){
       console.log("changed RECORDING costs to: " + e);
       this.setState({costsRecording: e}, () => {
           this.calculate();
@@ -503,7 +492,7 @@ class TestCompPage extends React.Component{
 
   }
 
-  getStateCostsMarketing() {
+  getStateCostsMarketing(){
     console.log(this.costsMarketingRef.current.state)
     if(this.costsMarketingRef.current.state.value != "" && parseInt(this.costsMarketingRef.current.state.value) != this.state.costsMarketing) {
       const e = parseInt(this.costsMarketingRef.current.state.value);
@@ -511,14 +500,14 @@ class TestCompPage extends React.Component{
     }
   }
 
-  updateCostsMarketing(e) {
+  updateCostsMarketing(e){
       console.log("changed MARKETING costs to: " + e);
       this.setState({costsMarketing: e}, () => {
           this.calculate();
       });
   }
 
-  getStateCostsDistribution() {
+  getStateCostsDistribution(){
     console.log(this.costsDistributionRef.current.state)
     if(this.costsDistributionRef.current.state.value != "" && parseInt(this.costsDistributionRef.current.state.value) != this.state.costsDistribution) {
       const e = parseInt(this.costsDistributionRef.current.state.value);
@@ -526,14 +515,14 @@ class TestCompPage extends React.Component{
     }
   }
 
-  updateCostsDistribution(e) {
+  updateCostsDistribution(e){
       console.log("changed DISTRIBUTION costs to: " + e);
       this.setState({costsDistribution: e}, () => {
           this.calculate();
       });
   }
 
-  getStateCostsMisc() {
+  getStateCostsMisc(){
     console.log(this.costsMiscRef.current.state)
     if(this.costsMiscRef.current.state.value != "" && parseInt(this.costsMiscRef.current.state.value) != this.state.costsMisc) {
       const e = parseInt(this.costsMiscRef.current.state.value);
@@ -541,14 +530,14 @@ class TestCompPage extends React.Component{
     }
   }
 
-  updateCostsMisc(e) {
+  updateCostsMisc(e){
       console.log("changed MISC costs to: " + e);
       this.setState({costsMisc: e}, () => {
           this.calculate();
       });
-  }
+   }
 
-  getStateAdvance() {
+  getStateAdvance(){
     console.log(this.advanceRef.current.state)
     if(this.advanceRef.current.state.value != "" && parseInt(this.advanceRef.current.state.value) != this.state.advance) {
         const e = parseInt(this.advanceRef.current.state.value);
@@ -556,7 +545,7 @@ class TestCompPage extends React.Component{
     }
   }
 
-  getStatePubDeal() {
+  getStatePubDeal(){
     //console.log("getting state rec deal");
     if(this.pubTypeRef.current.state.selectedOption != null && this.pubTypeRef.current.state.selectedOption.value != this.state.publishingDealSelected) {
       //console.log(this.dealTypeRef.current.state.selectedOption.value);
@@ -567,7 +556,7 @@ class TestCompPage extends React.Component{
     //console.log("Node: " + node);
   }
 
-  getStateRecDeal() {
+  getStateRecDeal(){
     //console.log("getting state rec deal");
     if(this.dealTypeRef.current.state.selectedOption != null && this.dealTypeRef.current.state.selectedOption.value != this.state.recordDealSelected) {
       //console.log(this.dealTypeRef.current.state.selectedOption.value);
@@ -578,12 +567,12 @@ class TestCompPage extends React.Component{
     //console.log("Node: " + node);
   }
 
-  testMap() {
+  testMap(){
     this.state.providers.map(provider => console.log(provider.name));
     //this.state.providers.map(provider => ce('tr', null, ce('td', null, ce('text', null, provider.name))), ce('tr', null, ce('td', null, ce('input', {type: 'checkbox', checked: provider.includeInCalculations, onClick: e => this.toggleMe(provider.id)}))))
   }
 
-  handleMyClick(id) {
+  handleMyClick(id){
     //console.log("clicked on " + id);
     //console.log(this.state.roleTypes[0].ref.current.state.button);
 
@@ -620,40 +609,41 @@ class TestCompPage extends React.Component{
     }
   }
 
-    changeStreams(e) {
+  changeStreams(e){
 
-        if(this.estStreamsRef.current.state.value != "" && parseInt(this.estStreamsRef.current.state.value) != this.state.streamNumber) {
-            const l = parseInt(this.estStreamsRef.current.state.value);
-            this.updateStreams(l);
-        }
-    }
-  updateStreams(e) {
+      if(this.estStreamsRef.current.state.value != "" && parseInt(this.estStreamsRef.current.state.value) != this.state.streamNumber) {
+          const l = parseInt(this.estStreamsRef.current.state.value);
+          this.updateStreams(l);
+      }
+  }
+
+  updateStreams(e){
     console.log("changed estStreams to: " + e);
       this.setState({streamNumber: e}, () => {
           this.calculate();
       });
   }
 
-  updateAdvance(e) {
+  updateAdvance(e){
     console.log("changed advance to: " + e);
       this.setState({advance: e}, () => {
           this.calculate();
       });
    }
 
-  setSliderValue(val) {
+  setSliderValue(val){
       this.setState( {sliderValue: val});
       this.calculate();
   }
 
-  updateSlider(e) {
+  updateSlider(e){
       console.log(e.target.value)
       //val = document.getElementById("splitSlider").value()
       this.setState( {sliderValue: e.target.value})
       this.calculate();
   }
 
-  buildPublishingDealSelect() {
+  buildPublishingDealSelect(){
       let fullTrad = {
           id: 0,
           name: "Full/Traditional"
@@ -674,21 +664,19 @@ class TestCompPage extends React.Component{
       this.setState( {publishDeal: deals})
   }
 
-  handlePublishingDealSelect(e) {
+  handlePublishingDealSelect(e){
       console.log(e);
       this.setState({publishingDealSelected: e});
       this.calculate();
   }
 
-  handleRoleButton(which) {
+  handleRoleButton(which){
       console.log(which);
       this.setState({role: which})
       this.calculate();
   }
 
- // handleRecDealSelect(e)
-
-  handleRecDealSelect(e) {
+  handleRecDealSelect(e){
      console.log("selecting Roles");
      console.log(e);
      if(e === "royalty") {
@@ -715,11 +703,11 @@ class TestCompPage extends React.Component{
      this.calculate();
   }
 
-  changeSliderVal(val) {
+  changeSliderVal(val){
       this.dealSliderRef.current.setState({values: [val]});
   }
 
-  doSliderStuff(e) {
+  doSliderStuff(e){
    console.log(this.dealSliderRef.current.state.values);
    if(this.dealSliderRef.current.state.values != null && this.dealSliderRef.current.state.values[0] != this.state.sliderValue) {
      //console.log("setting slider state to: " + this.dealSliderRef.current.state.values[0]);
@@ -728,7 +716,7 @@ class TestCompPage extends React.Component{
    }
   }
 
-  buildRecordDealSelect() {
+  buildRecordDealSelect(){
       //console.log("Roles!");
       let royalty = {
           id: 0,
@@ -751,15 +739,14 @@ class TestCompPage extends React.Component{
       this.setState( {recordDeal: rls} );
   }
 
-  toggleMe(index) {
+  toggleMe(index){
     this.state.providers[index].includeInCalculations = !this.state.providers[index].includeInCalculations;
     //console.log(dsps[index].name);
     //console.log(dsps[index].includeInCalculations);
     this.calculate();
   }
 
-  /// MATH STUFF /////
-  calculate() {
+  calculate(){
       this.calcTotalCosts();
       this.getPublisherShare();
 
@@ -863,7 +850,7 @@ class TestCompPage extends React.Component{
       }
   }
 
-  weightedAverageOfSelected() {
+  weightedAverageOfSelected(){
 
       let sum = 0.0;
       for(let i=0; i < this.state.providers.length; i++) {
@@ -884,7 +871,7 @@ class TestCompPage extends React.Component{
       return sum/sumOfWeights;
   }
 
-  getTotalEarnings(artistShare) {
+  getTotalEarnings(artistShare){
       if(this.state.role === "both") {
           this.setState({totalEarnings: artistShare + this.state.artistWriterEarnings});
       } else if(this.state.role === "artist") {
@@ -913,7 +900,7 @@ class TestCompPage extends React.Component{
       }
   }
 
-  updateMoneyGoal(e) {
+  updateMoneyGoal(e){
     console.log("changed Money Goals to: " + e);
     console.log("*********" + this.state.moneyGoalStreamsNeeded)
     this.setState({moneyGoalInput: e});

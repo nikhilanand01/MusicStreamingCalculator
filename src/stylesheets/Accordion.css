@@ -1,0 +1,36 @@
+.accodion-container{
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+#accodion {
+	border-radius: 18px;
+	/* box-shadow: 0 6px 22px 0 rgba(19, 102, 202, 0.1); */
+	background-color: #ffffff;
+	border: solid 2px #e5f1ff;
+	padding: 15px 25px;
+	/* cursor: pointer; */
+	overflow: hidden;
+	border-radius: 10px;
+	margin: 10px auto;
+}
+
+.open{
+	/* height: 150px; */
+	transition: height 0.25s ease-in;
+  padding: 15px 25px;
+}
+.close{
+	height: 15px;
+	transition: height 0.25s ease-out;
+}
+
+.icon{
+	font-size: 25px;
+  font-weight: 600;
+	position: absolute;
+  cursor: pointer;
+	right: 25px;
+	top: -15px;
+}

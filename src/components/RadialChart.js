@@ -71,8 +71,8 @@ class RadialChart extends Component {
           options={this.state.optionsRadial}
           series={this.props.series}
           type="radialBar"
-          height={200}
-          width={200}/>
+          height={this.props.height}
+          width={this.props.width}/>
       </div>
       );
     }

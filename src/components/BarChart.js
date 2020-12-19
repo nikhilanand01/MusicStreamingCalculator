@@ -31,7 +31,7 @@ class BarChart extends React.Component {
         },
         legend: {
           position: 'bottom',
-          horizontalAlign: 'right',
+          horizontalAlign: 'center',
         },
         fill: {
           opacity: 1

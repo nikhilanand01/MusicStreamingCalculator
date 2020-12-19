@@ -1,5 +1,5 @@
 button.buttonTrue{
-padding: 10px 20px;
+padding: 10px 15px;
 cursor: pointer;
 opacity: 0.6;
 background: white;
@@ -11,10 +11,11 @@ border-bottom: 2px solid transparent;
 transition: ease border-bottom 100ms;
 border-bottom: 2px solid black;
 opacity: 1;
+margin-right: 5px;
 }
 
 button.buttonFalse{
-padding: 10px 14px;
+padding: 10px 15px;
 cursor: pointer;
 opacity: 0.6;
 background: white;
