@@ -178,6 +178,7 @@ class TestCompPage extends React.Component{
         this.costsMiscRef = React.createRef();
         this.dealSliderRef = React.createRef();
         this.estStreamsRef = React.createRef();
+        this.streamsSliderRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -295,7 +296,12 @@ class TestCompPage extends React.Component{
                        locked={false}
                        active={false}
                        onChange={e => this.changeStreams(e)}/>
+<<<<<<< HEAD
                     <StreamSlider />
+=======
+                    <StreamSlider ref={this.streamsSliderRef} onChange={e => this.updateStreamSlider(e)}/>
+                  </div>
+>>>>>>> 4e3b56a8e6dbcdcedf483d0e42c5f19a5f1f64d5
                   <div>
                     <Accordion title="Which DSPs Are Included?"
                               body={
@@ -413,6 +419,11 @@ class TestCompPage extends React.Component{
         </div>
 
         )
+    }
+
+    updateStreamSlider(e) {
+      console.log("updating stream slider");
+      console.log(this.streamsSliderRef.current.state.values);
     }
 
 
