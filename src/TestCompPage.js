@@ -65,15 +65,6 @@ let recBoth = {
 
 const roleTypes = [recArtist, recWriter, recBoth];
 
-{/* LABEL SERVICES RENDER CODE....
-  <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-  <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
-  <div style={{textAlign: 'right'}}>
-    <SmallText text="Created By: Nikhil Anand, Sam Vincent, Alexandre Perrin, Peter Dyson"/>
-  </div>
-  */}
-
-
 //average / approx payout for publishing for stream
 const avgPubPayout = 0.0007174565191
 
@@ -259,6 +250,14 @@ class TestCompPage extends React.Component{
                           ref={this.dealTypeRef}
                           options={labelDealOptions}
                           onChange = {e => this.getStateRecDeal(e)}/>
+                      <div>
+                        {this.state.recordDealSelected === "labelServices" &&
+                          <div>
+                            <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                            <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
+                          </div>
+                        }
+                      </div>
                       <SmallText text="Record Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
                       <DealSplitSlider ref={this.dealSliderRef}
                           onChange = {e => this.doSliderStuff(e)}/>

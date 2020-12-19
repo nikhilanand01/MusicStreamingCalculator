@@ -21,6 +21,9 @@ class MultiDropDown extends React.Component {
         options={this.props.options}
         className="basic-multi-select"
         classNamePrefix="Select Services"
+        styles={{
+          menu: provided => ({ ...provided, zIndex: 10 })
+          }}
       />
     );
   }
