@@ -10,8 +10,6 @@ class SingleDropDown extends React.Component {
 
   handleChange = selectedOption => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
-    //console.log('My state: ', this.state.selectedOption);
   };
 
 
@@ -25,11 +23,16 @@ class SingleDropDown extends React.Component {
   render() {
     const { selectedOption } = this.state;
 
+    const customStyles = {
+    menu: (provided, state) => ({
+      ...provided,
+      zIndex: 10
+    })
+  }
+
     return (
       <Select
-      styles={{
-        menu: provided => ({ ...provided, zIndex: 10 })
-        }}
+        styles={customStyles}
         value={selectedOption}
         onChange={this.handleChange}
         options={this.props.options}

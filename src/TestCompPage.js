@@ -7,6 +7,7 @@ import SwitchButton from './components/SwitchButton.js';
 import NumberInput from './components/NumberInput.js';
 import TabGroup from './components/ButtonGroup.js';
 import SingleDropDown from './components/SingleDropDown.js';
+import MarketingDropDown from './components/MarketingCostDropDown.js';
 import MultiDropDown from './components/MultiDropDown.js';
 import BarChart from './components/BarChart.js';
 import RadialChart from './components/RadialChart.js';
@@ -14,6 +15,7 @@ import DealSplitSlider from './components/DealSplitSlider.js';
 import StreamSlider from './components/StreamSlider.js';
 import Accordion from './components/Accordion.js';
 import NumberFormat from 'react-number-format';
+import Checkbox from './components/Checkbox.js';
 
 const labelDealOptions = [
   { value: 'royalty', label: 'Royalty' },
@@ -315,21 +317,17 @@ class TestCompPage extends React.Component{
                   <div style={{borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
                     <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
-                        <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
-                            <div style={{}}>
-                              <NumberInput
-                                id= {"costsRecording"}
-                                ref = {this.costsRecordingRef}
-                                label="Recording Costs"
-                                locked={false}
-                                active={false}
-                                onChange = {e => this.getStateCostsRecording(e)}/>
-                            </div>
-                            <div style={{width: '15%'}}>
-                              <SwitchButton/>
-                            </div>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%', paddingRight: '2%', width: '50%'}}>
+                            <NumberInput
+                              id= {"costsRecording"}
+                              ref = {this.costsRecordingRef}
+                              label="Recording Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsRecording(e)}/>
+                            <Checkbox />
                         </div>
-                        <div style={{flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%', paddingRight: '2%', width: '50%'}}>
                             <NumberInput
                               id= {"costsMarketing"}
                               ref = {this.costsMarketingRef}
@@ -337,11 +335,11 @@ class TestCompPage extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsMarketing(e)}/>
-                          <div style={{marginLeft: '1%'}}>
-                            <SingleDropDown options={marketingSplitOptions}/>
+                          <div style={{marginLeft: '2%', width: '50%'}}>
+                            <MarketingDropDown options={marketingSplitOptions}/>
                           </div>
                         </div>
-                        <div style={{ flexDirection: 'row', marginBottom: '2%', paddingRight: '2%'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%', paddingRight: '2%', width: '50%'}}>
                             <NumberInput
                               id= {"costsDistribution"}
                               ref = {this.costsDistributionRef}
@@ -349,11 +347,9 @@ class TestCompPage extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsDistribution(e)}/>
-                          <div style={{width: '15%'}}>
-                            <SwitchButton/>
-                          </div>
+                              <Checkbox />
                         </div>
-                        <div style={{ flexDirection: 'row'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', width: '50%'}}>
                             <NumberInput
                               id= {"costsMisc"}
                               ref = {this.costsMiscRef}
@@ -361,10 +357,10 @@ class TestCompPage extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsMisc(e)}/>
-                          <div style={{width: '15%'}}>
-                            <SwitchButton/>
-                          </div>
+                              <Checkbox />
                         </div>
+
+
                     </div>
                   </div>
                   <div>
@@ -372,11 +368,17 @@ class TestCompPage extends React.Component{
 
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                       <div style={{flexDirection: 'column', marginRight: '5%'}}>
-                        <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                          <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
+                          <Checkbox />
+                        </div>
                         <SmallText text={`Streams Needed: ${this.state.recoupStreamsNeeds.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                       </div>
                       <div style={{flexDirection: 'column'}}>
-                        <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                          <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
+                          <Checkbox />
+                        </div>
                         <NumberInput
                           id= {"moneyGoalInput"}
                           ref = {this.moneyGoalInputRef}
