@@ -795,10 +795,10 @@ class TestCompPage extends React.Component{
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
       }
 
-      console.log("grossRevenue: " + grossRevenue)
-      console.log("totRecoupe: " + totalMoneyToRecoupe)
-      console.log("ArtistRecordEarnings: " + artistRecordShare)
-      console.log("labelShare: " + labelShare)
+      // console.log("grossRevenue: " + grossRevenue)
+      // console.log("totRecoupe: " + totalMoneyToRecoupe)
+      // console.log("ArtistRecordEarnings: " + artistRecordShare)
+      // console.log("labelShare: " + labelShare)
 
       this.setState({
         grossRecordingRev: grossRevenue,
@@ -865,7 +865,7 @@ class TestCompPage extends React.Component{
       }
       if(sumOfWeights <= 0.0) return 0.0
       //console.log(sum)
-      console.log(sum/sumOfWeights);
+      // console.log(sum/sumOfWeights);
       return sum/sumOfWeights;
   }
 
