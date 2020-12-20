@@ -181,6 +181,8 @@ class TestCompPage extends React.Component{
             publishingDealSelected: null,
             advance: 0,
             grossRecordingRev: 0,
+            grossPubRev: 0,
+            grossTotalRev: 0,
             totRecoupe: 0,
             labelShare: 0,
             publisherShare: 0,
@@ -395,7 +397,7 @@ class TestCompPage extends React.Component{
                       <NumberFormat value={`${this.state.artistTotalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                          <NumberFormat value={`${this.state.grossRecordingRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
+                          <NumberFormat value={`${this.state.grossTotalRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
                           <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
                         </div>
                           <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
@@ -807,41 +809,43 @@ class TestCompPage extends React.Component{
 
 
       this.getArtistTotalEarnings(artistRecordShare);
+      this.getGrossTotalEarnings();
 
   }
 
-  getPublisherShare() {
-      let pubGrossRevenue = avgPubPayout * this.state.streamNumber;
-      let pubPerformanceRevenue = pubGrossRevenue * .5;
-      let pubMechanicalRevenue = pubGrossRevenue * .5;
-      let pubPROAdminFee = pubPerformanceRevenue * .165;
-      let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
-      let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
-      let publisherPercentage;
+  getPublisherShare(){
+    let pubGrossRevenue = avgPubPayout * this.state.streamNumber;
+    let pubPerformanceRevenue = pubGrossRevenue * .5;
+    let pubMechanicalRevenue = pubGrossRevenue * .5;
+    let pubPROAdminFee = pubPerformanceRevenue * .165;
+    let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
+    let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
+    let publisherPercentage;
 
-      switch(this.state.publishingDealSelected) {
-        case 'Full/Traditional':
-          publisherPercentage = 1.0;
-          break;
-        case 'Co-Publishing':
-          publisherPercentage = 0.5;
-          break;
-        case 'Admin Deal':
-          publisherPercentage = 0.1;
-          break;
-        case 'No Deal':
-          publisherPercentage = 0.0;
-          break;
-      }
+    switch(this.state.publishingDealSelected) {
+      case 'Full/Traditional':
+        publisherPercentage = 1.0;
+        break;
+      case 'Co-Publishing':
+        publisherPercentage = 0.5;
+        break;
+      case 'Admin Deal':
+        publisherPercentage = 0.1;
+        break;
+      case 'No Deal':
+        publisherPercentage = 0.0;
+        break;
+    }
 
-      let publisherShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage
-      let artistWriterEarnings = ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))
+    let publisherShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage
+    let artistWriterEarnings = ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))
 
-      this.setState({
-        publisherShare: publisherShare,
-        artistWriterEarnings: artistWriterEarnings,
-      },
-      () => {console.log("PUB PERCENTAGE***** " + publisherPercentage)});
+    this.setState({
+      publisherShare: publisherShare,
+      artistWriterEarnings: artistWriterEarnings,
+      grossPubRev: pubGrossRevenue,
+    },
+    () => {console.log("PUB PERCENTAGE***** " + publisherPercentage)});
   }
 
   weightedAverageOfSelected(){
@@ -873,6 +877,10 @@ class TestCompPage extends React.Component{
       } else if(this.state.role === "writer") {
           this.setState({artistTotalEarnings: this.state.artistWriterEarnings});
       }
+  }
+
+  getGrossTotalEarnings(){
+    this.setState({grossTotalRev: this.state.grossRecordingRev + this.state.grossPubRev});
   }
 
   autoRecoup(){
