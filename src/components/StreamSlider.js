@@ -3,7 +3,7 @@ import { Slider, Rail, Handles, Tracks } from 'react-compound-slider'
 
 const sliderStyle = {
   position: 'relative',
-  width: '100%',
+  width: '96%',
   height: 80,
   // touchAction: 'none',
 }
@@ -87,7 +87,7 @@ export class StreamSlider extends Component {
     update: defaultValues.slice(),
   }
 
-  
+
   componentDidUpdate() {
     if (this.props.onChange) {
       this.props.onChange(this.state);

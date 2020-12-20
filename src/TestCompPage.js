@@ -62,7 +62,6 @@ let recBoth = {
   ref: React.createRef(),
   selected: true
 }
-
 const roleTypes = [recArtist, recWriter, recBoth];
 
 //average / approx payout for publishing for stream
@@ -181,12 +180,13 @@ class TestCompPage extends React.Component{
             recordDealSelected: null,
             publishingDealSelected: null,
             advance: 0,
-            grossRev: 0,
+            grossRecordingRev: 0,
             totRecoupe: 0,
+            labelShare: 0,
             publisherShare: 0,
             artistRecordEarnings: 0,
             artistWriterEarnings: 0,
-            totalEarnings: 0,
+            artistTotalEarnings: 0,
             recoupStreamsNeeds: 0,
             moneyGoalInput: 0,
             moneyGoalStreamsNeeded: 0,
@@ -228,8 +228,8 @@ class TestCompPage extends React.Component{
             <div style={{textAlign: 'center'}}>
               <TitleText text="The Streaming Calculator" style={{color: '#111', fontSize: '48px', fontWeight: '700', lineHeight: '48px', margin: '0 0 24px', padding: '0 30px', textAlign: 'center', textTransform: 'uppercase'}}/>
             </div>
-            <div style={{display: 'flex', flexDirection: 'row'}}>
-                <div style={{width: '32%', flexDirection: 'column', paddingRight: '1.25%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <div style={{width: '30%', flexDirection: 'column', paddingRight: '1.25%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -245,11 +245,13 @@ class TestCompPage extends React.Component{
                     </div>
                   <div>
                     <div style={{marginBottom: '8%'}}>
-                      <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                      <SingleDropDown
-                          ref={this.dealTypeRef}
-                          options={labelDealOptions}
-                          onChange = {e => this.getStateRecDeal(e)}/>
+                      <div>
+                        <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                        <SingleDropDown
+                            ref={this.dealTypeRef}
+                            options={labelDealOptions}
+                            onChange = {e => this.getStateRecDeal(e)}/>
+                      </div>
                       <div>
                         {this.state.recordDealSelected === "labelServices" &&
                           <div>
@@ -262,7 +264,7 @@ class TestCompPage extends React.Component{
                       <DealSplitSlider ref={this.dealSliderRef}
                           onChange = {e => this.doSliderStuff(e)}/>
                       <SmallText text="Record Deal Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                      <div style={{display: 'flex', justifyContent: 'center'}}>
+                      <div style={{justifyContent: 'center'}}>
                         <NumberInput ref={this.advanceRef}
                           id= {"numInput"}
                           label = "Advance on Earnings"
@@ -271,7 +273,6 @@ class TestCompPage extends React.Component{
                           onChange = {e => this.getStateAdvance(e)}/>
                       </div>
                     </div>
-
                     <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                     <SingleDropDown
                         ref={this.pubTypeRef}
@@ -283,7 +284,7 @@ class TestCompPage extends React.Component{
 
 
 
-              <div style={{width: '34%', flexDirection: 'column', paddingRight: '1%'}}>
+              <div style={{width: '33%', flexDirection: 'column', paddingRight: '1%'}}>
                   <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                   <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -391,10 +392,10 @@ class TestCompPage extends React.Component{
                   <div>
                     <div>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
-                      <NumberFormat value={`${this.state.totalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
+                      <NumberFormat value={`${this.state.artistTotalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                          <NumberFormat value={`${this.state.grossRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
+                          <NumberFormat value={`${this.state.grossRecordingRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
                           <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
                         </div>
                           <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
@@ -414,12 +415,10 @@ class TestCompPage extends React.Component{
         )
     }
 
-    updateStreamSlider(e) {
-      console.log("updating stream slider");
-      console.log(this.streamsSliderRef.current.state.values);
-    }
-
-
+  updateStreamSlider(e) {
+    console.log("updating stream slider");
+    console.log(this.streamsSliderRef.current.state.values);
+  }
 
   getRoleButton(name){
        console.log(name);
@@ -446,7 +445,7 @@ class TestCompPage extends React.Component{
   getButtonClick(id){
     //console.log("clicked: " + id);
     //console.log(this.state.providers[id].ref.current.state);
-    if(this.state.providers[id].ref.current.state.button != null && this.state.providers[id].ref.current.state.button != this.state.providers[id].includeInCalculations) {
+    if(this.state.providers[id].ref.current.state.button !== null && this.state.providers[id].ref.current.state.button !== this.state.providers[id].includeInCalculations) {
       this.toggleMe(id);
     }
 
@@ -454,13 +453,7 @@ class TestCompPage extends React.Component{
 
   calcTotalCosts(){
     let costsTotal;
-    console.log("Costs of recording: " + this.state.costsRecording);
-    console.log("Costs of marketing: " + this.state.costsMarketing);
-    console.log("Costs of Distribution: " + this.state.costsDistribution);
-    console.log("Misc costs: " + this.state.costsMic);
     costsTotal = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
-
-    console.log("TOTAL COSTS " + costsTotal)
 
     this.setState({
       costsTotal: costsTotal
@@ -481,14 +474,14 @@ class TestCompPage extends React.Component{
 
   getStateCostsRecording(){
     console.log(this.costsRecordingRef.current.state)
-    if(this.costsRecordingRef.current.state.value != "" && parseInt(this.costsRecordingRef.current.state.value) != this.state.costsRecording) {
+    if(this.costsRecordingRef.current.state.value !== "" && parseInt(this.costsRecordingRef.current.state.value) !== this.state.costsRecording) {
       const e = parseInt(this.costsRecordingRef.current.state.value);
       this.updateCostsRecording(e);
     }
   }
 
   updateCostsRecording(e){
-      console.log("changed RECORDING costs to: " + e);
+      // console.log("changed RECORDING costs to: " + e);
       this.setState({costsRecording: e}, () => {
           this.calculate();
       });
@@ -498,14 +491,14 @@ class TestCompPage extends React.Component{
 
   getStateCostsMarketing(){
     console.log(this.costsMarketingRef.current.state)
-    if(this.costsMarketingRef.current.state.value != "" && parseInt(this.costsMarketingRef.current.state.value) != this.state.costsMarketing) {
+    if(this.costsMarketingRef.current.state.value !== "" && parseInt(this.costsMarketingRef.current.state.value) !== this.state.costsMarketing) {
       const e = parseInt(this.costsMarketingRef.current.state.value);
       this.updateCostsMarketing(e);
     }
   }
 
   updateCostsMarketing(e){
-      console.log("changed MARKETING costs to: " + e);
+      // console.log("changed MARKETING costs to: " + e);
       this.setState({costsMarketing: e}, () => {
           this.calculate();
       });
@@ -513,14 +506,14 @@ class TestCompPage extends React.Component{
 
   getStateCostsDistribution(){
     console.log(this.costsDistributionRef.current.state)
-    if(this.costsDistributionRef.current.state.value != "" && parseInt(this.costsDistributionRef.current.state.value) != this.state.costsDistribution) {
+    if(this.costsDistributionRef.current.state.value !== "" && parseInt(this.costsDistributionRef.current.state.value) !== this.state.costsDistribution) {
       const e = parseInt(this.costsDistributionRef.current.state.value);
       this.updateCostsDistribution(e);
     }
   }
 
   updateCostsDistribution(e){
-      console.log("changed DISTRIBUTION costs to: " + e);
+      // console.log("changed DISTRIBUTION costs to: " + e);
       this.setState({costsDistribution: e}, () => {
           this.calculate();
       });
@@ -528,14 +521,14 @@ class TestCompPage extends React.Component{
 
   getStateCostsMisc(){
     console.log(this.costsMiscRef.current.state)
-    if(this.costsMiscRef.current.state.value != "" && parseInt(this.costsMiscRef.current.state.value) != this.state.costsMisc) {
+    if(this.costsMiscRef.current.state.value !== "" && parseInt(this.costsMiscRef.current.state.value) !== this.state.costsMisc) {
       const e = parseInt(this.costsMiscRef.current.state.value);
       this.updateCostsMisc(e);
     }
   }
 
   updateCostsMisc(e){
-      console.log("changed MISC costs to: " + e);
+      // console.log("changed MISC costs to: " + e);
       this.setState({costsMisc: e}, () => {
           this.calculate();
       });
@@ -543,7 +536,7 @@ class TestCompPage extends React.Component{
 
   getStateAdvance(){
     console.log(this.advanceRef.current.state)
-    if(this.advanceRef.current.state.value != "" && parseInt(this.advanceRef.current.state.value) != this.state.advance) {
+    if(this.advanceRef.current.state.value !== "" && parseInt(this.advanceRef.current.state.value) !== this.state.advance) {
         const e = parseInt(this.advanceRef.current.state.value);
         this.updateAdvance(e);
     }
@@ -551,7 +544,7 @@ class TestCompPage extends React.Component{
 
   getStatePubDeal(){
     //console.log("getting state rec deal");
-    if(this.pubTypeRef.current.state.selectedOption != null && this.pubTypeRef.current.state.selectedOption.value != this.state.publishingDealSelected) {
+    if(this.pubTypeRef.current.state.selectedOption !== null && this.pubTypeRef.current.state.selectedOption.value !== this.state.publishingDealSelected) {
       //console.log(this.dealTypeRef.current.state.selectedOption.value);
       const e = this.pubTypeRef.current.state.selectedOption.value;
       this.handlePublishingDealSelect(e);
@@ -562,7 +555,7 @@ class TestCompPage extends React.Component{
 
   getStateRecDeal(){
     //console.log("getting state rec deal");
-    if(this.dealTypeRef.current.state.selectedOption != null && this.dealTypeRef.current.state.selectedOption.value != this.state.recordDealSelected) {
+    if(this.dealTypeRef.current.state.selectedOption !== null && this.dealTypeRef.current.state.selectedOption.value !== this.state.recordDealSelected) {
       //console.log(this.dealTypeRef.current.state.selectedOption.value);
       const e = this.dealTypeRef.current.state.selectedOption.value;
       this.handleRecDealSelect(e);
@@ -581,7 +574,7 @@ class TestCompPage extends React.Component{
     //console.log(this.state.roleTypes[0].ref.current.state.button);
 
     //this.setState({role: id});
-    if(id==="artist" && this.state.roleTypes[0].selected != this.state.roleTypes[0].ref.current.state.button) {
+    if(id==="artist" && this.state.roleTypes[0].selected !== this.state.roleTypes[0].ref.current.state.button) {
       this.setState({role: "artist"});
       this.state.roleTypes[0].selected = true;
       this.state.roleTypes[0].ref.current.setState({button: true});
@@ -591,7 +584,7 @@ class TestCompPage extends React.Component{
       this.state.roleTypes[2].ref.current.setState({button: false});
       this.calculate();
     }
-    if(id==="writer" && this.state.roleTypes[1].selected != this.state.roleTypes[1].ref.current.state.button) {
+    if(id==="writer" && this.state.roleTypes[1].selected !== this.state.roleTypes[1].ref.current.state.button) {
       this.setState({role: "writer"});
       this.state.roleTypes[0].selected = false;
       this.state.roleTypes[0].ref.current.setState({button: false});
@@ -601,7 +594,7 @@ class TestCompPage extends React.Component{
       this.state.roleTypes[2].ref.current.setState({button: false});
       this.calculate();
     }
-    if(id==="both" && this.state.roleTypes[2].selected != this.state.roleTypes[2].ref.current.state.button) {
+    if(id==="both" && this.state.roleTypes[2].selected !== this.state.roleTypes[2].ref.current.state.button) {
       this.setState({role: "both"});
       this.state.roleTypes[0].selected = false;
       this.state.roleTypes[0].ref.current.setState({button: false});
@@ -615,21 +608,21 @@ class TestCompPage extends React.Component{
 
   changeStreams(e){
 
-      if(this.estStreamsRef.current.state.value != "" && parseInt(this.estStreamsRef.current.state.value) != this.state.streamNumber) {
+      if(this.estStreamsRef.current.state.value !== "" && parseInt(this.estStreamsRef.current.state.value) !== this.state.streamNumber) {
           const l = parseInt(this.estStreamsRef.current.state.value);
           this.updateStreams(l);
       }
   }
 
   updateStreams(e){
-    console.log("changed estStreams to: " + e);
+    // console.log("changed estStreams to: " + e);
       this.setState({streamNumber: e}, () => {
           this.calculate();
       });
   }
 
   updateAdvance(e){
-    console.log("changed advance to: " + e);
+    // console.log("changed advance to: " + e);
       this.setState({advance: e}, () => {
           this.calculate();
       });
@@ -641,7 +634,7 @@ class TestCompPage extends React.Component{
   }
 
   updateSlider(e){
-      console.log(e.target.value)
+      // console.log(e.target.value)
       //val = document.getElementById("splitSlider").value()
       this.setState( {sliderValue: e.target.value})
       this.calculate();
@@ -669,7 +662,7 @@ class TestCompPage extends React.Component{
   }
 
   handlePublishingDealSelect(e){
-      console.log(e);
+      // console.log(e);
       this.setState({publishingDealSelected: e});
       this.calculate();
   }
@@ -702,7 +695,7 @@ class TestCompPage extends React.Component{
      //document.getElementById("splitSlider").value = this.state.sliderValue;
      //console.log(this.myRef.current);
      //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
-     console.log("sliderValue: " + this.state.sliderValue);
+     // console.log("sliderValue: " + this.state.sliderValue);
      this.setState({recordDealSelected: e})
      this.calculate();
   }
@@ -713,7 +706,7 @@ class TestCompPage extends React.Component{
 
   doSliderStuff(e){
    console.log(this.dealSliderRef.current.state.values);
-   if(this.dealSliderRef.current.state.values != null && this.dealSliderRef.current.state.values[0] != this.state.sliderValue) {
+   if(this.dealSliderRef.current.state.values !== null && this.dealSliderRef.current.state.values[0] !== this.state.sliderValue) {
      //console.log("setting slider state to: " + this.dealSliderRef.current.state.values[0]);
      this.setState({sliderValue: this.dealSliderRef.current.state.values[0]});
      this.calculate();
@@ -755,35 +748,29 @@ class TestCompPage extends React.Component{
       this.getPublisherShare();
 
       console.log("calculating");
-      let artistShare = 0;
+      let artistRecordShare = 0;
       let labelShare = 0;
-
       let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
-      //console.log(totalMoneyToRecoupe)
       let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
-      //console.log("grossRevenue: " + grossRevenue)
-      //checkDSPs();
-      //console.log(estStreams.value * avgPayout);
-      //console.log(estStreams.value * weightedAverageOfSelected());
+
       if (this.state.recordDealSelected === "royalty") {
           // Artist Split
           if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
             console.log("unrecouped");
-            artistShare = 0;
+            artistRecordShare = 0;
           } else {
-            artistShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
+            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
 
       } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "Distribution Fee") {
-          //net profit deals are generally guaranteed 50/50, distribution are generally 70/30 artist/label
           let profit = (grossRevenue - this.state.costsTotal);
           // Artist Split
           if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
             console.log("unrecouped");
-            artistShare = 0;
+            artistRecordShare = 0;
           } else {
-            artistShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
+            artistRecordShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
           }
           // Label Split Net Profit, Distributions
           if(this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent") {
@@ -792,66 +779,69 @@ class TestCompPage extends React.Component{
               } else {
                   labelShare = (profit * (1-(parseFloat(this.state.sliderValue)/100)));
               }
-          } else labelShare = grossRevenue - artistShare;
+          } else labelShare = grossRevenue - artistRecordShare;
 
 
       } else if (this.state.recordDealSelected === "labelServices") {
           // Artist Split
           if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
             console.log("unrecouped");
-            artistShare = 0;
+            artistRecordShare = 0;
           } else {
-            artistShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
+            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
       }
 
       console.log("grossRevenue: " + grossRevenue)
       console.log("totRecoupe: " + totalMoneyToRecoupe)
-      console.log("ArtistRecordEarnings: " + artistShare)
-      console.log("publisherShare: " + labelShare)
+      console.log("ArtistRecordEarnings: " + artistRecordShare)
+      console.log("labelShare: " + labelShare)
 
       this.setState({
-        grossRev: grossRevenue,
+        grossRecordingRev: grossRevenue,
         totRecoupe: totalMoneyToRecoupe,
-        artistRecordEarnings: artistShare,
-        publisherShare: labelShare,
-        }, () => {console.log("done calculating")});
+        artistRecordEarnings: artistRecordShare,
+        labelShare: labelShare,
+        });
 
 
-      this.getTotalEarnings(artistShare);
+      this.getArtistTotalEarnings(artistRecordShare);
 
   }
 
   getPublisherShare() {
-      //console.log("avgPubPayout: " + avgPubPayout)
-
       let pubGrossRevenue = avgPubPayout * this.state.streamNumber;
       let pubPerformanceRevenue = pubGrossRevenue * .5;
       let pubMechanicalRevenue = pubGrossRevenue * .5;
       let pubPROAdminFee = pubPerformanceRevenue * .165;
       let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
       let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
-
       let publisherPercentage;
 
-      if(this.state.publishingDealSelected === "Full/Traditional") {
+      switch(this.state.publishingDealSelected) {
+        case 'Full/Traditional':
           publisherPercentage = 1.0;
-          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
-      } else if(this.state.publishingDealSelected === "Co-Publishing") {
+          break;
+        case 'Co-Publishing':
           publisherPercentage = 0.5;
-          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
-      } else if(this.state.publishingDealSelected === "Admin Deal") {
+          break;
+        case 'Admin Deal':
           publisherPercentage = 0.1;
-          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
-      } else if(this.state.publishingDealSelected === "No Deal") {
+          break;
+        case 'No Deal':
           publisherPercentage = 0.0;
-          this.setState({publisherShare: ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage});
-          this.setState({artistWriterEarnings: ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1- publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))});
+          break;
       }
+
+      let publisherShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage
+      let artistWriterEarnings = ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))
+
+      this.setState({
+        publisherShare: publisherShare,
+        artistWriterEarnings: artistWriterEarnings,
+      },
+      () => {console.log("PUB PERCENTAGE***** " + publisherPercentage)});
   }
 
   weightedAverageOfSelected(){
@@ -875,13 +865,13 @@ class TestCompPage extends React.Component{
       return sum/sumOfWeights;
   }
 
-  getTotalEarnings(artistShare){
+  getArtistTotalEarnings(artistRecordShare){
       if(this.state.role === "both") {
-          this.setState({totalEarnings: artistShare + this.state.artistWriterEarnings});
+          this.setState({artistTotalEarnings: artistRecordShare + this.state.artistWriterEarnings});
       } else if(this.state.role === "artist") {
-          this.setState({totalEarnings: artistShare});
+          this.setState({artistTotalEarnings: artistRecordShare});
       } else if(this.state.role === "writer") {
-          this.setState({totalEarnings: this.state.artistWriterEarnings});
+          this.setState({artistTotalEarnings: this.state.artistWriterEarnings});
       }
   }
 
@@ -897,7 +887,7 @@ class TestCompPage extends React.Component{
 
   getStateMoneyGoalInput(){
     console.log(this.moneyGoalInputRef.current.state);
-    if(this.moneyGoalInputRef.current.state.value != "" && parseInt(this.moneyGoalInputRef.current.state.value) != this.state.moneyGoalInput)
+    if(this.moneyGoalInputRef.current.state.value !== "" && parseInt(this.moneyGoalInputRef.current.state.value) !== this.state.moneyGoalInput)
       {
        const e = parseInt(this.moneyGoalInputRef.current.state.value);
        this.updateMoneyGoal(e);
@@ -905,8 +895,8 @@ class TestCompPage extends React.Component{
   }
 
   updateMoneyGoal(e){
-    console.log("changed Money Goals to: " + e);
-    console.log("*********" + this.state.moneyGoalStreamsNeeded)
+    // console.log("changed Money Goals to: " + e);
+    // console.log("*********" + this.state.moneyGoalStreamsNeeded)
     this.setState({moneyGoalInput: e});
     this.calculate();
   }
