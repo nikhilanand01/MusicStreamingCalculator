@@ -1,15 +1,14 @@
 import React from 'react';
-
 import './App.css';
 import CalcPage from './CalcPage.js';
-import TestCompPage from './TestCompPage.js';
+import DesktopVersion from './DesktopVersion.js';
 
 
 function App() {
   return (
     <div className="App">
       {/*<CalcPage/>*/}
-      <TestCompPage/>
+      <DesktopVersion/>
     </div>
   );
 }

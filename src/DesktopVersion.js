@@ -152,7 +152,7 @@ let tidal = {
     includeInCalculations: true
 };
 
-class TestCompPage extends React.Component{
+class DesktopVersion extends React.Component{
     constructor(props) {
         super(props);
         this.dealTypeRef = React.createRef();
@@ -228,12 +228,12 @@ class TestCompPage extends React.Component{
 
     render() {
       return (
-        <div style={{padding: '2%', display: 'flex', flexDirection: 'column'}}>
+        <div style={{padding: '2%', display: 'flex', flexDirection: 'column', backgroundColor: '#f5f5f5'}}>
             <div style={{textAlign: 'center'}}>
               <TitleText text="The Streaming Calculator" style={{color: '#111', fontSize: '48px', fontWeight: '700', lineHeight: '48px', margin: '0 0 24px', padding: '0 30px', textAlign: 'center', textTransform: 'uppercase'}}/>
             </div>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <div style={{width: '30%', flexDirection: 'column', paddingRight: '1.25%', marginRight: '1%', borderRight: 'thin dotted #b3d0ff'}}>
+                <div style={{width: '30%', flexDirection: 'column', padding: '0.75% 1% 0% 1%', borderRight: 'thin dashed #b3d0ff', borderLeft: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderTop: 'thin solid #b3d0ff', backgroundColor: '#fff'}}>
                     <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -288,7 +288,7 @@ class TestCompPage extends React.Component{
 
 
 
-              <div style={{width: '33%', flexDirection: 'column', paddingRight: '1%'}}>
+              <div style={{width: '34%', flexDirection: 'column', padding: '0.75% 1% 0% 1%',marginRight: '1%', borderTop: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderRight:'thin solid #b3d0ff', backgroundColor: '#fff'}}>
                   <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
                   <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -392,7 +392,7 @@ class TestCompPage extends React.Component{
                   </div>
               </div>
 
-                <div style={{flexDirection: 'column', width: '35%', border: 'thin solid #b3d0ff', backgroundColor: '#f2f6ff'}}>
+                <div style={{flexDirection: 'column', width: '35%', border: 'thin solid #b3d0ff', backgroundColor: '#f2f6ff', paddingTop: '0.75%'}}>
                   <div>
                     <div>
                       <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
@@ -944,4 +944,4 @@ class TestCompPage extends React.Component{
 }
 
 
-export default TestCompPage;
+export default DesktopVersion;
