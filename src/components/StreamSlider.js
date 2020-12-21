@@ -24,7 +24,7 @@ function GetMiddleValue(min, max) {
 }
 
 function MaxNumb(){
-  return Math.floor(Math.random() * 1000000);
+  return 1000000;//Math.floor(Math.random() * 1000000);
 }
 
 
@@ -83,8 +83,8 @@ function Track({ source, target, getTrackProps }) {
 
 export class StreamSlider extends Component {
   state = {
-    values: defaultValues.slice(),
-    update: defaultValues.slice(),
+    values: this.props.values.slice(),
+    update: this.props.values.slice(),
   }
 
 
@@ -94,9 +94,9 @@ export class StreamSlider extends Component {
     }
   }
 
-  onUpdate = update => {
-    this.setState({ update })
-  }
+  //onUpdate = update => {
+  //  this.setState({ update })
+  //}
 
   onChange = values => {
     this.setState({ values })
@@ -111,8 +111,7 @@ export class StreamSlider extends Component {
       <div style={{ height: 70, width: '100%' }}>
         <Slider
           rootStyle={sliderStyle}
-          domain={domain}
-          onUpdate={this.onUpdate}
+          domain={this.props.domain}
           onChange={this.onChange}
           values={values}
           mode={1}
