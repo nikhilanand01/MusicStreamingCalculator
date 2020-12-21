@@ -198,13 +198,13 @@ class DesktopVersion extends React.Component{
             moneyGoalStreamsNeeded: 0,
             seriesBar: [{
               name: 'From Recording',
-              data: [16255, 100558, 0]
+              data: [0, 0, 0]
             }, {
               name: 'From Writing',
-              data: [17371, 3191, 3700]
+              data: [0, 0, 0]
             },{
               name: 'From Advance',
-              data: [1000, 0, 0]
+              data: [0, 0, 0]
             }
           ],
           seriesRadial: [],
@@ -220,7 +220,7 @@ class DesktopVersion extends React.Component{
 
     componentDidMount() {
         this.buildRecordDealSelect();
-        this.handleRoleButton("Writer & Artist");
+        this.handleRoleButton();
         this.buildPublishingDealSelect();
         this.setSliderValue(50);
         this.testMap();
@@ -897,11 +897,11 @@ class DesktopVersion extends React.Component{
 
   getArtistTotalEarnings(){
       if(this.state.role === "both") {
-          this.setState({artistTotalEarnings: this.state.artistRecordEarnings + this.state.artistWriterEarnings});
+          this.setState({artistTotalEarnings: this.state.artistRecordEarnings + (this.state.artistWriterEarnings > 0 ? this.state.artistWriterEarnings : 0)});
       } else if(this.state.role === "artist") {
           this.setState({artistTotalEarnings: this.state.artistRecordEarnings});
       } else if(this.state.role === "writer") {
-          this.setState({artistTotalEarnings: this.state.artistWriterEarnings});
+          this.setState({artistTotalEarnings: (this.state.artistWriterEarnings > 0 ? this.state.artistWriterEarnings : 0)});
       }
   }
 
