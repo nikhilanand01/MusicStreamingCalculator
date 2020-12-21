@@ -175,7 +175,7 @@ class DesktopVersion extends React.Component{
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
-            streamNumber: 1000,
+            streamNumber: 0,
             role: null,
             recordDeal: [],
             publishDeal: [],
@@ -252,7 +252,7 @@ class DesktopVersion extends React.Component{
                     </div>
                   <div>
                     {this.state.role !== "writer" &&
-                      <div style={{margin: '3% 0% 8% 0%', borderTop: 'thin dotted #b3d0ff'}}>
+                      <div style={{margin: '3% 0% 4% 0%', borderTop: 'thin dotted #b3d0ff'}}>
                         <div>
                           <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                           <SingleDropDown
@@ -347,7 +347,7 @@ class DesktopVersion extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsMarketing(e)}/>
-                          <div style={{marginLeft: '2%', width: '48%'}}>
+                          <div style={{marginLeft: '2%', width: '46%'}}>
                             <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 0px'}}/>
                             <MarketingDropDown options={marketingSplitOptions}/>
                           </div>
@@ -356,7 +356,7 @@ class DesktopVersion extends React.Component{
                             <NumberInput
                               id= {"costsDistribution"}
                               ref = {this.costsDistributionRef}
-                              label="Distrubtion Costs"
+                              label="Distribution Costs"
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsDistribution(e)}/>
@@ -386,16 +386,17 @@ class DesktopVersion extends React.Component{
                         body={
                           <div>
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                              <div style={{flexDirection: 'column', marginRight: '5%'}}>
+                              <div style={{flexDirection: 'column', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
+                                <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
+                                <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
                                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                  <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
+                                  <SmallText text="Check" style={{fontSize: '12px',}}/>
                                   <Checkbox/>
                                 </div>
-                                <SmallText text={`Streams Needed: ${this.state.recoupStreamsNeeds.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                               </div>
-                              <div style={{flexDirection: 'column'}}>
+                              <div style={{flexDirection: 'column', paddingLeft: '3%'}}>
                                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                  <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
+                                  <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
                                   <Checkbox />
                                 </div>
                                 <NumberInput
@@ -405,7 +406,7 @@ class DesktopVersion extends React.Component{
                                   locked={false}
                                   active={false}
                                   onChange = {e => this.getStateMoneyGoalInput(e)}/>
-                                {/*<SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/> */}
+                                <SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
                               </div>
                             </div>
                           </div>
@@ -802,6 +803,7 @@ class DesktopVersion extends React.Component{
           this.getGrossTotalEarnings();
           this.updateGraphs();
           this.percentRecouped();
+          this.autoRecoup();
         });
 
 
@@ -898,6 +900,10 @@ class DesktopVersion extends React.Component{
      } else {
        recoupStreamsNeeds = ((this.state.costsTotal + this.state.advance) / (parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
      }
+
+    this.setState({
+      recoupStreamsNeeds: recoupStreamsNeeds
+    })
   }
 
   getStateMoneyGoalInput(){
@@ -939,13 +945,11 @@ class DesktopVersion extends React.Component{
         } else {
           recoupPercent = 0
         }
-
       }
     }
     //return recoupPercent;
     this.setState({seriesRadial: [recoupPercent]},() => {
-    //this.calculate();
-    console.log("recoupPercent: " + recoupPercent)
+    // this.calculate();
   });
   }
 
