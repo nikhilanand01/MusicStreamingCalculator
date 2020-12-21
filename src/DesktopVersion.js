@@ -190,6 +190,7 @@ class DesktopVersion extends React.Component{
             labelPublishingShare: 0,
             publisherShare: 0,
             artistRecordEarnings: 0,
+            artistUnrecoupedAmount: 0,
             artistWriterEarnings: 0,
             artistTotalEarnings: 0,
             recoupStreamsNeeds: 0,
@@ -587,7 +588,7 @@ class DesktopVersion extends React.Component{
       this.state.roleTypes[2].selected = false;
       this.state.roleTypes[2].ref.current.setState({button: false});
       this.setState({role: "artist"}, () => {this.calculate()});
-      
+
     }
     if(id==="writer" && this.state.roleTypes[1].selected !== this.state.roleTypes[1].ref.current.state.button) {
       this.state.roleTypes[0].selected = false;
@@ -699,7 +700,7 @@ class DesktopVersion extends React.Component{
      //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
      // console.log("sliderValue: " + this.state.sliderValue);
      this.setState({recordDealSelected: e}, () => {this.calculate()})
-     
+
   }
 
   changeSliderVal(val){
@@ -752,7 +753,9 @@ class DesktopVersion extends React.Component{
       console.log("calculating");
       let artistRecordShare = 0;
       let labelShare = 0;
-      let totalMoneyToRecoupe = parseFloat(this.state.advance) + parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+      let artistUnrecoupedAmount = 0;
+      let totalCosts = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+      let totalMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
       let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
 
       if (this.state.recordDealSelected === "royalty") {
@@ -760,6 +763,7 @@ class DesktopVersion extends React.Component{
           if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
             console.log("unrecouped");
             artistRecordShare = 0;
+            artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe);
           } else {
             artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
           }
@@ -771,6 +775,7 @@ class DesktopVersion extends React.Component{
           if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
             console.log("unrecouped");
             artistRecordShare = 0;
+            artistUnrecoupedAmount = Math.abs(((grossRevenue - totalCosts)*(parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance));
           } else {
             artistRecordShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
           }
@@ -805,6 +810,7 @@ class DesktopVersion extends React.Component{
         totRecoupe: totalMoneyToRecoupe,
         artistRecordEarnings: artistRecordShare,
         labelShare: labelShare,
+        artistUnrecoupedAmount: artistUnrecoupedAmount,
         }, () => {
 
           this.getArtistTotalEarnings();
@@ -817,7 +823,7 @@ class DesktopVersion extends React.Component{
   }
 
   updateGraphs() {
-    this.setState({seriesBar: 
+    this.setState({seriesBar:
       [{
               name: 'From Recording',
               data: [this.state.artistRecordEarnings.toFixed(0), this.state.labelShare.toFixed(0), 0]
@@ -947,8 +953,12 @@ class DesktopVersion extends React.Component{
       if ((this.state.artistRecordEarnings / this.state.totRecoupe) > 1){
         recoupPercent = 100
       } else {
-        recoupPercent = ((this.state.artistRecordEarnings / this.state.totRecoupe) * 100)
-        recoupPercent.toFixed(0);
+        if(this.state.grossRecordingRev !== 0) {
+          recoupPercent = (((this.state.totRecoupe - this.state.artistUnrecoupedAmount)/this.state.totRecoupe) * 100).toFixed(0)
+        } else {
+          recoupPercent = 0
+        }
+
       }
     }
     //return recoupPercent;
