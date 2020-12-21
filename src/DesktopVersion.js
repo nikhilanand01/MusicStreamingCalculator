@@ -386,27 +386,28 @@ class DesktopVersion extends React.Component{
                         body={
                           <div>
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                              <div style={{flexDirection: 'column', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
-                                <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
-                                <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
+                              <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
+                                <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
                                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                                   <SmallText text="Check" style={{fontSize: '12px',}}/>
                                   <Checkbox/>
                                 </div>
+                                <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
                               </div>
-                              <div style={{flexDirection: 'column', paddingLeft: '3%'}}>
+                              <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
+                                <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
                                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                  <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
-                                  <Checkbox />
+                                  <SmallText text="Check" style={{fontSize: '12px',}}/>
+                                  <Checkbox/>
                                 </div>
                                 <NumberInput
                                   id= {"moneyGoalInput"}
                                   ref = {this.moneyGoalInputRef}
-                                  label="I want to Make...."
+                                  label="I want to Make..."
                                   locked={false}
                                   active={false}
                                   onChange = {e => this.getStateMoneyGoalInput(e)}/>
-                                <SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                                <NumberFormat value={`${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '3%'}}>{`Streams Needed: ${value}`}</div>} />
                               </div>
                             </div>
                           </div>
@@ -804,6 +805,7 @@ class DesktopVersion extends React.Component{
           this.updateGraphs();
           this.percentRecouped();
           this.autoRecoup();
+          this.moneyGoal();
         });
 
 
@@ -916,8 +918,7 @@ class DesktopVersion extends React.Component{
   }
 
   updateMoneyGoal(e){
-    // console.log("changed Money Goals to: " + e);
-    // console.log("*********" + this.state.moneyGoalStreamsNeeded)
+
     this.setState({moneyGoalInput: e});
     this.calculate();
   }
@@ -931,7 +932,10 @@ class DesktopVersion extends React.Component{
     } else {
       moneyGoalStreamsNeeded = ((moneyGoalInput / (parseFloat(this.state.sliderValue)/100)) + parseFloat(this.state.advance)) / this.weightedAverageOfSelected()
     }
-    // console.log("*********" + moneyGoalStreamsNeeded)
+
+    this.setState({
+      moneyGoalStreamsNeeded: moneyGoalStreamsNeeded
+    })
   }
 
   percentRecouped(){
