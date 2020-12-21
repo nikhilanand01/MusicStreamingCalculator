@@ -187,6 +187,7 @@ class DesktopVersion extends React.Component{
             grossTotalRev: 0,
             totRecoupe: 0,
             labelShare: 0,
+            labelPublishingShare: 0,
             publisherShare: 0,
             artistRecordEarnings: 0,
             artistWriterEarnings: 0,
@@ -205,7 +206,7 @@ class DesktopVersion extends React.Component{
               data: [1000, 0, 0]
             }
           ],
-          seriesRadial: [44],
+          seriesRadial: [],
           roleTypes: roleTypes,
           costsTotal: 0,
           costsRecording: 0,
@@ -808,10 +809,27 @@ class DesktopVersion extends React.Component{
 
           this.getArtistTotalEarnings();
           this.getGrossTotalEarnings();
-
+          this.updateGraphs();
+          this.percentRecouped();
         });
 
 
+  }
+
+  updateGraphs() {
+    this.setState({seriesBar: 
+      [{
+              name: 'From Recording',
+              data: [this.state.artistRecordEarnings.toFixed(0), this.state.labelShare.toFixed(0), 0]
+            }, {
+              name: 'From Writing',
+              data: [this.state.artistWriterEarnings.toFixed(0), this.state.labelPublishingShare.toFixed(0), this.state.publisherShare.toFixed(0)]
+            },{
+              name: 'From Advance',
+              data: [this.state.advance.toFixed(0), 0, 0]
+            }
+          ]
+    })
   }
 
   getPublisherShare(){
@@ -845,6 +863,7 @@ class DesktopVersion extends React.Component{
       publisherShare: publisherShare,
       artistWriterEarnings: artistWriterEarnings,
       grossPubRev: pubGrossRevenue,
+      labelPublishingShare: pubMechanicalRecordFee
     },
     () => {console.log("PUB PERCENTAGE***** " + publisherPercentage)});
   }
@@ -933,8 +952,9 @@ class DesktopVersion extends React.Component{
       }
     }
     //return recoupPercent;
-    this.setState({seriesRadial: recoupPercent},() => {
-    this.calculate();
+    this.setState({seriesRadial: [recoupPercent]},() => {
+    //this.calculate();
+    console.log("recoupPercent: " + recoupPercent)
   });
   }
 
