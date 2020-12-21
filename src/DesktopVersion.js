@@ -174,7 +174,7 @@ class DesktopVersion extends React.Component{
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
-            streamNumber: 0,
+            streamNumber: 1000,
             role: null,
             recordDeal: [],
             publishDeal: [],
@@ -300,7 +300,7 @@ class DesktopVersion extends React.Component{
                        locked={false}
                        active={false}
                        onChange={e => this.changeStreams(e)}/>
-                    <StreamSlider ref={this.streamsSliderRef} onChange={e => this.updateStreamSlider(e)}/>
+                    <StreamSlider ref={this.streamsSliderRef} values={[this.state.streamNumber]} domain={[0, (this.state.streamNumber+1)*2]} onChange={e => this.updateStreamSlider(e)}/>
                     <div>
                       <Accordion
                           title="Which DSPs Are Included?"
@@ -422,8 +422,12 @@ class DesktopVersion extends React.Component{
     }
 
   updateStreamSlider(e) {
-    console.log("updating stream slider");
-    console.log(this.streamsSliderRef.current.state.values);
+    console.log(e.values);
+    console.log("&&&&&&&&&&&&&&    " + this.streamsSliderRef.current.state.values);
+    if(this.state.streamNumber != this.streamsSliderRef.current.state.values[0]) {
+      this.setState({streamNumber: this.streamsSliderRef.current.state.values[0]}, () =>
+      {this.calculate()})
+    }
   }
 
   getRoleButton(name){
@@ -622,6 +626,7 @@ class DesktopVersion extends React.Component{
     // console.log("changed estStreams to: " + e);
       this.setState({streamNumber: e}, () => {
           this.calculate();
+          if(this.streamsSliderRef.current.state.values != [this.state.streamNumber]) this.streamsSliderRef.current.setState({values: [this.state.streamNumber], update: [this.state.streamNumber]});
       });
   }
 
