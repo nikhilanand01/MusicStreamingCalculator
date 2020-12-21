@@ -579,34 +579,32 @@ class DesktopVersion extends React.Component{
 
     //this.setState({role: id});
     if(id==="artist" && this.state.roleTypes[0].selected !== this.state.roleTypes[0].ref.current.state.button) {
-      this.setState({role: "artist"});
       this.state.roleTypes[0].selected = true;
       this.state.roleTypes[0].ref.current.setState({button: true});
       this.state.roleTypes[1].selected = false;
       this.state.roleTypes[1].ref.current.setState({button: false});
       this.state.roleTypes[2].selected = false;
       this.state.roleTypes[2].ref.current.setState({button: false});
-      this.calculate();
+      this.setState({role: "artist"}, () => {this.calculate()});
+      
     }
     if(id==="writer" && this.state.roleTypes[1].selected !== this.state.roleTypes[1].ref.current.state.button) {
-      this.setState({role: "writer"});
       this.state.roleTypes[0].selected = false;
       this.state.roleTypes[0].ref.current.setState({button: false});
       this.state.roleTypes[1].selected = true;
       this.state.roleTypes[1].ref.current.setState({button: true});
       this.state.roleTypes[2].selected = false;
       this.state.roleTypes[2].ref.current.setState({button: false});
-      this.calculate();
+      this.setState({role: "writer"}, () => {this.calculate()});
     }
     if(id==="both" && this.state.roleTypes[2].selected !== this.state.roleTypes[2].ref.current.state.button) {
-      this.setState({role: "both"});
       this.state.roleTypes[0].selected = false;
       this.state.roleTypes[0].ref.current.setState({button: false});
       this.state.roleTypes[1].selected = false;
       this.state.roleTypes[1].ref.current.setState({button: false});
       this.state.roleTypes[2].selected = true;
       this.state.roleTypes[2].ref.current.setState({button: true});
-      this.calculate();
+      this.setState({role: "both"}, () => {this.calculate()});
     }
   }
 
@@ -667,8 +665,7 @@ class DesktopVersion extends React.Component{
 
   handlePublishingDealSelect(e){
       // console.log(e);
-      this.setState({publishingDealSelected: e});
-      this.calculate();
+      this.setState({publishingDealSelected: e}, () => {this.calculate()});
   }
 
   handleRoleButton(which){
@@ -700,8 +697,8 @@ class DesktopVersion extends React.Component{
      //console.log(this.myRef.current);
      //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
      // console.log("sliderValue: " + this.state.sliderValue);
-     this.setState({recordDealSelected: e})
-     this.calculate();
+     this.setState({recordDealSelected: e}, () => {this.calculate()})
+     
   }
 
   changeSliderVal(val){
@@ -807,11 +804,13 @@ class DesktopVersion extends React.Component{
         totRecoupe: totalMoneyToRecoupe,
         artistRecordEarnings: artistRecordShare,
         labelShare: labelShare,
+        }, () => {
+
+          this.getArtistTotalEarnings();
+          this.getGrossTotalEarnings();
+
         });
 
-
-      this.getArtistTotalEarnings(artistRecordShare);
-      this.getGrossTotalEarnings();
 
   }
 
@@ -831,7 +830,7 @@ class DesktopVersion extends React.Component{
       case 'Co-Publishing':
         publisherPercentage = 0.5;
         break;
-      case 'Admin Deal':
+      case 'Admin':
         publisherPercentage = 0.1;
         break;
       case 'No Deal':
@@ -871,18 +870,18 @@ class DesktopVersion extends React.Component{
       return sum/sumOfWeights;
   }
 
-  getArtistTotalEarnings(artistRecordShare){
+  getArtistTotalEarnings(){
       if(this.state.role === "both") {
-          this.setState({artistTotalEarnings: artistRecordShare + this.state.artistWriterEarnings});
+          this.setState({artistTotalEarnings: this.state.artistRecordEarnings + this.state.artistWriterEarnings});
       } else if(this.state.role === "artist") {
-          this.setState({artistTotalEarnings: artistRecordShare});
+          this.setState({artistTotalEarnings: this.state.artistRecordEarnings});
       } else if(this.state.role === "writer") {
           this.setState({artistTotalEarnings: this.state.artistWriterEarnings});
       }
   }
 
   getGrossTotalEarnings(){
-    this.setState({grossTotalRev: this.state.grossRecordingRev + this.state.grossPubRev});
+    this.setState({grossTotalRev: this.state.grossRecordingRev + this.state.grossPubRev}, () => {console.log("Gross Total Rev" + this.state.grossTotalRev)});
   }
 
   autoRecoup(){
