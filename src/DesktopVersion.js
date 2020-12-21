@@ -236,7 +236,7 @@ class DesktopVersion extends React.Component{
               <TitleText className="title-text" text="The Streaming Calculator" />
             </div>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <div style={{width: '30%', flexDirection: 'column', padding: '0.75% 1% 0% 1%', borderRight: 'thin dotted #b3d0ff', borderLeft: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderTop: 'thin solid #b3d0ff', backgroundColor: '#fff'}}>
+                <div style={{width: '29%', flexDirection: 'column', padding: '0.75% 1% 0% 1%', borderRight: 'thin dotted #b3d0ff', borderLeft: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderTop: 'thin solid #b3d0ff', backgroundColor: '#fff'}}>
                     <SmallText className="subtitle" text="About You" />
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -297,7 +297,7 @@ class DesktopVersion extends React.Component{
 
 
 
-              <div style={{width: '34%', flexDirection: 'column', padding: '0.75% 1% 0% 1%',marginRight: '1%', borderTop: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderRight:'thin solid #b3d0ff', backgroundColor: '#fff'}}>
+              <div style={{width: '35%', flexDirection: 'column', padding: '0.75% 1% 0% 1%',marginRight: '1%', borderTop: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderRight:'thin solid #b3d0ff', backgroundColor: '#fff'}}>
                   <SmallText className="subtitle" text="About Your Song" />
                   <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
@@ -326,7 +326,7 @@ class DesktopVersion extends React.Component{
                   <div style={{borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
                     <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
-                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%', paddingRight: '2%', width: '50%'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
                             <NumberInput
                               id= {"costsRecording"}
                               ref = {this.costsRecordingRef}
@@ -334,9 +334,12 @@ class DesktopVersion extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsRecording(e)}/>
-                            <Checkbox />
+                            <div>
+                              <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
+                              <Checkbox />
+                            </div>
                         </div>
-                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%', paddingRight: '2%', width: '50%'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
                             <NumberInput
                               id= {"costsMarketing"}
                               ref = {this.costsMarketingRef}
@@ -344,11 +347,12 @@ class DesktopVersion extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsMarketing(e)}/>
-                          <div style={{marginLeft: '2%', width: '50%'}}>
+                          <div style={{marginLeft: '2%', width: '48%'}}>
+                            <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 0px'}}/>
                             <MarketingDropDown options={marketingSplitOptions}/>
                           </div>
                         </div>
-                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2%', paddingRight: '2%', width: '50%'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
                             <NumberInput
                               id= {"costsDistribution"}
                               ref = {this.costsDistributionRef}
@@ -356,7 +360,10 @@ class DesktopVersion extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsDistribution(e)}/>
+                            <div>
+                              <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
                               <Checkbox />
+                            </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'row', width: '50%'}}>
                             <NumberInput
@@ -366,7 +373,10 @@ class DesktopVersion extends React.Component{
                               locked={false}
                               active={false}
                               onChange = {e => this.getStateCostsMisc(e)}/>
+                            <div>
+                              <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
                               <Checkbox />
+                            </div>
                         </div>
                     </div>
                   </div>
