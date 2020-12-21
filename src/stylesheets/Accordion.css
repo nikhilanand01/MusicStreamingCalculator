@@ -14,10 +14,11 @@
 	overflow: hidden;
 	border-radius: 10px;
 	margin: 10px auto;
+	width: 100%;
 }
 
 .open{
-	/* height: 150px; */
+	/* height: auto; */
 	transition: height 0.25s ease-in;
   padding: 15px 25px;
 }

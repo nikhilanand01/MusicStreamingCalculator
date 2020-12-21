@@ -2,6 +2,7 @@ import React from "react";
 import { render } from "react-dom";
 import {TransitionMotion, spring } from 'react-motion';
 import "../stylesheets/NumberInput.css";
+import NumberFormat from 'react-number-format';
 
 class NumberInput extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class NumberInput extends React.Component {
   }
 
   render() {
-    const { active, value, error, label } = this.state;
+    const { active, value, error, label} = this.state;
     const { predicted, locked } = this.props;
     const fieldClassName = `field ${(locked ? active : active || value) &&
       "active"} ${locked && !active && "locked"}`;
@@ -42,8 +43,7 @@ class NumberInput extends React.Component {
           value &&
           predicted &&
           predicted.includes(value) && <p className="predicted">{predicted}</p>}
-        <input
-          id={0}
+        <NumberFormat
           type="text"
           value={value}
           placeholder={label}

@@ -16,6 +16,7 @@ import StreamSlider from './components/StreamSlider.js';
 import Accordion from './components/Accordion.js';
 import NumberFormat from 'react-number-format';
 import Checkbox from './components/Checkbox.js';
+import './stylesheets/DesktopPage.css';
 
 const labelDealOptions = [
   { value: 'royalty', label: 'Royalty' },
@@ -232,11 +233,11 @@ class DesktopVersion extends React.Component{
       return (
         <div style={{padding: '2%', display: 'flex', flexDirection: 'column', backgroundColor: '#f5f5f5'}}>
             <div style={{textAlign: 'center'}}>
-              <TitleText text="The Streaming Calculator" style={{color: '#111', fontSize: '48px', fontWeight: '700', lineHeight: '48px', margin: '0 0 24px', padding: '0 30px', textAlign: 'center', textTransform: 'uppercase'}}/>
+              <TitleText className="title-text" text="The Streaming Calculator" />
             </div>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <div style={{width: '30%', flexDirection: 'column', padding: '0.75% 1% 0% 1%', borderRight: 'thin dashed #b3d0ff', borderLeft: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderTop: 'thin solid #b3d0ff', backgroundColor: '#fff'}}>
-                    <SmallText text="About You" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
+                <div style={{width: '30%', flexDirection: 'column', padding: '0.75% 1% 0% 1%', borderRight: 'thin dotted #b3d0ff', borderLeft: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderTop: 'thin solid #b3d0ff', backgroundColor: '#fff'}}>
+                    <SmallText className="subtitle" text="About You" />
                     <div>
                       <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
@@ -250,48 +251,54 @@ class DesktopVersion extends React.Component{
                         </div>
                     </div>
                   <div>
-                    <div style={{marginBottom: '8%'}}>
-                      <div>
-                        <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                    {this.state.role !== "writer" &&
+                      <div style={{margin: '3% 0% 8% 0%', borderTop: 'thin dotted #b3d0ff'}}>
+                        <div>
+                          <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                          <SingleDropDown
+                              ref={this.dealTypeRef}
+                              options={labelDealOptions}
+                              onChange = {e => this.getStateRecDeal(e)}/>
+                        </div>
+                        <div>
+                          {this.state.recordDealSelected === "labelServices" &&
+                            <div>
+                              <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                              <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
+                            </div>
+                          }
+                        </div>
+                        <SmallText text="Record Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
+                        <DealSplitSlider ref={this.dealSliderRef}
+                            onChange = {e => this.doSliderStuff(e)}/>
+                        <SmallText text="Record Deal Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
+                        <div style={{justifyContent: 'center'}}>
+                          <NumberInput ref={this.advanceRef}
+                            id= {"numInput"}
+                            label = "Advance on Earnings"
+                            locked = {false}
+                            active = {false}
+                            onChange = {e => this.getStateAdvance(e)}/>
+                        </div>
+                      </div>
+                    }
+                    {this.state.role !== "artist" &&
+                      <div style={{borderTop: 'thin dotted #b3d0ff', marginBottom: '5%'}}>
+                        <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                         <SingleDropDown
-                            ref={this.dealTypeRef}
-                            options={labelDealOptions}
-                            onChange = {e => this.getStateRecDeal(e)}/>
+                            ref={this.pubTypeRef}
+                            options={pubDealOptions}
+                            onChange = {e => this.getStatePubDeal(e)}
+                        />
                       </div>
-                      <div>
-                        {this.state.recordDealSelected === "labelServices" &&
-                          <div>
-                            <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                            <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
-                          </div>
-                        }
-                      </div>
-                      <SmallText text="Record Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
-                      <DealSplitSlider ref={this.dealSliderRef}
-                          onChange = {e => this.doSliderStuff(e)}/>
-                      <SmallText text="Record Deal Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                      <div style={{justifyContent: 'center'}}>
-                        <NumberInput ref={this.advanceRef}
-                          id= {"numInput"}
-                          label = "Advance on Earnings"
-                          locked = {false}
-                          active = {false}
-                          onChange = {e => this.getStateAdvance(e)}/>
-                      </div>
-                    </div>
-                    <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                    <SingleDropDown
-                        ref={this.pubTypeRef}
-                        options={pubDealOptions}
-                        onChange = {e => this.getStatePubDeal(e)}
-                    />
+                    }
                   </div>
                 </div>
 
 
 
               <div style={{width: '34%', flexDirection: 'column', padding: '0.75% 1% 0% 1%',marginRight: '1%', borderTop: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderRight:'thin solid #b3d0ff', backgroundColor: '#fff'}}>
-                  <SmallText text="About Your Song" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
+                  <SmallText className="subtitle" text="About Your Song" />
                   <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                     <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                     <NumberInput ref={this.estStreamsRef}
@@ -361,50 +368,52 @@ class DesktopVersion extends React.Component{
                               onChange = {e => this.getStateCostsMisc(e)}/>
                               <Checkbox />
                         </div>
-
-
                     </div>
                   </div>
                   <div>
-                    <SmallText text="Advanced Calculations" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: 0}}/>
-
-                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                      <div style={{flexDirection: 'column', marginRight: '5%'}}>
-                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                          <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
-                          <Checkbox />
-                        </div>
-                        <SmallText text={`Streams Needed: ${this.state.recoupStreamsNeeds.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
-                      </div>
-                      <div style={{flexDirection: 'column'}}>
-                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                          <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
-                          <Checkbox />
-                        </div>
-                        <NumberInput
-                          id= {"moneyGoalInput"}
-                          ref = {this.moneyGoalInputRef}
-                          label="I want to Make...."
-                          locked={false}
-                          active={false}
-                          onChange = {e => this.getStateMoneyGoalInput(e)}/>
-                        {/*<SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/> */}
-                      </div>
-                    </div>
+                    <Accordion
+                        title="Advanced Calculations"
+                        body={
+                          <div>
+                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                              <div style={{flexDirection: 'column', marginRight: '5%'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                  <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
+                                  <Checkbox/>
+                                </div>
+                                <SmallText text={`Streams Needed: ${this.state.recoupStreamsNeeds.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/>
+                              </div>
+                              <div style={{flexDirection: 'column'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                  <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '800', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto' }}/>
+                                  <Checkbox />
+                                </div>
+                                <NumberInput
+                                  id= {"moneyGoalInput"}
+                                  ref = {this.moneyGoalInputRef}
+                                  label="I want to Make...."
+                                  locked={false}
+                                  active={false}
+                                  onChange = {e => this.getStateMoneyGoalInput(e)}/>
+                                {/*<SmallText text={`Streams Needed: ${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} style={{ fontSize: '14px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}/> */}
+                              </div>
+                            </div>
+                          </div>
+                        }/>
                   </div>
               </div>
 
-                <div style={{flexDirection: 'column', width: '35%', border: 'thin solid #b3d0ff', backgroundColor: '#f2f6ff', paddingTop: '0.75%'}}>
+                <div className="results-container">
                   <div>
                     <div>
-                      <SmallText text="Your Results" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', textDecoration: 'underline', marginTop: 0, marginBottom: 0 }}/>
+                      <SmallText className="subtitle" text="Your Results" />
                       <NumberFormat value={`${this.state.artistTotalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                           <NumberFormat value={`${this.state.grossTotalRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
                           <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
                         </div>
-                          <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
+                        <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
                       </div>
                     </div>
                     <div>
@@ -422,8 +431,7 @@ class DesktopVersion extends React.Component{
     }
 
   updateStreamSlider(e) {
-    console.log(e.values);
-    console.log("&&&&&&&&&&&&&&    " + this.streamsSliderRef.current.state.values);
+
     if(this.state.streamNumber != this.streamsSliderRef.current.state.values[0]) {
       this.setState({streamNumber: this.streamsSliderRef.current.state.values[0]}, () =>
       {this.calculate()})
@@ -431,10 +439,6 @@ class DesktopVersion extends React.Component{
   }
 
   getRoleButton(name){
-       console.log(name);
-       console.log(this.artistButtonRef.current.state.button);
-       console.log(this.writerButtonRef.current.state.button);
-       console.log(this.bothButtonRef.current.state.button);
 
        if(name === "artist" && !this.artistButtonRef.current.state.button) {
           this.handleRoleButton("artist");
@@ -453,8 +457,7 @@ class DesktopVersion extends React.Component{
   }
 
   getButtonClick(id){
-    //console.log("clicked: " + id);
-    //console.log(this.state.providers[id].ref.current.state);
+
     if(this.state.providers[id].ref.current.state.button !== null && this.state.providers[id].ref.current.state.button !== this.state.providers[id].includeInCalculations) {
       this.toggleMe(id);
     }
@@ -467,9 +470,7 @@ class DesktopVersion extends React.Component{
 
     this.setState({
       costsTotal: costsTotal
-    },() => {
-    //this.calculate();
-    console.log(this.state.costsTotal);
+    },() => {//this.calculate();
     })
 
     this.updateRecoupable();
@@ -477,13 +478,12 @@ class DesktopVersion extends React.Component{
 
   updateRecoupable(){
     let ret = this.state.costsTotal + this.state.advance;
-    console.log("ret: " + ret);
     this.setState({totRecoupe: ret})
 
   }
 
   getStateCostsRecording(){
-    console.log(this.costsRecordingRef.current.state)
+
     if(this.costsRecordingRef.current.state.value !== "" && parseInt(this.costsRecordingRef.current.state.value) !== this.state.costsRecording) {
       const e = parseInt(this.costsRecordingRef.current.state.value);
       this.updateCostsRecording(e);
@@ -491,16 +491,14 @@ class DesktopVersion extends React.Component{
   }
 
   updateCostsRecording(e){
-      // console.log("changed RECORDING costs to: " + e);
+
       this.setState({costsRecording: e}, () => {
           this.calculate();
       });
-      console.log("state: " + this.state.costsRecording);
-
   }
 
   getStateCostsMarketing(){
-    console.log(this.costsMarketingRef.current.state)
+
     if(this.costsMarketingRef.current.state.value !== "" && parseInt(this.costsMarketingRef.current.state.value) !== this.state.costsMarketing) {
       const e = parseInt(this.costsMarketingRef.current.state.value);
       this.updateCostsMarketing(e);
@@ -508,14 +506,14 @@ class DesktopVersion extends React.Component{
   }
 
   updateCostsMarketing(e){
-      // console.log("changed MARKETING costs to: " + e);
+
       this.setState({costsMarketing: e}, () => {
           this.calculate();
       });
   }
 
   getStateCostsDistribution(){
-    console.log(this.costsDistributionRef.current.state)
+
     if(this.costsDistributionRef.current.state.value !== "" && parseInt(this.costsDistributionRef.current.state.value) !== this.state.costsDistribution) {
       const e = parseInt(this.costsDistributionRef.current.state.value);
       this.updateCostsDistribution(e);
@@ -523,14 +521,14 @@ class DesktopVersion extends React.Component{
   }
 
   updateCostsDistribution(e){
-      // console.log("changed DISTRIBUTION costs to: " + e);
+
       this.setState({costsDistribution: e}, () => {
           this.calculate();
       });
   }
 
   getStateCostsMisc(){
-    console.log(this.costsMiscRef.current.state)
+
     if(this.costsMiscRef.current.state.value !== "" && parseInt(this.costsMiscRef.current.state.value) !== this.state.costsMisc) {
       const e = parseInt(this.costsMiscRef.current.state.value);
       this.updateCostsMisc(e);
@@ -538,14 +536,14 @@ class DesktopVersion extends React.Component{
   }
 
   updateCostsMisc(e){
-      // console.log("changed MISC costs to: " + e);
+
       this.setState({costsMisc: e}, () => {
           this.calculate();
       });
-   }
+  }
 
   getStateAdvance(){
-    console.log(this.advanceRef.current.state)
+
     if(this.advanceRef.current.state.value !== "" && parseInt(this.advanceRef.current.state.value) !== this.state.advance) {
         const e = parseInt(this.advanceRef.current.state.value);
         this.updateAdvance(e);
@@ -553,35 +551,29 @@ class DesktopVersion extends React.Component{
   }
 
   getStatePubDeal(){
-    //console.log("getting state rec deal");
+
     if(this.pubTypeRef.current.state.selectedOption !== null && this.pubTypeRef.current.state.selectedOption.value !== this.state.publishingDealSelected) {
-      //console.log(this.dealTypeRef.current.state.selectedOption.value);
       const e = this.pubTypeRef.current.state.selectedOption.value;
       this.handlePublishingDealSelect(e);
     }
     //const node = this.dealTypeRef.current;
-    //console.log("Node: " + node);
   }
 
   getStateRecDeal(){
-    //console.log("getting state rec deal");
+
     if(this.dealTypeRef.current.state.selectedOption !== null && this.dealTypeRef.current.state.selectedOption.value !== this.state.recordDealSelected) {
-      //console.log(this.dealTypeRef.current.state.selectedOption.value);
       const e = this.dealTypeRef.current.state.selectedOption.value;
       this.handleRecDealSelect(e);
     }
     //const node = this.dealTypeRef.current;
-    //console.log("Node: " + node);
   }
 
   testMap(){
     this.state.providers.map(provider => console.log(provider.name));
-    //this.state.providers.map(provider => ce('tr', null, ce('td', null, ce('text', null, provider.name))), ce('tr', null, ce('td', null, ce('input', {type: 'checkbox', checked: provider.includeInCalculations, onClick: e => this.toggleMe(provider.id)}))))
+
   }
 
   handleMyClick(id){
-    //console.log("clicked on " + id);
-    //console.log(this.state.roleTypes[0].ref.current.state.button);
 
     //this.setState({role: id});
     if(id==="artist" && this.state.roleTypes[0].selected !== this.state.roleTypes[0].ref.current.state.button) {
@@ -623,7 +615,7 @@ class DesktopVersion extends React.Component{
   }
 
   updateStreams(e){
-    // console.log("changed estStreams to: " + e);
+
       this.setState({streamNumber: e}, () => {
           this.calculate();
           if(this.streamsSliderRef.current.state.values != [this.state.streamNumber]) this.streamsSliderRef.current.setState({values: [this.state.streamNumber], update: [this.state.streamNumber]});
@@ -631,7 +623,7 @@ class DesktopVersion extends React.Component{
   }
 
   updateAdvance(e){
-    // console.log("changed advance to: " + e);
+
       this.setState({advance: e}, () => {
           this.calculate();
       });
@@ -643,7 +635,7 @@ class DesktopVersion extends React.Component{
   }
 
   updateSlider(e){
-      // console.log(e.target.value)
+
       //val = document.getElementById("splitSlider").value()
       this.setState( {sliderValue: e.target.value})
       this.calculate();
@@ -671,19 +663,18 @@ class DesktopVersion extends React.Component{
   }
 
   handlePublishingDealSelect(e){
-      // console.log(e);
+
       this.setState({publishingDealSelected: e}, () => {this.calculate()});
   }
 
   handleRoleButton(which){
-      console.log(which);
+
       this.setState({role: which})
       this.calculate();
   }
 
   handleRecDealSelect(e){
-     console.log("selecting Roles");
-     console.log(e);
+
      if(e === "royalty") {
        this.setState({sliderValue: 20});
        this.changeSliderVal(20);
@@ -700,12 +691,7 @@ class DesktopVersion extends React.Component{
        this.setState({sliderValue: 80});
        this.changeSliderVal(80);
      }
-     //document.getElementById("splitSlider").value = this.state.sliderValue;
-     //console.log(this.myRef.current);
-     //React.findDOMNode(this.refs.sliderRef).value = this.state.sliderValue;
-     // console.log("sliderValue: " + this.state.sliderValue);
      this.setState({recordDealSelected: e}, () => {this.calculate()})
-
   }
 
   changeSliderVal(val){
@@ -713,49 +699,41 @@ class DesktopVersion extends React.Component{
   }
 
   doSliderStuff(e){
-   console.log(this.dealSliderRef.current.state.values);
-   if(this.dealSliderRef.current.state.values !== null && this.dealSliderRef.current.state.values[0] !== this.state.sliderValue) {
-     //console.log("setting slider state to: " + this.dealSliderRef.current.state.values[0]);
-     this.setState({sliderValue: this.dealSliderRef.current.state.values[0]});
-     this.calculate();
-   }
+    if(this.dealSliderRef.current.state.values !== null && this.dealSliderRef.current.state.values[0] !== this.state.sliderValue) {
+      this.setState({sliderValue: this.dealSliderRef.current.state.values[0]});
+      this.calculate();
+    }
   }
 
   buildRecordDealSelect(){
-      //console.log("Roles!");
-      let royalty = {
-          id: 0,
-          name: "Royalty"
-      };
-      let netProfit = {
-          id: 1,
-          name: "Net Profit"
-      };
-      let distributionPercent = {
-          id: 2,
-          name: "Distribution Percent"
-      };
-      let labelServices = {
-          id: 3,
-          name: "Label Services"
-      }
-
-      let rls = [royalty, netProfit, distributionPercent, labelServices];
-      this.setState( {recordDeal: rls} );
+    let royalty = {
+        id: 0,
+        name: "Royalty"
+    };
+    let netProfit = {
+        id: 1,
+        name: "Net Profit"
+    };
+    let distributionPercent = {
+        id: 2,
+        name: "Distribution Percent"
+    };
+    let labelServices = {
+        id: 3,
+        name: "Label Services"
+    }
+    let rls = [royalty, netProfit, distributionPercent, labelServices];
+    this.setState( {recordDeal: rls} );
   }
 
   toggleMe(index){
     this.state.providers[index].includeInCalculations = !this.state.providers[index].includeInCalculations;
-    //console.log(dsps[index].name);
-    //console.log(dsps[index].includeInCalculations);
     this.calculate();
   }
 
   calculate(){
       this.calcTotalCosts();
       this.getPublisherShare();
-
-      console.log("calculating");
       let artistRecordShare = 0;
       let labelShare = 0;
       let artistUnrecoupedAmount = 0;
@@ -766,7 +744,6 @@ class DesktopVersion extends React.Component{
       if (this.state.recordDealSelected === "royalty") {
           // Artist Split
           if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
-            console.log("unrecouped");
             artistRecordShare = 0;
             artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe);
           } else {
@@ -778,7 +755,6 @@ class DesktopVersion extends React.Component{
           let profit = (grossRevenue - this.state.costsTotal);
           // Artist Split
           if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
-            console.log("unrecouped");
             artistRecordShare = 0;
             artistUnrecoupedAmount = Math.abs(((grossRevenue - totalCosts)*(parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance));
           } else {
@@ -797,18 +773,12 @@ class DesktopVersion extends React.Component{
       } else if (this.state.recordDealSelected === "labelServices") {
           // Artist Split
           if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
-            console.log("unrecouped");
             artistRecordShare = 0;
           } else {
             artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
       }
-
-      // console.log("grossRevenue: " + grossRevenue)
-      // console.log("totRecoupe: " + totalMoneyToRecoupe)
-      // console.log("ArtistRecordEarnings: " + artistRecordShare)
-      // console.log("labelShare: " + labelShare)
 
       this.setState({
         grossRecordingRev: grossRevenue,
@@ -875,8 +845,7 @@ class DesktopVersion extends React.Component{
       artistWriterEarnings: artistWriterEarnings,
       grossPubRev: pubGrossRevenue,
       labelPublishingShare: pubMechanicalRecordFee
-    },
-    () => {console.log("PUB PERCENTAGE***** " + publisherPercentage)});
+    });
   }
 
   weightedAverageOfSelected(){
@@ -887,7 +856,6 @@ class DesktopVersion extends React.Component{
               sum += (this.state.providers[i].payoutPerStream * this.state.providers[i].marketShareStreams)
           }
       }
-      console.log(sum)
       let sumOfWeights = 0.0;
       for(let i=0;i < this.state.providers.length; i++) {
         if(this.state.providers[i].includeInCalculations) {
@@ -895,8 +863,6 @@ class DesktopVersion extends React.Component{
         }
       }
       if(sumOfWeights <= 0.0) return 0.0
-      //console.log(sum)
-      // console.log(sum/sumOfWeights);
       return sum/sumOfWeights;
   }
 
@@ -911,7 +877,7 @@ class DesktopVersion extends React.Component{
   }
 
   getGrossTotalEarnings(){
-    this.setState({grossTotalRev: this.state.grossRecordingRev + this.state.grossPubRev}, () => {console.log("Gross Total Rev" + this.state.grossTotalRev)});
+    this.setState({grossTotalRev: this.state.grossRecordingRev + this.state.grossPubRev}, () => {});
   }
 
   autoRecoup(){
@@ -949,7 +915,7 @@ class DesktopVersion extends React.Component{
     } else {
       moneyGoalStreamsNeeded = ((moneyGoalInput / (parseFloat(this.state.sliderValue)/100)) + parseFloat(this.state.advance)) / this.weightedAverageOfSelected()
     }
-    console.log("*********" + moneyGoalStreamsNeeded)
+    // console.log("*********" + moneyGoalStreamsNeeded)
   }
 
   percentRecouped(){
@@ -972,8 +938,6 @@ class DesktopVersion extends React.Component{
     console.log("recoupPercent: " + recoupPercent)
   });
   }
-
-
 
 }
 

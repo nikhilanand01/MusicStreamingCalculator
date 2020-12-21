@@ -13,7 +13,7 @@ export default function Checkboxes() {
       <Checkbox
         checked={checked}
         onChange={handleChange}
-        inputProps={{ 'aria-label': 'primary checkbox' }}
+        inputProps={{ 'aria-label': 'primary checkbox'}}
         size='medium'
       />
     </div>

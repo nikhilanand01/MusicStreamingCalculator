@@ -1,8 +1,8 @@
 import React from 'react';
 
-const TitleText = ({text, style }) => {
+const TitleText = ({text, style, className }) => {
     return (
-        <p className="titleText" style={style}>
+        <p className={className} style={style}>
             {text}
         </p>
     );
