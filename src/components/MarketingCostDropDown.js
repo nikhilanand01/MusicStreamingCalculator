@@ -57,6 +57,7 @@ class MarketingDropDown extends React.Component {
         value={selectedOption}
         onChange={this.handleChange}
         options={this.props.options}
+        defaultValue={this.props.defaultValue}
       />
     );
   }

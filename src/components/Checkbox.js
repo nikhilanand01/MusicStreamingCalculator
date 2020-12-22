@@ -1,21 +1,25 @@
 import React from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
+import '../stylesheets/Checkbox.css';
 
-export default function Checkboxes() {
-  const [checked, setChecked] = React.useState(false);
+class Checkbox extends React.Component {
+	constructor(props){
+		super(props);
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
+	}
 
-  return (
-    <div>
-      <Checkbox
-        checked={checked}
-        onChange={handleChange}
-        inputProps={{ 'aria-label': 'primary checkbox'}}
-        size='medium'
-      />
-    </div>
-  );
+	render() {
+		return (
+        <label className="check-container">
+  			  <input
+            type={"checkbox"}
+            onChange = {this.props.onChange}
+            checked={this.props.checked}
+          />
+          <span class="checkmark"></span>
+        </label>
+      );
+	}
 }
+
+
+export default Checkbox;

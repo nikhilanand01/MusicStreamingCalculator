@@ -16,7 +16,7 @@
 }
 
 .title-text{
-  text-shadow: 3px 3px 1px #4287f5;
+  text-shadow: 3px 3px 1px #858585;
   color: #111;
   font-size: 44px;
   font-weight: 700;
@@ -36,6 +36,13 @@
   color: #323747;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.footer{
+  background-color: #fff;
+  padding: 1%;
+  display: flex;
+  justify-content: center;
 }
 
 a{
