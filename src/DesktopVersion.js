@@ -532,7 +532,7 @@ class DesktopVersion extends React.Component{
     },() => {this.updateRecoupable();
     })
 
-    
+
   }
 
   updateRecoupable(){
@@ -997,6 +997,41 @@ class DesktopVersion extends React.Component{
     this.setState({seriesRadial: [recoupPercent]},() => {
     // this.calculate();
   });
+  }
+
+  buildLabelServicesSelect(){
+      let stemDistribution = {
+          id: 0,
+          name: "stemDistribution",
+          value: (parseInt(this.state.artistRecordEarnings)* 0.1),
+
+      }
+      let advertising = {
+          id: 1,
+          name: "advertising",
+          value: 2500,
+
+      }
+      let analytics = {
+          id: 2,
+          name: "analytics",
+          value: 2500,
+
+      }
+      let royaltyAccounting = {
+          id: 3,
+          name: "royaltyAccounting",
+          value: (parseInt(this.state.artistRecordEarnings) * 0.5),
+
+      }
+      let splitPayments = {
+          id: 4,
+          name: "splitPayments",
+          value: 1000,
+
+      }
+      let services = [stemDistribution, advertising, analytics, royaltyAccounting, splitPayments]
+      this.setState( {labelServices: services})
   }
 
 }
