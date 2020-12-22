@@ -17,20 +17,6 @@ const railStyle = {
   backgroundColor: '#CBDCFC',
 }
 
-function GetMiddleValue(min, max) {
-  min = domain[0];
-  max = domain[1];
-  return (min+max)/2
-}
-
-function MaxNumb(){
-  return 1000000;//Math.floor(Math.random() * 1000000);
-}
-
-
-const domain = [0, MaxNumb()]
-const defaultValues = [GetMiddleValue()]
-
 export function Handle({
   handle: { id, value, percent },
   getHandleProps
@@ -104,7 +90,7 @@ export class StreamSlider extends Component {
 
   render() {
     const {
-      state: { values, update },
+      state: { values },
     } = this
 
     return (

@@ -6,7 +6,7 @@ import {BrowserView, MobileView} from "react-device-detect";
 import ReactGA from 'react-ga';
 
 function initializeAnalytics(){
-  ReactGA.initialize("G-9MQ7W6WQH9")
+  ReactGA.initialize("UA-140003762-3")
   ReactGA.pageview('/')
 }
 

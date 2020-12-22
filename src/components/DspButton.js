@@ -1,8 +1,6 @@
-/* eslint-env browser, commonjs, jquery, es6 */
-
 import React from 'react';
 import '../stylesheets/DspButton.css';
-import SmallText from './SmallText';
+
 
 
 class DspButton extends React.Component {
