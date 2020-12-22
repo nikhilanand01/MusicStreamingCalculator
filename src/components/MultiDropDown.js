@@ -9,6 +9,12 @@ class MultiDropDown extends React.Component {
   handleChange = selectedOption => {
     this.setState({ selectedOption });
   };
+  componentDidUpdate() {
+    if (this.props.onChange) {
+      this.props.onChange(this.state);
+    }
+  }
+
   render() {
     const { selectedOption } = this.state;
 
@@ -17,11 +23,13 @@ class MultiDropDown extends React.Component {
         defaultValue={this.props.default}
         isMulti
         name="labelServices"
+        onChange={this.handleChange}
+
         options={this.props.options}
         className="basic-multi-select"
         styles={{
           menu: provided => ({ ...provided, zIndex: 10 })
-          }}
+          }} 
       />
     );
   }
