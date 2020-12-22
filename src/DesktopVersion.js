@@ -246,7 +246,7 @@ class DesktopVersion extends React.Component{
         <div>
           <div style={{padding: '2%', display: 'flex', flexDirection: 'column', backgroundColor: '#f5f5f5'}}>
               <div style={{textAlign: 'center'}}>
-                <TitleText className="title-text" text="The Streaming Calculator" />
+                <TitleText className="title-text" text="What's My Stream?" />
               </div>
               <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                   <div style={{width: '29%', flexDirection: 'column', padding: '0.75% 1% 0% 1%', borderRight: 'thin dotted #b3d0ff', borderLeft: 'thin solid #b3d0ff', borderBottom: 'thin solid #b3d0ff', borderTop: 'thin solid #b3d0ff', backgroundColor: '#fff'}}>
