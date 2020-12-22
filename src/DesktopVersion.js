@@ -447,10 +447,14 @@ class DesktopVersion extends React.Component{
     }
 
   updateStreamSlider(e) {
-
-    if(this.state.streamNumber != this.streamsSliderRef.current.state.values[0]) {
-      this.setState({streamNumber: this.streamsSliderRef.current.state.values[0]}, () =>
-      {this.calculate()})
+    console.log("STREAM SLIDER UPDATE");
+    if(this.state.streamNumber != this.streamsSliderRef.current.state.values[0] && this.streamsSliderRef.current.state.values[0] != this.estStreamsRef.current.state.value) {
+      console.log("Setting state");
+      const state = this.streamsSliderRef.current.state.values[0];
+      this.estStreamsRef.current.setState({value: state});
+      console.log("STATE to go to: " + state);
+        this.setState({streamNumber: state}, () =>
+        {this.calculate()})
     }
   }
 
@@ -631,10 +635,9 @@ class DesktopVersion extends React.Component{
   }
 
   updateStreams(e){
-
       this.setState({streamNumber: e}, () => {
-          this.calculate();
-          if(this.streamsSliderRef.current.state.values != [this.state.streamNumber]) this.streamsSliderRef.current.setState({values: [this.state.streamNumber], update: [this.state.streamNumber]});
+          this.streamsSliderRef.current.setState({values: [e]})
+          this.estStreamsRef.current.setState({value: e}, () => {this.calculate();})
       });
   }
 
