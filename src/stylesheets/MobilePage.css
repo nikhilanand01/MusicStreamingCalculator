@@ -1,0 +1,7 @@
+.mobile-results-container{
+  flex-direction: 'column';
+  border: thin solid #b3d0ff;
+  background-color: #f2f6ff;
+  padding-top: 0.75%;
+  border-radius: 8px;
+}
