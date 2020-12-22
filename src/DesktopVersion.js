@@ -187,6 +187,8 @@ class DesktopVersion extends React.Component{
             publishingDealSelected: null,
             advance: 0,
             grossRecordingRev: 0,
+            moneyGoalChecked: false,
+            autoRecoupChecked: false,
             recordingCostChecked: true,
             distributionCostChecked: true,
             miscCostChecked: true,
@@ -400,7 +402,7 @@ class DesktopVersion extends React.Component{
                                 <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
                                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                                   <SmallText text="Check" style={{fontSize: '12px',}}/>
-                                  <Checkbox/>
+                                  <input type={"checkbox"} onChange={e => this.handleAutoRecoup()}/>
                                 </div>
                                 <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
                               </div>
@@ -410,7 +412,7 @@ class DesktopVersion extends React.Component{
                                 </ToolTip>
                                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                                   <SmallText text="Check" style={{fontSize: '12px',}}/>
-                                  <Checkbox/>
+                                  <input type={"checkbox"} onChange={e => this.handleMoneyGoalCheckbox()}/>
                                 </div>
                                 <NumberInput
                                   id= {"moneyGoalInput"}
@@ -455,6 +457,18 @@ class DesktopVersion extends React.Component{
         )
     }
 
+  handleMoneyGoalCheckbox() {
+    this.setState({moneyGoalChecked: !this.state.moneyGoalChecked}, () => {
+      this.calculate();
+    })
+  }
+
+  handleAutoRecoup() {
+    this.setState({autoRecoupChecked: !this.state.autoRecoupChecked}, () => {
+      this.calculate();
+    })
+  }
+
   calcMarketingCosts() {
     if(this.marketingDropDownRef.current.state.selectedOption != null && this.state.marketingValSelected != this.marketingDropDownRef.current.state.selectedOption.value) {
       this.setState({marketingValSelected: this.marketingDropDownRef.current.state.selectedOption.value}, () => {this.calcTotalCosts();})
@@ -462,7 +476,6 @@ class DesktopVersion extends React.Component{
   }
 
   changeCheckboxes(whichOne) {
-    console.log(whichOne);
 
     if(whichOne == "recording") {
       this.setState({recordingCostChecked: !this.state.recordingCostChecked}, () => {this.calculate();})
@@ -476,12 +489,9 @@ class DesktopVersion extends React.Component{
   }
 
   updateStreamSlider(e) {
-    console.log("STREAM SLIDER UPDATE");
     if(this.state.streamNumber != this.streamsSliderRef.current.state.values[0] && this.streamsSliderRef.current.state.values[0] != this.estStreamsRef.current.state.value) {
-      console.log("Setting state");
       const state = this.streamsSliderRef.current.state.values[0];
       this.estStreamsRef.current.setState({value: state});
-      console.log("STATE to go to: " + state);
         this.setState({streamNumber: state}, () =>
         {this.calculate()})
     }
@@ -520,7 +530,6 @@ class DesktopVersion extends React.Component{
     if(this.state.distributionCostChecked) costsTotal += this.state.costsDistribution;
     if(this.state.miscCostChecked) costsTotal += this.state.costsMisc;
     if(this.marketingDropDownRef.current.state.selectedOption == null) {
-      console.log("IS NULL")
       costsTotal += this.state.costsMarketing;
     }
     else costsTotal += (this.state.costsMarketing * this.marketingDropDownRef.current.state.selectedOption.value)
@@ -791,7 +800,10 @@ class DesktopVersion extends React.Component{
       let artistUnrecoupedAmount = 0;
       let totalCosts = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       let totalMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
-      let grossRevenue= this.state.streamNumber * this.weightedAverageOfSelected();
+      let grossRevenue = 0;
+      if(!this.state.autoRecoupChecked && !this.state.moneyGoalChecked) grossRevenue = this.state.streamNumber * this.weightedAverageOfSelected();
+      if (this.state.autoRecoupChecked) grossRevenue = this.state.recoupStreamsNeeds * this.weightedAverageOfSelected();
+      if (this.state.moneyGoalChecked) grossRevenue = this.state.moneyGoalStreamsNeeded * this.weightedAverageOfSelected();
 
       if (this.state.recordDealSelected === "royalty") {
           // Artist Split
@@ -961,8 +973,8 @@ class DesktopVersion extends React.Component{
 
   updateMoneyGoal(e){
 
-    this.setState({moneyGoalInput: e});
-    this.calculate();
+    this.setState({moneyGoalInput: e}, () => {this.calculate();});
+    
   }
 
   moneyGoal(){
@@ -972,7 +984,7 @@ class DesktopVersion extends React.Component{
     if(this.state.recordDealSelected === "royalty" || this.state.recordDealSelected === "labelServices"){
       moneyGoalStreamsNeeded = (moneyGoalInput - parseFloat(this.state.advance) + (this.state.totRecoupe)) / ((parseFloat(this.state.sliderValue)/100) * this.weightedAverageOfSelected())
     } else {
-      moneyGoalStreamsNeeded = ((moneyGoalInput / (parseFloat(this.state.sliderValue)/100)) + parseFloat(this.state.advance)) / this.weightedAverageOfSelected()
+      moneyGoalStreamsNeeded = ((moneyGoalInput / (parseFloat(this.state.sliderValue)/100)) + parseFloat(this.state.costsTotal)) / this.weightedAverageOfSelected()
     }
 
     this.setState({
