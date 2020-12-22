@@ -3,7 +3,7 @@ import './App.css';
 import CalcPage from './CalcPage.js';
 import DesktopVersion from './DesktopVersion.js';
 import MobileVersion from './MobileVersion.js';
-import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+import {BrowserView, MobileView} from "react-device-detect";
 
 
 function App() {

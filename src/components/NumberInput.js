@@ -28,7 +28,7 @@ class NumberInput extends React.Component {
   }
 
   handleKeyPress(event) {
-    console.log(this.state.value)
+    // console.log(this.state.value)
   }
 
   render() {
@@ -52,6 +52,7 @@ class NumberInput extends React.Component {
           onKeyPress={this.handleKeyPress.bind(this)}
           onFocus={() => !locked && this.setState({ active: true })}
           onBlur={() => !locked && this.setState({ active: false })}
+          isNumericString={true}
         />
         <label htmlFor={0} className={error && "error"}>
           {error || label}

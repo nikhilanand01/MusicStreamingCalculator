@@ -27,9 +27,6 @@ class DspButton extends React.Component {
     }
   }
 
-  testButton(){
-    console.log("DSP - MAKE VALUE TOGGLE ON/OFF")
-  }
 
   render(){
     return (

@@ -38,12 +38,8 @@ class TabGroupTwo extends React.Component {
     }
   }
 
-  handleChange() {
-    console.log("changing");
-  }
 
   handleMyClick(id) {
-    //console.log(id);
     if(id === "artist" && this.props.types[0].selected !== true) {
       this.setState({val1: true, val2: false, val3: false});
       this.props.types[0].selected = true;
@@ -60,7 +56,6 @@ class TabGroupTwo extends React.Component {
       this.props.types[1].selected = false;
       this.props.types[2].selected = true;
     }
-    console.log(this.state.val1 + "n" + this.state.val2 + "n" + this.state.val3)
   }
 
   render() {

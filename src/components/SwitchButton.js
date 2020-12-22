@@ -16,9 +16,6 @@ export default class SwitchButton extends Component {
     this.setState({ checked });
   }
 
-  notiChange(){
-    console.log(this.state.checked ? 'Recoupable' : 'Non-Recoupable');
-  }
 
   render() {
     return (
@@ -27,7 +24,6 @@ export default class SwitchButton extends Component {
         <Switch
           checked={this.state.checked}
           onChange={this.handleChange}
-          onClick={this.notiChange()}
           onColor="#eb7060"
           onHandleColor="#f7371e"
           handleDiameter={25}

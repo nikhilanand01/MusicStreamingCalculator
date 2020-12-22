@@ -226,7 +226,6 @@ class DesktopVersion extends React.Component{
         this.handleRoleButton();
         this.buildPublishingDealSelect();
         this.setSliderValue(50);
-        this.testMap();
         this.calculate();
     }
 
@@ -584,11 +583,6 @@ class DesktopVersion extends React.Component{
     //const node = this.dealTypeRef.current;
   }
 
-  testMap(){
-    this.state.providers.map(provider => console.log(provider.name));
-
-  }
-
   handleMyClick(id){
 
     //this.setState({role: id});
@@ -853,6 +847,8 @@ class DesktopVersion extends React.Component{
       case 'No Deal':
         publisherPercentage = 0.0;
         break;
+      default:
+        publisherPercentage = 0.0;
     }
 
     let publisherShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage
@@ -913,7 +909,7 @@ class DesktopVersion extends React.Component{
   }
 
   getStateMoneyGoalInput(){
-    console.log(this.moneyGoalInputRef.current.state);
+
     if(this.moneyGoalInputRef.current.state.value !== "" && parseInt(this.moneyGoalInputRef.current.state.value) !== this.state.moneyGoalInput)
       {
        const e = parseInt(this.moneyGoalInputRef.current.state.value);
