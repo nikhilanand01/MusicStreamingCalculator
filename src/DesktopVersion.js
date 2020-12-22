@@ -173,6 +173,7 @@ class DesktopVersion extends React.Component{
         this.dealSliderRef = React.createRef();
         this.estStreamsRef = React.createRef();
         this.streamsSliderRef = React.createRef();
+        this.marketingDropDownRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -186,6 +187,9 @@ class DesktopVersion extends React.Component{
             publishingDealSelected: null,
             advance: 0,
             grossRecordingRev: 0,
+            recordingCostChecked: true,
+            distributionCostChecked: true,
+            miscCostChecked: true,
             grossPubRev: 0,
             grossTotalRev: 0,
             totRecoupe: 0,
@@ -197,6 +201,7 @@ class DesktopVersion extends React.Component{
             artistWriterEarnings: 0,
             artistTotalEarnings: 0,
             recoupStreamsNeeds: 0,
+            marketingValSelected: 0.0,
             moneyGoalInput: 0,
             moneyGoalStreamsNeeded: 0,
             seriesBar: [{
@@ -341,7 +346,7 @@ class DesktopVersion extends React.Component{
                               onChange = {e => this.getStateCostsRecording(e)}/>
                             <div>
                               <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                              <Checkbox />
+                              <input type={"checkbox"} onChange = {e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked}/>
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
@@ -354,7 +359,7 @@ class DesktopVersion extends React.Component{
                               onChange = {e => this.getStateCostsMarketing(e)}/>
                           <div style={{marginLeft: '2%', width: '46%'}}>
                             <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 0px'}}/>
-                            <MarketingDropDown options={marketingSplitOptions}/>
+                            <MarketingDropDown ref={this.marketingDropDownRef} options={marketingSplitOptions} onChange={e => this.calcMarketingCosts()}/>
                           </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
@@ -367,7 +372,7 @@ class DesktopVersion extends React.Component{
                               onChange = {e => this.getStateCostsDistribution(e)}/>
                             <div>
                               <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                              <Checkbox />
+                              <input type={"checkbox"} onChange = {e => this.changeCheckboxes("distribution")}  checked={this.state.distributionCostChecked}/>
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'row', width: '50%'}}>
@@ -380,7 +385,7 @@ class DesktopVersion extends React.Component{
                               onChange = {e => this.getStateCostsMisc(e)}/>
                             <div>
                               <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                              <Checkbox />
+                              <input type={"checkbox"} onChange = {e => this.changeCheckboxes("misc")}  checked={this.state.miscCostChecked}/>
                             </div>
                         </div>
                     </div>
@@ -450,6 +455,26 @@ class DesktopVersion extends React.Component{
         )
     }
 
+  calcMarketingCosts() {
+    if(this.marketingDropDownRef.current.state.selectedOption != null && this.state.marketingValSelected != this.marketingDropDownRef.current.state.selectedOption.value) {
+      this.setState({marketingValSelected: this.marketingDropDownRef.current.state.selectedOption.value}, () => {this.calcTotalCosts();})
+    }
+  }
+
+  changeCheckboxes(whichOne) {
+    console.log(whichOne);
+
+    if(whichOne == "recording") {
+      this.setState({recordingCostChecked: !this.state.recordingCostChecked}, () => {this.calculate();})
+    }
+    if(whichOne == "distribution") {
+      this.setState({distributionCostChecked: !this.state.distributionCostChecked}, () => {this.calculate();})
+    }
+    if(whichOne == "misc") {
+      this.setState({miscCostChecked: !this.state.miscCostChecked}, () => {this.calculate();})
+    }
+  }
+
   updateStreamSlider(e) {
     console.log("STREAM SLIDER UPDATE");
     if(this.state.streamNumber != this.streamsSliderRef.current.state.values[0] && this.streamsSliderRef.current.state.values[0] != this.estStreamsRef.current.state.value) {
@@ -489,15 +514,25 @@ class DesktopVersion extends React.Component{
   }
 
   calcTotalCosts(){
-    let costsTotal;
-    costsTotal = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+    let costsTotal = 0;
+
+    if(this.state.recordingCostChecked) costsTotal += this.state.costsRecording;
+    if(this.state.distributionCostChecked) costsTotal += this.state.costsDistribution;
+    if(this.state.miscCostChecked) costsTotal += this.state.costsMisc;
+    if(this.marketingDropDownRef.current.state.selectedOption == null) {
+      console.log("IS NULL")
+      costsTotal += this.state.costsMarketing;
+    }
+    else costsTotal += (this.state.costsMarketing * this.marketingDropDownRef.current.state.selectedOption.value)
+
+    //costsTotal = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
 
     this.setState({
       costsTotal: costsTotal
-    },() => {//this.calculate();
+    },() => {this.updateRecoupable();
     })
 
-    this.updateRecoupable();
+    
   }
 
   updateRecoupable(){
@@ -718,8 +753,7 @@ class DesktopVersion extends React.Component{
 
   doSliderStuff(e){
     if(this.dealSliderRef.current.state.values !== null && this.dealSliderRef.current.state.values[0] !== this.state.sliderValue) {
-      this.setState({sliderValue: this.dealSliderRef.current.state.values[0]});
-      this.calculate();
+      this.setState({sliderValue: this.dealSliderRef.current.state.values[0]}, () => {this.calculate();});
     }
   }
 
