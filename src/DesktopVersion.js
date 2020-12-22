@@ -174,6 +174,7 @@ class DesktopVersion extends React.Component{
         this.estStreamsRef = React.createRef();
         this.streamsSliderRef = React.createRef();
         this.marketingDropDownRef = React.createRef();
+        this.labelServicesSelectedRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -199,6 +200,7 @@ class DesktopVersion extends React.Component{
             labelPublishingShare: 0,
             publisherShare: 0,
             artistRecordEarnings: 0,
+            labelServicesCosts: 0,
             artistUnrecoupedAmount: 0,
             artistWriterEarnings: 0,
             artistTotalEarnings: 0,
@@ -232,6 +234,7 @@ class DesktopVersion extends React.Component{
         this.buildRecordDealSelect();
         this.handleRoleButton();
         this.buildPublishingDealSelect();
+        this.buildLabelServicesSelect();
         this.setSliderValue(50);
         this.calculate();
     }
@@ -273,10 +276,10 @@ class DesktopVersion extends React.Component{
                             {this.state.recordDealSelected === "labelServices" &&
                               <div>
                                 <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                                <MultiDropDown
-                                  options={labelServicesOptions}
-                                  default={labelServicesOptions[0]}
-
+                                <MultiDropDown ref={this.labelServicesSelectedRef}
+                                  options={this.state.labelServices}
+                                  default={this.state.labelServices[0]}
+                                  onChange={e => this.changeLabelServicesDropDown(e)}
                                 />
                               </div>
                             }
@@ -463,6 +466,25 @@ class DesktopVersion extends React.Component{
         )
     }
 
+  changeLabelServicesDropDown(e) {
+    console.log(e.selectedOption)
+    //console.log("changing drop down");
+    let lblCosts = 0;
+    if(e.selectedOption != null) {
+      for(let i=0; i<e.selectedOption.length; i++) {
+        lblCosts += e.selectedOption[i].amt;
+        console.log(lblCosts);
+      }
+    }
+    console.log(this.state.labelServicesCosts)
+    console.log(lblCosts)
+    if(this.state.labelServicesCosts != lblCosts) {
+      console.log("here")
+      this.setState({labelServicesCosts: lblCosts}, () => {this.calculate();})
+    }
+
+  }
+
   handleMoneyGoalCheckbox() {
     this.setState({moneyGoalChecked: !this.state.moneyGoalChecked}, () => {
       this.calculate();
@@ -539,6 +561,11 @@ class DesktopVersion extends React.Component{
       costsTotal += this.state.costsMarketing;
     }
     else costsTotal += (this.state.costsMarketing * this.marketingDropDownRef.current.state.selectedOption.value)
+
+    if(this.state.recordDealSelected === "labelServices") {
+      console.log("label services: " + this.state.labelServicesCosts)
+      costsTotal += this.state.labelServicesCosts;
+    }
 
     //costsTotal = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
 
@@ -758,6 +785,7 @@ class DesktopVersion extends React.Component{
      } else if (e === "labelServices") {
        this.setState({sliderValue: 80});
        this.changeSliderVal(80);
+       if(this.labelServicesSelectedRef.current != null) console.log(this.labelServicesSelectedRef.current.state.selectedOption);
      }
      this.setState({recordDealSelected: e}, () => {this.calculate()})
   }
@@ -1020,34 +1048,53 @@ class DesktopVersion extends React.Component{
   buildLabelServicesSelect(){
       let stemDistribution = {
           id: 0,
-          name: "stemDistribution",
-          value: (parseInt(this.state.artistRecordEarnings)* 0.1),
+          value: "stemDistribution",
+          label: 'Stem Distribution',
+          amt: (parseInt(this.state.artistRecordEarnings)* 0.1),
+          selected: true
 
       }
       let advertising = {
           id: 1,
-          name: "advertising",
-          value: 2500,
+          value: "advertising",
+          label: 'Avertising',
+          amt: 2500,
+          selected: false
 
       }
       let analytics = {
           id: 2,
-          name: "analytics",
-          value: 2500,
+          value: "analytics",
+          label: 'Analytics',
+          amt: 2500,
+          selected: false
 
       }
       let royaltyAccounting = {
           id: 3,
-          name: "royaltyAccounting",
-          value: (parseInt(this.state.artistRecordEarnings) * 0.5),
+          value: "royaltyAccounting",
+          label: 'Royalty Accounting',
+          amt: (parseInt(this.state.artistRecordEarnings) * 0.5),
+          selected: false
 
       }
       let splitPayments = {
           id: 4,
-          name: "splitPayments",
-          value: 1000,
+          value: "splitPayments",
+          label: 'Split Payments',
+          amt: 1000,
+          selected: false
 
       }
+
+      /*const labelServicesOptions = [
+      { value: 'stemDistribution', label: 'Stem Distribution' },
+      { value: 'avertising', label: 'Avertising' },
+      { value: 'analytics', label: 'Analytics' },
+      { value: 'royaltyAccounting', label: 'Royalty Accounting' },
+      { value: 'splitPayments', label: 'Split Payments' },
+      ]*/
+
       let services = [stemDistribution, advertising, analytics, royaltyAccounting, splitPayments]
       this.setState( {labelServices: services})
   }
