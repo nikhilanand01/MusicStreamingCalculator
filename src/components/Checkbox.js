@@ -2,10 +2,6 @@ import React from 'react';
 import '../stylesheets/Checkbox.css';
 
 class Checkbox extends React.Component {
-	constructor(props){
-		super(props);
-
-	}
 
 	render() {
 		return (

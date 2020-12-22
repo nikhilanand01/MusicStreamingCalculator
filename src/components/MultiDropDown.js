@@ -16,7 +16,6 @@ class MultiDropDown extends React.Component {
   }
 
   render() {
-    const { selectedOption } = this.state;
 
     return (
       <Select
@@ -29,7 +28,7 @@ class MultiDropDown extends React.Component {
         className="basic-multi-select"
         styles={{
           menu: provided => ({ ...provided, zIndex: 10 })
-          }} 
+          }}
       />
     );
   }

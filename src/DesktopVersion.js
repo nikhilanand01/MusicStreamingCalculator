@@ -1,13 +1,10 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
-import { render } from 'react-dom'
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TitleText from './components/TitleText.js';
 import DspButton from './components/DspButton.js';
-import SwitchButton from './components/SwitchButton.js';
 import NumberInput from './components/NumberInput.js';
-import TabGroup from './components/ButtonGroup.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import MarketingDropDown from './components/MarketingCostDropDown.js';
 import MultiDropDown from './components/MultiDropDown.js';
@@ -40,14 +37,6 @@ const marketingSplitOptions = [
   { value: 0.0, label: '0%' },
   { value: 0.5, label: '50%' },
   { value: 1.0, label: '100%' }
-]
-
-const labelServicesOptions = [
-  { value: 'stemDistribution', label: 'Stem Distribution' },
-  { value: 'avertising', label: 'Avertising' },
-  { value: 'analytics', label: 'Analytics' },
-  { value: 'royaltyAccounting', label: 'Royalty Accounting' },
-  { value: 'splitPayments', label: 'Split Payments' },
 ]
 
 let recArtist = {
@@ -257,7 +246,6 @@ class DesktopVersion extends React.Component{
                           {this.state.roleTypes.map(type => (
                             <DspButton ref={type.ref}
                               key={type.id}
-                              //active={type.selected}
                               onChange={e => this.handleMyClick(type.id)}
                               text={type.name}
                             />))}
@@ -473,19 +461,14 @@ class DesktopVersion extends React.Component{
     }
 
   changeLabelServicesDropDown(e) {
-    console.log(e.selectedOption)
-    //console.log("changing drop down");
+
     let lblCosts = 0;
-    if(e.selectedOption != null) {
+    if(e.selectedOption !== null) {
       for(let i=0; i<e.selectedOption.length; i++) {
         lblCosts += e.selectedOption[i].amt;
-        console.log(lblCosts);
       }
     }
-    console.log(this.state.labelServicesCosts)
-    console.log(lblCosts)
-    if(this.state.labelServicesCosts != lblCosts) {
-      console.log("here")
+    if(this.state.labelServicesCosts !== lblCosts) {
       this.setState({labelServicesCosts: lblCosts}, () => {this.calculate();})
     }
 
@@ -504,26 +487,26 @@ class DesktopVersion extends React.Component{
   }
 
   calcMarketingCosts() {
-    if(this.marketingDropDownRef.current.state.selectedOption != null && this.state.marketingValSelected != this.marketingDropDownRef.current.state.selectedOption.value) {
+    if(this.marketingDropDownRef.current.state.selectedOption !== null && this.state.marketingValSelected !== this.marketingDropDownRef.current.state.selectedOption.value) {
       this.setState({marketingValSelected: this.marketingDropDownRef.current.state.selectedOption.value}, () => {this.calcTotalCosts();})
     }
   }
 
   changeCheckboxes(whichOne) {
 
-    if(whichOne == "recording") {
+    if(whichOne === "recording") {
       this.setState({recordingCostChecked: !this.state.recordingCostChecked}, () => {this.calculate();})
     }
-    if(whichOne == "distribution") {
+    if(whichOne === "distribution") {
       this.setState({distributionCostChecked: !this.state.distributionCostChecked}, () => {this.calculate();})
     }
-    if(whichOne == "misc") {
+    if(whichOne === "misc") {
       this.setState({miscCostChecked: !this.state.miscCostChecked}, () => {this.calculate();})
     }
   }
 
   updateStreamSlider(e) {
-    if(this.state.streamNumber != this.streamsSliderRef.current.state.values[0] && this.streamsSliderRef.current.state.values[0] != this.estStreamsRef.current.state.value) {
+    if(this.state.streamNumber !== this.streamsSliderRef.current.state.values[0] && this.streamsSliderRef.current.state.values[0] !== this.estStreamsRef.current.state.value) {
       const state = this.streamsSliderRef.current.state.values[0];
       this.estStreamsRef.current.setState({value: state});
         this.setState({streamNumber: state}, () =>
@@ -563,13 +546,12 @@ class DesktopVersion extends React.Component{
     if(this.state.recordingCostChecked) costsTotal += this.state.costsRecording;
     if(this.state.distributionCostChecked) costsTotal += this.state.costsDistribution;
     if(this.state.miscCostChecked) costsTotal += this.state.costsMisc;
-    if(this.marketingDropDownRef.current.state.selectedOption == null) {
+    if(this.marketingDropDownRef.current.state.selectedOption === null) {
       costsTotal += this.state.costsMarketing;
     }
     else costsTotal += (this.state.costsMarketing * this.marketingDropDownRef.current.state.selectedOption.value)
 
     if(this.state.recordDealSelected === "labelServices") {
-      console.log("label services: " + this.state.labelServicesCosts)
       costsTotal += this.state.labelServicesCosts;
     }
 
@@ -791,7 +773,6 @@ class DesktopVersion extends React.Component{
      } else if (e === "labelServices") {
        this.setState({sliderValue: 80});
        this.changeSliderVal(80);
-       if(this.labelServicesSelectedRef.current != null) console.log(this.labelServicesSelectedRef.current.state.selectedOption);
      }
      this.setState({recordDealSelected: e}, () => {this.calculate()})
   }
@@ -1092,14 +1073,6 @@ class DesktopVersion extends React.Component{
           selected: false
 
       }
-
-      /*const labelServicesOptions = [
-      { value: 'stemDistribution', label: 'Stem Distribution' },
-      { value: 'avertising', label: 'Avertising' },
-      { value: 'analytics', label: 'Analytics' },
-      { value: 'royaltyAccounting', label: 'Royalty Accounting' },
-      { value: 'splitPayments', label: 'Split Payments' },
-      ]*/
 
       let services = [stemDistribution, advertising, analytics, royaltyAccounting, splitPayments]
       this.setState( {labelServices: services})
