@@ -394,30 +394,39 @@ class DesktopVersion extends React.Component{
                       </div>
                     </div>
                     <div>
-                      <Accordion title="Advanced Calculations"
-                        body={
-                          <div>
-                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                              <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
-                                <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                  <SmallText text="Check" style={{fontSize: '12px',}}/>
-                                  <input type={"checkbox"} onChange={e => this.handleAutoRecoup()}/>
-                                </div>
-                                <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
+                    <Accordion
+                      title="Advanced Calculations"
+                      body={
+                        <div>
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                            <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
+                              <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
+                              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                <SmallText text="Check" style={{fontSize: '12px',}}/>
+                                <input type={"checkbox"} onChange={e => this.handleAutoRecoup()}/>
                               </div>
-
-                              <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
-                                <ToolTip content="Advance is included in revenue earned" direction="top">
-                                <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                                </ToolTip>
-                                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                  <SmallText text="Check" style={{fontSize: '12px',}}/>
-                                  <input type={"checkbox"} onChange={e => this.handleMoneyGoalCheckbox()}/>
-                                </div>
-                              </div>
+                              <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
                             </div>
-                          </div>}/>                      
+                            <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
+                              <ToolTip content="Advance is included in revenue earned" direction="top">
+                                <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
+                              </ToolTip>
+                              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                <SmallText text="Check" style={{fontSize: '12px',}}/>
+                                <input type={"checkbox"} onChange={e => this.handleMoneyGoalCheckbox()}/>
+                              </div>
+                              <NumberInput
+                                id= {"moneyGoalInput"}
+                                ref = {this.moneyGoalInputRef}
+                                label="I want to Make..."
+                                locked={false}
+                                active={false}
+                                onChange = {e => this.getStateMoneyGoalInput(e)}/>
+                              <NumberFormat value={`${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '3%'}}>{`Streams Needed: ${value}`}</div>} />
+                            </div>
+                          </div>
+                        </div>
+                      }/>
                     </div>
                 </div>
 
