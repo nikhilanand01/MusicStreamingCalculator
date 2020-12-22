@@ -14,12 +14,11 @@ class MultiDropDown extends React.Component {
 
     return (
       <Select
-        defaultValue={this.props.options[0]}
+        defaultValue={this.props.default}
         isMulti
         name="labelServices"
         options={this.props.options}
         className="basic-multi-select"
-        classNamePrefix="Select Services"
         styles={{
           menu: provided => ({ ...provided, zIndex: 10 })
           }}

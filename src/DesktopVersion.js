@@ -42,7 +42,7 @@ const marketingSplitOptions = [
 ]
 
 const labelServicesOptions = [
-  { value: 'steamDistribution', label: 'Steam Distribution' },
+  { value: 'stemDistribution', label: 'Stem Distribution' },
   { value: 'avertising', label: 'Avertising' },
   { value: 'analytics', label: 'Analytics' },
   { value: 'royaltyAccounting', label: 'Royalty Accounting' },
@@ -166,7 +166,6 @@ class DesktopVersion extends React.Component{
         this.writerButtonRef = React.createRef();
         this.bothButtonRef = React.createRef();
         this.moneyGoalInputRef = React.createRef();
-        // this.costsTotalRef = React.createRef();
         this.costsRecordingRef = React.createRef();
         this.costsMarketingRef = React.createRef();
         this.costsDistributionRef = React.createRef();
@@ -181,6 +180,7 @@ class DesktopVersion extends React.Component{
             role: null,
             recordDeal: [],
             publishDeal: [],
+            labelServices: [],
             sliderValue: 50,
             recordDealSelected: null,
             publishingDealSelected: null,
@@ -265,7 +265,11 @@ class DesktopVersion extends React.Component{
                           {this.state.recordDealSelected === "labelServices" &&
                             <div>
                               <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                              <MultiDropDown options={labelServicesOptions} defaultValue={labelServicesOptions[0]}/>
+                              <MultiDropDown
+                                options={labelServicesOptions}
+                                default={labelServicesOptions[0]}
+
+                              />
                             </div>
                           }
                         </div>
@@ -435,11 +439,12 @@ class DesktopVersion extends React.Component{
                       <BarChart series={this.state.seriesBar}/>
                     </div>
                   </div>
-
                 </div>
-
             </div>
-
+            <div>
+              <SmallText text="This tool should be used as a guide only. These figures are an estimate and do not guarantee earnings."/>
+              <SmallText text="Created By: Nikhil Anand, Sam Vincent, Alexandre Perrin, & Peter Dyson"/>
+            </div>
         </div>
 
         )
