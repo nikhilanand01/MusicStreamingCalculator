@@ -1,4 +1,5 @@
 import React from 'react';
+import NumberFormat from 'react-number-format';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TitleText from './components/TitleText.js';
@@ -14,8 +15,9 @@ import RadialChart from './components/RadialChart.js';
 import DealSplitSlider from './components/DealSplitSlider.js';
 import StreamSlider from './components/StreamSlider.js';
 import Accordion from './components/Accordion.js';
-import NumberFormat from 'react-number-format';
 import Checkbox from './components/Checkbox.js';
+import ToolTip from './components/ToolTip.js';
+
 import './stylesheets/DesktopPage.css';
 
 const labelDealOptions = [
@@ -395,7 +397,9 @@ class DesktopVersion extends React.Component{
                                 <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
                               </div>
                               <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
-                                <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
+                                <ToolTip content="Advance is included in revenue earned" direction="top">
+                                  <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
+                                </ToolTip>
                                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                                   <SmallText text="Check" style={{fontSize: '12px',}}/>
                                   <Checkbox/>
