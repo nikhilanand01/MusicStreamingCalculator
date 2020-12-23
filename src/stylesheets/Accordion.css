@@ -11,7 +11,7 @@
 	border: solid 2px #e5f1ff;
 	padding: 15px 25px;
 	/* cursor: pointer; */
-	overflow: hidden;
+	/* overflow: hidden; */
 	border-radius: 10px;
 	margin: 10px auto;
 	width: 100%;
@@ -21,10 +21,12 @@
 	/* height: auto; */
 	transition: height 0.25s ease-in;
   padding: 15px 25px;
+	overflow: visible;
 }
 .close{
 	height: 15px;
 	transition: height 0.25s ease-out;
+	overflow: hidden;
 }
 
 .icon{
