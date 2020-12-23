@@ -15,6 +15,7 @@ import StreamSlider from './components/StreamSlider.js';
 import Accordion from './components/Accordion.js';
 import Checkbox from './components/Checkbox.js';
 import ToolTip from './components/ToolTip.js';
+import SwitchButton from './components/SwitchButton.js';
 
 import './stylesheets/MobilePage.css';
 
@@ -333,8 +334,8 @@ class MobileVersion extends React.Component{
 
                           <div style={{borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
                             <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
-                            <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
-                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
+                            <div style={{justifyContent:'center'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
                                     <NumberInput
                                       id= {"costsRecording"}
                                       ref = {this.costsRecordingRef}
@@ -344,10 +345,10 @@ class MobileVersion extends React.Component{
                                       onChange = {e => this.getStateCostsRecording(e)}/>
                                     <div>
                                       <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                                      <Checkbox onChange={e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked}/>
+                                      <SwitchButton onChange={e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked} />
                                     </div>
                                 </div>
-                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%'}}>
                                     <NumberInput
                                       id= {"costsMarketing"}
                                       ref = {this.costsMarketingRef}
@@ -356,7 +357,6 @@ class MobileVersion extends React.Component{
                                       active={false}
                                       onChange = {e => this.getStateCostsMarketing(e)}/>
                                   <div style={{marginLeft: '2%', width: '46%'}}>
-                                    <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 0px'}}/>
                                     <MarketingDropDown
                                       ref={this.marketingDropDownRef}
                                       options={marketingSplitOptions}
@@ -365,7 +365,7 @@ class MobileVersion extends React.Component{
                                       />
                                   </div>
                                 </div>
-                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
                                     <NumberInput
                                       id= {"costsDistribution"}
                                       ref = {this.costsDistributionRef}
@@ -374,11 +374,10 @@ class MobileVersion extends React.Component{
                                       active={false}
                                       onChange = {e => this.getStateCostsDistribution(e)}/>
                                     <div>
-                                      <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                                      <Checkbox onChange={e => this.changeCheckboxes("distribution")}  checked={this.state.distributionCostChecked}/>
+                                      <SwitchButton onChange={e => this.changeCheckboxes("distribution")}  checked={this.state.distributionCostChecked}/>
                                     </div>
                                 </div>
-                                <div style={{display: 'flex', flexDirection: 'row', width: '50%'}}>
+                                <div style={{display: 'flex', flexDirection: 'row'}}>
                                     <NumberInput
                                       id= {"costsMisc"}
                                       ref = {this.costsMiscRef}
@@ -387,8 +386,7 @@ class MobileVersion extends React.Component{
                                       active={false}
                                       onChange = {e => this.getStateCostsMisc(e)}/>
                                     <div>
-                                      <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                                      <Checkbox onChange={e => this.changeCheckboxes("misc")}  checked={this.state.miscCostChecked}/>
+                                      <SwitchButton onChange={e => this.changeCheckboxes("misc")}  checked={this.state.miscCostChecked}/>
                                     </div>
                                 </div>
                             </div>
@@ -405,20 +403,14 @@ class MobileVersion extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                       <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
                         <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '8%'}}>
-                          <SmallText text="Check" style={{fontSize: '14px', marginBottom: 0}}/>
-                          <Checkbox onChange={e => this.handleAutoRecoup()}/>
-                        </div>
-                        <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
+                        <SwitchButton onChange={e => this.handleAutoRecoup()} />
+                        <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', padding: '5% 0% 5% 0%'}}>{`Streams Needed: ${value}`}</div>} />
                       </div>
                       <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
                         <ToolTip content="Advance is included in revenue earned" direction="top">
                           <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
                         </ToolTip>
-                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '8%'}}>
-                          <SmallText text="Check" style={{fontSize: '14px', marginBottom: 0}}/>
-                          <Checkbox onChange={e => this.handleMoneyGoalCheckbox()}/>
-                        </div>
+                        <SwitchButton onChange={e => this.handleMoneyGoalCheckbox()}/>
                         <NumberInput
                           id= {"moneyGoalInput"}
                           ref = {this.moneyGoalInputRef}
