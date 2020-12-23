@@ -282,6 +282,7 @@ class MobileVersion extends React.Component{
                           <div style={{justifyContent: 'center'}}>
                             <NumberInput ref={this.advanceRef}
                               id= {"numInput"}
+                              pattern="[0-9]*"
                               label = "Advance on Earnings"
                               locked = {false}
                               active = {false}
@@ -312,6 +313,7 @@ class MobileVersion extends React.Component{
                             <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                             <NumberInput ref={this.estStreamsRef}
                                id={0}
+                               pattern="[0-9]*"
                                label="Estimated Streams"
                                locked={false}
                                active={false}
@@ -338,6 +340,7 @@ class MobileVersion extends React.Component{
                                 <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
                                     <NumberInput
                                       id= {"costsRecording"}
+                                      pattern="[0-9]*"
                                       ref = {this.costsRecordingRef}
                                       label="Recording Costs"
                                       locked={false}
@@ -351,6 +354,7 @@ class MobileVersion extends React.Component{
                                 <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%'}}>
                                     <NumberInput
                                       id= {"costsMarketing"}
+                                      pattern="[0-9]*"
                                       ref = {this.costsMarketingRef}
                                       label="Marketing Costs"
                                       locked={false}
@@ -368,6 +372,7 @@ class MobileVersion extends React.Component{
                                 <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
                                     <NumberInput
                                       id= {"costsDistribution"}
+                                      pattern="[0-9]*"
                                       ref = {this.costsDistributionRef}
                                       label="Distribution Costs"
                                       locked={false}
@@ -380,6 +385,7 @@ class MobileVersion extends React.Component{
                                 <div style={{display: 'flex', flexDirection: 'row'}}>
                                     <NumberInput
                                       id= {"costsMisc"}
+                                      pattern="[0-9]*"
                                       ref = {this.costsMiscRef}
                                       label="Misc. Costs"
                                       locked={false}
@@ -413,6 +419,7 @@ class MobileVersion extends React.Component{
                         <SwitchButton onChange={e => this.handleMoneyGoalCheckbox()}/>
                         <NumberInput
                           id= {"moneyGoalInput"}
+                          pattern="[0-9]*"
                           ref = {this.moneyGoalInputRef}
                           label="I want to Make..."
                           locked={false}
