@@ -20,10 +20,12 @@ class Accordion extends React.Component {
 		return (
 			<div className="accodion-container" style={{marginTop: '2%'}}>
 				<section id="accodion" className={(this.state.isOpen) ? 'open' : 'close'}>
-           <SmallText text={this.props.title} style={{marginTop: '-8px'}} onClick={this.toggleAccordion}/>
-		  	   <div>{this.props.body}</div>
+					<div onClick={this.toggleAccordion}>
+					 <SmallText text={this.props.title} style={{marginTop: '-8px'}} />
+					 <p className="icon" onClick={this.toggleAccordion}>{(this.state.isOpen) ? '-' : '+'}</p>
+					</div>
+					 <div>{this.props.body}</div>
 		  	</section>
-        <p className="icon" onClick={this.toggleAccordion}>{(this.state.isOpen) ? '-' : '+'}</p>
 			</div>
 	    );
 	}
