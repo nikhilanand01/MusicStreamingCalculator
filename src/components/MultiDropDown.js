@@ -23,7 +23,7 @@ class MultiDropDown extends React.Component {
         isMulti
         name="labelServices"
         onChange={this.handleChange}
-
+        placeholder="Select Label Services..."
         options={this.props.options}
         className="basic-multi-select"
         styles={{

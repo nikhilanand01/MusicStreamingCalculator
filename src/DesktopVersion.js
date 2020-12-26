@@ -3,7 +3,7 @@ import NumberFormat from 'react-number-format';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TitleText from './components/TitleText.js';
-import DspButton from './components/DspButton.js';
+import SelectButton from './components/SelectButton.js';
 import NumberInput from './components/NumberInput.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import MarketingDropDown from './components/MarketingCostDropDown.js';
@@ -244,7 +244,7 @@ class DesktopVersion extends React.Component{
                         <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                           {this.state.roleTypes.map(type => (
-                            <DspButton ref={type.ref}
+                            <SelectButton ref={type.ref}
                               key={type.id}
                               onChange={e => this.handleMyClick(type.id)}
                               text={type.name}
@@ -259,6 +259,7 @@ class DesktopVersion extends React.Component{
                             <SingleDropDown
                                 ref={this.dealTypeRef}
                                 options={labelDealOptions}
+                                selectedOption={labelDealOptions[0]}
                                 onChange = {e => this.getStateRecDeal(e)}/>
                           </div>
                           <div>
@@ -293,6 +294,7 @@ class DesktopVersion extends React.Component{
                           <SingleDropDown
                               ref={this.pubTypeRef}
                               options={pubDealOptions}
+                              selectedOption={pubDealOptions[1]}
                               onChange = {e => this.getStatePubDeal(e)}
                           />
                         </div>
@@ -319,7 +321,7 @@ class DesktopVersion extends React.Component{
                             body={
                               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
                                 {this.state.providers.map((provider) =>
-                                <DspButton
+                                <SelectButton
                                   ref={provider.ref}
                                   key={provider.id}
                                   text={provider.name}
@@ -357,7 +359,7 @@ class DesktopVersion extends React.Component{
                               <MarketingDropDown
                                 ref={this.marketingDropDownRef}
                                 options={marketingSplitOptions}
-                                defaultValue={marketingSplitOptions[0]}
+                                selectedOption={marketingSplitOptions[2]}
                                 onChange={e => this.calcMarketingCosts()}
                                 />
                             </div>
@@ -449,7 +451,7 @@ class DesktopVersion extends React.Component{
           </div>
           <div className="footer">
             <div style={{width: '45%'}}>
-              <SmallText className="subtitle" text="About This Tool:" style={{}}/>
+              <SmallText className="subtitle" text="About This Tool:" />
               <SmallText text="This Streaming Calculator was made to model music streaming revenue, and give more clarity on where streaming revenue goes. This tool should be used as a guide only. These figures are an estimate and do not guarantee earnings."/>
               <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a>
               <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
@@ -459,6 +461,8 @@ class DesktopVersion extends React.Component{
 
         )
     }
+
+// FUNCTIONS
 
   changeLabelServicesDropDown(e) {
 

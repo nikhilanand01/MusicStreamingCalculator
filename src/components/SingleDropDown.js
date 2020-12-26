@@ -5,7 +5,8 @@ import styled from "styled-components";
 class SingleDropDown extends React.Component {
 
   state = {
-    selectedOption: null,
+    // selectedOption: this.props.selectedOption,
+    selectedOption: null
   };
 
   handleChange = selectedOption => {
@@ -36,6 +37,7 @@ class SingleDropDown extends React.Component {
         value={selectedOption}
         onChange={this.handleChange}
         options={this.props.options}
+        defaultValue={this.props.defaultValue}
       />
     );
   }

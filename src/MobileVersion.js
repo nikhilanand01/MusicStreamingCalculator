@@ -3,7 +3,7 @@ import NumberFormat from 'react-number-format';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TitleText from './components/TitleText.js';
-import DspButton from './components/DspButton.js';
+import SelectButton from './components/SelectButton.js';
 import NumberInput from './components/NumberInput.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import MarketingDropDown from './components/MarketingCostDropDown.js';
@@ -246,7 +246,7 @@ class MobileVersion extends React.Component{
                         <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                           {this.state.roleTypes.map(type => (
-                            <DspButton ref={type.ref}
+                            <SelectButton ref={type.ref}
                               key={type.id}
                               onChange={e => this.handleMyClick(type.id)}
                               text={type.name}
@@ -325,7 +325,7 @@ class MobileVersion extends React.Component{
                                   body={
                                     <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
                                       {this.state.providers.map((provider) =>
-                                      <DspButton
+                                      <SelectButton
                                         ref={provider.ref}
                                         key={provider.id}
                                         text={provider.name}
