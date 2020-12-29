@@ -45,7 +45,7 @@ export function Handle({
       }}
       {...getHandleProps(id)}
     >
-      <div style={{fontSize: 14, marginTop: 35, fontWeight: '500'}}>
+      <div style={{fontSize: 14, marginTop: 5, fontWeight: '600', color: 'white'}}>
         {value}
       </div>
     </div>
@@ -138,9 +138,9 @@ export class DealSplitSlider extends Component {
           </Tracks>
           </Slider>
         </div>
-        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '0 2% 0'}}>
-          <SmallText text={`Artist:  ${parseInt(values)}`} style={{textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09'}}/>
-          <SmallText text={`${100-parseInt(values)} :Label`} style={{textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09',}}/>
+        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '-20px 2% 0'}}>
+          <SmallText text={`Artist:  ${parseInt(values)}%`} style={{textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09'}}/>
+          <SmallText text={`${100-parseInt(values)}% :Label`} style={{textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09',}}/>
         </div>
       </div>
     )

@@ -3,8 +3,8 @@ import { Slider, Rail, Handles, Tracks } from 'react-compound-slider'
 
 const sliderStyle = {
   position: 'relative',
-  width: '96%',
-  height: 80,
+  width: '100%',
+  height: 50,
   // touchAction: 'none',
 }
 
@@ -12,7 +12,7 @@ const railStyle = {
   position: 'absolute',
   width: '100%',
   height: 10,
-  marginTop: 35,
+  marginTop: 22,
   borderRadius: 5,
   backgroundColor: '#CBDCFC',
 }
@@ -27,7 +27,7 @@ export function Handle({
         left: `${percent}%`,
         position: 'absolute',
         marginLeft: -15,
-        marginTop: 25,
+        marginTop: 12,
         zIndex: 2,
         width: 30,
         height: 30,
@@ -40,7 +40,7 @@ export function Handle({
       }}
       {...getHandleProps(id)}
     >
-      <div style={{fontSize: 12, marginTop: 35 }}>
+      <div style={{fontSize: 12, marginTop: 35}}>
         {value}
       </div>
     </div>
@@ -54,7 +54,7 @@ function Track({ source, target, getTrackProps }) {
         position: 'absolute',
         height: 10,
         zIndex: 1,
-        marginTop: 35,
+        marginTop: 22,
         backgroundColor: '#3665d6',
         borderRadius: 5,
         cursor: 'pointer',
