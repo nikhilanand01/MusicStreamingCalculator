@@ -166,6 +166,7 @@ class MobileVersion extends React.Component{
         this.streamsSliderRef = React.createRef();
         this.marketingDropDownRef = React.createRef();
         this.labelServicesSelectedRef = React.createRef();
+        this.barchartRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -446,7 +447,7 @@ class MobileVersion extends React.Component{
                         </div>
                       </div>
                       <div>
-                        <BarChart series={this.state.seriesBar}/>
+                        <BarChart ref={this.barchartRef} series={this.state.seriesBar}/>
                       </div>
                     </div>
                   </div>
@@ -890,19 +891,20 @@ class MobileVersion extends React.Component{
   }
 
   updateGraphs() {
-    this.setState({seriesBar:
-      [{
+      this.setState({seriesBar:
+          [{
               name: 'From Recording',
-              data: [this.state.artistRecordEarnings.toFixed(0), this.state.labelShare.toFixed(0), 0]
+              data: [parseInt(this.state.artistRecordEarnings.toFixed(0)), parseInt(this.state.labelShare.toFixed(0)), 0]
             }, {
               name: 'From Writing',
-              data: [this.state.artistWriterEarnings.toFixed(0), this.state.labelPublishingShare.toFixed(0), this.state.publisherShare.toFixed(0)]
+              data: [parseInt(this.state.artistWriterEarnings.toFixed(0)), parseInt(this.state.labelPublishingShare.toFixed(0)), parseInt(this.state.publisherShare.toFixed(0))]
             },{
               name: 'From Advance',
-              data: [this.state.advance.toFixed(0), 0, 0]
+              data: [parseInt(this.state.advance.toFixed(0)), 0, 0]
             }
           ]
-    })
+        })
+    
   }
 
   getPublisherShare(){
