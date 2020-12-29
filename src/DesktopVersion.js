@@ -233,9 +233,13 @@ class DesktopVersion extends React.Component{
     render() {
       return (
       <div>
-        <div className="main-container" style={{}}>
-          <div style={{textAlign: 'center'}}>
-            <TitleText className="title-text" text="What's My Stream?" />
+        <div className="main-container">
+          <div className="footer">
+            <div style={{width: '48%', marginBottom: '2%'}}>
+              <TitleText className="title-text" text="What's My Stream?" />
+              <p>This Streaming Calculator was made to model music streaming revenue, and give more clarity on where streaming revenue goes. This tool should be used as a guide only. These figures are an estimate and do not guarantee earnings. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a></p>
+              <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
+            </div>
           </div>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
             <div className="calc-container">
@@ -455,16 +459,16 @@ class DesktopVersion extends React.Component{
                 <div>
                   <BarChart series={this.state.seriesBar}/>
                 </div>
+                <div>
+                  <Accordion
+                      title="Detailed Earnings Breakdown"
+                      body={
+                        <div>
+                          COMING SOON...
+                        </div>}/>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="footer">
-          <div style={{width: '45%'}}>
-            <SmallText className="subtitle" text="About This Tool:" />
-            <SmallText text="This Streaming Calculator was made to model music streaming revenue, and give more clarity on where streaming revenue goes. This tool should be used as a guide only. These figures are an estimate and do not guarantee earnings."/>
-            <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a>
-            <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
           </div>
         </div>
       </div>
