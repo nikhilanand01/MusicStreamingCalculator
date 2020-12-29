@@ -256,7 +256,7 @@ class DesktopVersion extends React.Component{
                     <div>
                       <div style={{}}>
                         <div>
-                          <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                          <SmallText text="Recording Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                           <SingleDropDown
                               ref={this.dealTypeRef}
                               options={labelDealOptions}
