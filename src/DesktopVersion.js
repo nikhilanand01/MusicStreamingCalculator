@@ -234,10 +234,10 @@ class DesktopVersion extends React.Component{
       return (
       <div>
         <div className="main-container">
-          <div className="footer">
-            <div style={{width: '48%', marginBottom: '2%'}}>
+          <div className="header">
+            <div style={{width: '47%', marginBottom: '2%'}}>
               <TitleText className="title-text" text="What's My Stream?" />
-              <p>This Streaming Calculator was made to model music streaming revenue, and give more clarity on where streaming revenue goes. This tool should be used as a guide only. These figures are an estimate and do not guarantee earnings. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a></p>
+              <p>What is a stream Worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the Music Industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a></p>
               <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
             </div>
           </div>
@@ -565,9 +565,8 @@ class DesktopVersion extends React.Component{
     if(this.state.distributionCostChecked) costsTotal += this.state.costsDistribution;
     if(this.state.miscCostChecked) costsTotal += this.state.costsMisc;
     if(this.marketingDropDownRef.current.state.selectedOption === null) {
-      costsTotal += this.state.costsMarketing;
-    }
-    else costsTotal += (this.state.costsMarketing * this.marketingDropDownRef.current.state.selectedOption.value)
+      costsTotal += 0;
+    } else costsTotal += (this.state.costsMarketing * this.marketingDropDownRef.current.state.selectedOption.value)
 
     if(this.state.recordDealSelected === "labelServices") {
       costsTotal += this.state.labelServicesCosts;
@@ -837,8 +836,8 @@ class DesktopVersion extends React.Component{
       let artistRecordShare = 0;
       let labelShare = 0;
       let artistUnrecoupedAmount = 0;
-      let totalCosts = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
-      let totalMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
+      // let totalCosts = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+      let totalMoneyToRecoupe = parseFloat(this.state.advance) + this.state.costsTotal;
       let grossRevenue = 0;
       if(!this.state.autoRecoupChecked && !this.state.moneyGoalChecked) grossRevenue = this.state.streamNumber * this.weightedAverageOfSelected();
       if (this.state.autoRecoupChecked) grossRevenue = this.state.recoupStreamsNeeds * this.weightedAverageOfSelected();
@@ -859,7 +858,7 @@ class DesktopVersion extends React.Component{
           // Artist Split
           if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
             artistRecordShare = 0;
-            artistUnrecoupedAmount = Math.abs(((grossRevenue - totalCosts)*(parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance));
+            artistUnrecoupedAmount = Math.abs(((grossRevenue - this.state.costsTotal)*(parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance));
           } else {
             artistRecordShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
           }

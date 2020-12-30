@@ -92,7 +92,7 @@
 }
 
 .title-text{
-  text-shadow: 2px 2px 2px #858585;
+  /* text-shadow: 2px 2px 2px #858585; */
   color: #111;
   font-size: 28px;
   font-weight: 700;
@@ -116,7 +116,7 @@
   margin-bottom: 0;
 }
 
-.footer{
+.header{
   background-color: #transparent;
   padding: 1%;
   display: flex;
