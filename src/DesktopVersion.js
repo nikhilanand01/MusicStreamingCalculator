@@ -495,13 +495,13 @@ class DesktopVersion extends React.Component{
   changeCheckboxes(whichOne) {
 
     if(whichOne === "recording") {
-      this.setState({recordingCostChecked: !this.state.recordingCostChecked}, () => {this.calculate();})
+      this.setState({recordingCostChecked: !this.state.recordingCostChecked}, () => {this.calcTotalCosts();})
     }
     if(whichOne === "distribution") {
-      this.setState({distributionCostChecked: !this.state.distributionCostChecked}, () => {this.calculate();})
+      this.setState({distributionCostChecked: !this.state.distributionCostChecked}, () => {this.calcTotalCosts();})
     }
     if(whichOne === "misc") {
-      this.setState({miscCostChecked: !this.state.miscCostChecked}, () => {this.calculate();})
+      this.setState({miscCostChecked: !this.state.miscCostChecked}, () => {this.calcTotalCosts();})
     }
   }
 
@@ -567,7 +567,7 @@ class DesktopVersion extends React.Component{
 
   updateRecoupable(){
     let ret = this.state.costsTotal + this.state.advance;
-    this.setState({totRecoupe: ret})
+    this.setState({totRecoupe: ret}, () => {this.calculate()})
 
   }
 
@@ -582,7 +582,7 @@ class DesktopVersion extends React.Component{
   updateCostsRecording(e){
 
       this.setState({costsRecording: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -597,7 +597,7 @@ class DesktopVersion extends React.Component{
   updateCostsMarketing(e){
 
       this.setState({costsMarketing: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -612,7 +612,7 @@ class DesktopVersion extends React.Component{
   updateCostsDistribution(e){
 
       this.setState({costsDistribution: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -627,7 +627,7 @@ class DesktopVersion extends React.Component{
   updateCostsMisc(e){
 
       this.setState({costsMisc: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -814,12 +814,12 @@ class DesktopVersion extends React.Component{
   }
 
   calculate(){
-      this.calcTotalCosts();
+      //this.calcTotalCosts();
       this.getPublisherShare();
       let artistRecordShare = 0;
       let labelShare = 0;
       let artistUnrecoupedAmount = 0;
-      let totalCosts = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+      let totalCosts = this.state.costsTotal//parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       let totalMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
       let grossRevenue = 0;
       if(!this.state.autoRecoupChecked && !this.state.moneyGoalChecked) grossRevenue = this.state.streamNumber * this.weightedAverageOfSelected();
@@ -836,7 +836,7 @@ class DesktopVersion extends React.Component{
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
 
-      } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "Distribution Fee") {
+      } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "distributionFee") {
           let profit = (grossRevenue - this.state.costsTotal);
           // Artist Split
           if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
