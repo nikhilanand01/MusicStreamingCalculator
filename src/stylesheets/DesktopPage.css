@@ -15,10 +15,10 @@
       /* 0 100px 80px rgba(0, 0, 0, 0.12); */
 
   flex-direction: column;
-  width: 35%;
+  width: 36%;
   border: thin solid #e6eaf2;
   background-color: #f2f6ff;
-  padding-top: 0.75%;
+  padding: 0.75% 1% 0% 1%;
   border-radius: 7px;
   font-family: Ubuntu;
 }

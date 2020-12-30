@@ -18,7 +18,7 @@ class Accordion extends React.Component {
 
 	render() {
 		return (
-			<div className="accodion-container" style={{marginTop: '2%'}}>
+			<div className="accodion-container">
 				<section id="accodion" className={(this.state.isOpen) ? 'open' : 'close'}>
 					<div onClick={this.toggleAccordion}>
 					 <SmallText text={this.props.title} style={{marginTop: '-8px'}} />

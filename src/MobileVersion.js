@@ -235,7 +235,7 @@ class MobileVersion extends React.Component{
     render() {
       return (
         <div>
-          <div style={{padding: '2%', display: 'flex', flexDirection: 'column', backgroundColor: '#f5f5f5'}}>
+          <div className="mobile-main-container">
               <div style={{textAlign: 'center'}}>
                 <TitleText className="title-text" text="What's My Stream?" />
               </div>
@@ -244,7 +244,7 @@ class MobileVersion extends React.Component{
                   body={
                   <div style={{flexDirection: 'column', backgroundColor: '#fff'}}>
                       <div>
-                        <SmallText text="Your Role" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
+                        <SmallText text="Your Role:" style={{textAlign: 'left', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                           {this.state.roleTypes.map(type => (
                             <SelectButton ref={type.ref}
@@ -256,7 +256,7 @@ class MobileVersion extends React.Component{
                       </div>
                     <div>
                       {this.state.role !== "writer" &&
-                        <div style={{margin: '3% 0% 4% 0%', borderTop: 'thin dotted #b3d0ff'}}>
+                        <div style={{margin: '3% 0% 4% 0%', borderTop: 'thin solid #f0f0f0'}}>
                           <div>
                             <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                             <SingleDropDown
@@ -292,7 +292,7 @@ class MobileVersion extends React.Component{
                         </div>
                       }
                       {this.state.role !== "artist" &&
-                        <div style={{borderTop: 'thin dotted #b3d0ff', marginBottom: '5%'}}>
+                        <div style={{borderTop: 'thin solid #f0f0f0', marginBottom: '5%'}}>
                           <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                           <SingleDropDown
                               ref={this.pubTypeRef}
@@ -306,11 +306,10 @@ class MobileVersion extends React.Component{
                   }/>
 
                 <Accordion
-                    title="About Your Song"
+                    title="Your Streams"
                     body={
-
                       <div style={{flexDirection: 'column', backgroundColor: '#fff'}}>
-                          <div style={{alignItems: 'center', borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
+                          <div style={{alignItems: 'center'}}>
                             <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                             <NumberInput ref={this.estStreamsRef}
                                id={0}
@@ -334,74 +333,78 @@ class MobileVersion extends React.Component{
                                     </div>}/>
                             </div>
                           </div>
-
-                          <div style={{borderBottom: 'thin dotted #b3d0ff', paddingBottom: '2.5%'}}>
-                            <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
-                            <div style={{justifyContent:'center'}}>
-                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
-                                    <NumberInput
-                                      id= {"costsRecording"}
-                                      pattern="[0-9]*"
-                                      ref = {this.costsRecordingRef}
-                                      label="Recording Costs"
-                                      locked={false}
-                                      active={false}
-                                      onChange = {e => this.getStateCostsRecording(e)}/>
-                                    <div>
-                                      <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                                      <SwitchButton onChange={e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked} />
-                                    </div>
-                                </div>
-                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%'}}>
-                                    <NumberInput
-                                      id= {"costsMarketing"}
-                                      pattern="[0-9]*"
-                                      ref = {this.costsMarketingRef}
-                                      label="Marketing Costs"
-                                      locked={false}
-                                      active={false}
-                                      onChange = {e => this.getStateCostsMarketing(e)}/>
-                                  <div style={{marginLeft: '2%', width: '46%'}}>
-                                    <MarketingDropDown
-                                      ref={this.marketingDropDownRef}
-                                      selectedOption={marketingSplitOptions[2]}
-                                      options={marketingSplitOptions}
-                                      defaultValue={marketingSplitOptions[0]}
-                                      onChange={e => this.calcMarketingCosts()}
-                                      />
-                                  </div>
-                                </div>
-                                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
-                                    <NumberInput
-                                      id= {"costsDistribution"}
-                                      pattern="[0-9]*"
-                                      ref = {this.costsDistributionRef}
-                                      label="Distribution Costs"
-                                      locked={false}
-                                      active={false}
-                                      onChange = {e => this.getStateCostsDistribution(e)}/>
-                                    <div>
-                                      <SwitchButton onChange={e => this.changeCheckboxes("distribution")}  checked={this.state.distributionCostChecked}/>
-                                    </div>
-                                </div>
-                                <div style={{display: 'flex', flexDirection: 'row'}}>
-                                    <NumberInput
-                                      id= {"costsMisc"}
-                                      pattern="[0-9]*"
-                                      ref = {this.costsMiscRef}
-                                      label="Misc. Costs"
-                                      locked={false}
-                                      active={false}
-                                      onChange = {e => this.getStateCostsMisc(e)}/>
-                                    <div>
-                                      <SwitchButton onChange={e => this.changeCheckboxes("misc")}  checked={this.state.miscCostChecked}/>
-                                    </div>
-                                </div>
-                            </div>
-                          </div>
                       </div>
 
-              }/>
+                }/>
+
+              <Accordion
+                title="Your Costs"
+                body={
+                  <div>
+                    <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
+                    <div style={{justifyContent:'center'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
+                            <NumberInput
+                              id= {"costsRecording"}
+                              pattern="[0-9]*"
+                              ref = {this.costsRecordingRef}
+                              label="Recording Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsRecording(e)}/>
+                            <div>
+                              <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
+                              <SwitchButton onChange={e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked} />
+                            </div>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%'}}>
+                            <NumberInput
+                              id= {"costsMarketing"}
+                              pattern="[0-9]*"
+                              ref = {this.costsMarketingRef}
+                              label="Marketing Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsMarketing(e)}/>
+                          <div style={{marginLeft: '2%', width: '46%'}}>
+                            <MarketingDropDown
+                              ref={this.marketingDropDownRef}
+                              selectedOption={marketingSplitOptions[2]}
+                              options={marketingSplitOptions}
+                              defaultValue={marketingSplitOptions[0]}
+                              onChange={e => this.calcMarketingCosts()}
+                              />
+                          </div>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
+                            <NumberInput
+                              id= {"costsDistribution"}
+                              pattern="[0-9]*"
+                              ref = {this.costsDistributionRef}
+                              label="Distribution Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsDistribution(e)}/>
+                            <div>
+                              <SwitchButton onChange={e => this.changeCheckboxes("distribution")}  checked={this.state.distributionCostChecked}/>
+                            </div>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                            <NumberInput
+                              id= {"costsMisc"}
+                              pattern="[0-9]*"
+                              ref = {this.costsMiscRef}
+                              label="Misc. Costs"
+                              locked={false}
+                              active={false}
+                              onChange = {e => this.getStateCostsMisc(e)}/>
+                            <div>
+                              <SwitchButton onChange={e => this.changeCheckboxes("misc")}  checked={this.state.miscCostChecked}/>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                }/>
 
 
               <Accordion
@@ -455,9 +458,9 @@ class MobileVersion extends React.Component{
 
           </div>
           <div className="footer">
-            <div style={{width: '95%'}}>
-              <SmallText className="subtitle" text="About This Tool:" style={{}}/>
-              <SmallText text="This Streaming Calculator was made to model music streaming revenue, and give more clarity on where streaming revenue goes. This tool should be used as a guide only. These figures are an estimate and do not guarantee earnings."/>
+            <div style={{width: '92%'}}>
+              <SmallText className="subtitle" text="About This Tool:"/>
+              <p>What are your streams worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the music industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth.</p>
               <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a>
               <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
             </div>
@@ -469,7 +472,7 @@ class MobileVersion extends React.Component{
 
   changeLabelServicesDropDown(e) {
 
-    if(e.selectedOption !== null && e.selectedOption != this.state.selectedOptions) {
+    if(e.selectedOption !== null && e.selectedOption !== this.state.selectedOptions) {
       this.setState({selectedOptions: e.selectedOption}, () => {
         this.setState({labelServices: this.updateLabelServicesSelect()}, () => {
 
