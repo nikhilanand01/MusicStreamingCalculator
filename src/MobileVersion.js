@@ -411,14 +411,14 @@ class MobileVersion extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                       <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
                         <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                        <SwitchButton onChange={e => this.handleAutoRecoup()} />
+                        <SwitchButton onChange={e => this.handleAutoRecoup()} checked={this.state.autoRecoupChecked}/>
                         <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', padding: '5% 0% 5% 0%'}}>{`Streams Needed: ${value}`}</div>} />
                       </div>
                       <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
                         <ToolTip content="Advance is included in revenue earned" direction="top">
                           <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
                         </ToolTip>
-                        <SwitchButton onChange={e => this.handleMoneyGoalCheckbox()}/>
+                        <SwitchButton onChange={e => this.handleMoneyGoalCheckbox()} checked={this.state.moneyGoalChecked}/>
                         <NumberInput
                           id= {"moneyGoalInput"}
                           pattern="[0-9]*"
@@ -447,9 +447,9 @@ class MobileVersion extends React.Component{
                           <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
                         </div>
                       </div>
-                      <div>
+                      {/*<div>
                         <BarChart ref={this.barchartRef} series={this.state.seriesBar}/>
-                      </div>
+                      </div>*/}
                     </div>
                   </div>
 
