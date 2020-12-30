@@ -210,6 +210,7 @@ class DesktopVersion extends React.Component{
             }
           ],
           seriesRadial: [],
+          selectedOptions: [],
           roleTypes: roleTypes,
           costsTotal: 0,
           costsRecording: 0,
@@ -462,16 +463,68 @@ class DesktopVersion extends React.Component{
 
   changeLabelServicesDropDown(e) {
 
-    let lblCosts = 0;
-    if(e.selectedOption !== null) {
-      for(let i=0; i<e.selectedOption.length; i++) {
-        lblCosts += e.selectedOption[i].amt;
-      }
-    }
-    if(this.state.labelServicesCosts !== lblCosts) {
-      this.setState({labelServicesCosts: lblCosts}, () => {this.calculate();})
-    }
+    if(e.selectedOption !== null && e.selectedOption != this.state.selectedOptions) {
+      this.setState({selectedOptions: e.selectedOption}, () => {
+        this.setState({labelServices: this.updateLabelServicesSelect()}, () => {
 
+          console.log(e)
+          let lblCosts = 0;
+          for(let i=0; i<e.selectedOption.length; i++) {
+            lblCosts += this.state.labelServices[parseInt(e.selectedOption[i].id)].amt;
+          }
+          
+          if(this.state.labelServicesCosts !== lblCosts) {
+            this.setState({labelServicesCosts: lblCosts}, () => {this.calcTotalCosts();})
+          }
+        })
+      })
+    }
+  }
+
+  updateLabelServicesSelect() {
+      let stemDistribution = {
+          id: 0,
+          value: "stemDistribution",
+          label: 'Stem Distribution',
+          amt: (parseInt(this.state.artistRecordEarnings)* 0.1),
+          selected: true
+
+      }
+      let advertising = {
+          id: 1,
+          value: "advertising",
+          label: 'Avertising',
+          amt: 2500,
+          selected: false
+
+      }
+      let analytics = {
+          id: 2,
+          value: "analytics",
+          label: 'Analytics',
+          amt: 2500,
+          selected: false
+
+      }
+      let royaltyAccounting = {
+          id: 3,
+          value: "royaltyAccounting",
+          label: 'Royalty Accounting',
+          amt: (parseInt(this.state.artistRecordEarnings) * 0.05),
+          selected: false
+
+      }
+      let splitPayments = {
+          id: 4,
+          value: "splitPayments",
+          label: 'Split Payments',
+          amt: 1000,
+          selected: false
+
+      }
+
+      let services = [stemDistribution, advertising, analytics, royaltyAccounting, splitPayments]
+      return services;
   }
 
   handleMoneyGoalCheckbox() {
@@ -1061,7 +1114,7 @@ class DesktopVersion extends React.Component{
           id: 3,
           value: "royaltyAccounting",
           label: 'Royalty Accounting',
-          amt: (parseInt(this.state.artistRecordEarnings) * 0.5),
+          amt: (parseInt(this.state.artistRecordEarnings) * 0.05),
           selected: false
 
       }
