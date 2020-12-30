@@ -5,7 +5,7 @@ import styled from "styled-components";
 class MarketingDropDown extends React.Component {
 
   state = {
-    selectedOption: null,
+    selectedOption: this.props.selectedOption,
   };
 
   handleChange = selectedOption => {

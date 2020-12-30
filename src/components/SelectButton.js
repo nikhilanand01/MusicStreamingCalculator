@@ -1,9 +1,9 @@
 import React from 'react';
-import '../stylesheets/DspButton.css';
+import '../stylesheets/SelectButton.css';
 
 
 
-class DspButton extends React.Component {
+class SelectButton extends React.Component {
   constructor(props){
     super(props)
     this.state ={
@@ -40,4 +40,4 @@ class DspButton extends React.Component {
   }
 }
 
-export default DspButton;
+export default SelectButton;
