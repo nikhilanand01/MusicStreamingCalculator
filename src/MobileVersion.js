@@ -468,16 +468,68 @@ class MobileVersion extends React.Component{
 
   changeLabelServicesDropDown(e) {
 
-    let lblCosts = 0;
-    if(e.selectedOption !== null) {
-      for(let i=0; i<e.selectedOption.length; i++) {
-        lblCosts += e.selectedOption[i].amt;
-      }
-    }
-    if(this.state.labelServicesCosts !== lblCosts) {
-      this.setState({labelServicesCosts: lblCosts}, () => {this.calculate();})
-    }
+    if(e.selectedOption !== null && e.selectedOption != this.state.selectedOptions) {
+      this.setState({selectedOptions: e.selectedOption}, () => {
+        this.setState({labelServices: this.updateLabelServicesSelect()}, () => {
 
+          console.log(e)
+          let lblCosts = 0;
+          for(let i=0; i<e.selectedOption.length; i++) {
+            lblCosts += this.state.labelServices[parseInt(e.selectedOption[i].id)].amt;
+          }
+          
+          if(this.state.labelServicesCosts !== lblCosts) {
+            this.setState({labelServicesCosts: lblCosts}, () => {this.calcTotalCosts();})
+          }
+        })
+      })
+    }
+  }
+
+  updateLabelServicesSelect() {
+      let stemDistribution = {
+          id: 0,
+          value: "stemDistribution",
+          label: 'Stem Distribution',
+          amt: (parseInt(this.state.artistRecordEarnings)* 0.1),
+          selected: true
+
+      }
+      let advertising = {
+          id: 1,
+          value: "advertising",
+          label: 'Avertising',
+          amt: 2500,
+          selected: false
+
+      }
+      let analytics = {
+          id: 2,
+          value: "analytics",
+          label: 'Analytics',
+          amt: 2500,
+          selected: false
+
+      }
+      let royaltyAccounting = {
+          id: 3,
+          value: "royaltyAccounting",
+          label: 'Royalty Accounting',
+          amt: (parseInt(this.state.artistRecordEarnings) * 0.05),
+          selected: false
+
+      }
+      let splitPayments = {
+          id: 4,
+          value: "splitPayments",
+          label: 'Split Payments',
+          amt: 1000,
+          selected: false
+
+      }
+
+      let services = [stemDistribution, advertising, analytics, royaltyAccounting, splitPayments]
+      return services;
   }
 
   handleMoneyGoalCheckbox() {
@@ -501,13 +553,13 @@ class MobileVersion extends React.Component{
   changeCheckboxes(whichOne) {
 
     if(whichOne === "recording") {
-      this.setState({recordingCostChecked: !this.state.recordingCostChecked}, () => {this.calculate();})
+      this.setState({recordingCostChecked: !this.state.recordingCostChecked}, () => {this.calcTotalCosts();})
     }
     if(whichOne === "distribution") {
-      this.setState({distributionCostChecked: !this.state.distributionCostChecked}, () => {this.calculate();})
+      this.setState({distributionCostChecked: !this.state.distributionCostChecked}, () => {this.calcTotalCosts();})
     }
     if(whichOne === "misc") {
-      this.setState({miscCostChecked: !this.state.miscCostChecked}, () => {this.calculate();})
+      this.setState({miscCostChecked: !this.state.miscCostChecked}, () => {this.calcTotalCosts();})
     }
   }
 
@@ -573,7 +625,7 @@ class MobileVersion extends React.Component{
 
   updateRecoupable(){
     let ret = this.state.costsTotal + this.state.advance;
-    this.setState({totRecoupe: ret})
+    this.setState({totRecoupe: ret}, () => {this.calculate()})
 
   }
 
@@ -588,7 +640,7 @@ class MobileVersion extends React.Component{
   updateCostsRecording(e){
 
       this.setState({costsRecording: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -603,7 +655,7 @@ class MobileVersion extends React.Component{
   updateCostsMarketing(e){
 
       this.setState({costsMarketing: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -618,7 +670,7 @@ class MobileVersion extends React.Component{
   updateCostsDistribution(e){
 
       this.setState({costsDistribution: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -633,7 +685,7 @@ class MobileVersion extends React.Component{
   updateCostsMisc(e){
 
       this.setState({costsMisc: e}, () => {
-          this.calculate();
+          this.calcTotalCosts();
       });
   }
 
@@ -820,12 +872,12 @@ class MobileVersion extends React.Component{
   }
 
   calculate(){
-      this.calcTotalCosts();
+      //this.calcTotalCosts();
       this.getPublisherShare();
       let artistRecordShare = 0;
       let labelShare = 0;
       let artistUnrecoupedAmount = 0;
-      let totalCosts = parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
+      let totalCosts = this.state.costsTotal//parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
       let totalMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
       let grossRevenue = 0;
       if(!this.state.autoRecoupChecked && !this.state.moneyGoalChecked) grossRevenue = this.state.streamNumber * this.weightedAverageOfSelected();
@@ -842,7 +894,7 @@ class MobileVersion extends React.Component{
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
 
-      } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "Distribution Fee") {
+      } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "distributionFee") {
           let profit = (grossRevenue - this.state.costsTotal);
           // Artist Split
           if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
@@ -891,20 +943,19 @@ class MobileVersion extends React.Component{
   }
 
   updateGraphs() {
-      this.setState({seriesBar:
-          [{
+    this.setState({seriesBar:
+      [{
               name: 'From Recording',
-              data: [parseInt(this.state.artistRecordEarnings.toFixed(0)), parseInt(this.state.labelShare.toFixed(0)), 0]
+              data: [this.state.artistRecordEarnings.toFixed(0), this.state.labelShare.toFixed(0), 0]
             }, {
               name: 'From Writing',
-              data: [parseInt(this.state.artistWriterEarnings.toFixed(0)), parseInt(this.state.labelPublishingShare.toFixed(0)), parseInt(this.state.publisherShare.toFixed(0))]
+              data: [this.state.artistWriterEarnings.toFixed(0), this.state.labelPublishingShare.toFixed(0), this.state.publisherShare.toFixed(0)]
             },{
               name: 'From Advance',
-              data: [parseInt(this.state.advance.toFixed(0)), 0, 0]
+              data: [this.state.advance.toFixed(0), 0, 0]
             }
           ]
-        })
-    
+    })
   }
 
   getPublisherShare(){
@@ -980,7 +1031,7 @@ class MobileVersion extends React.Component{
     let recoupStreamsNeeds;
 
     if(this.state.recordDealSelected === "royalty" || this.state.recordDealSelected === "labelServices"){
-	     recoupStreamsNeeds = (this.state.totRecoupe/(parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
+       recoupStreamsNeeds = (this.state.totRecoupe/(parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
      } else {
        recoupStreamsNeeds = ((this.state.costsTotal + this.state.advance) / (parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
      }
@@ -1068,7 +1119,7 @@ class MobileVersion extends React.Component{
           id: 3,
           value: "royaltyAccounting",
           label: 'Royalty Accounting',
-          amt: (parseInt(this.state.artistRecordEarnings) * 0.5),
+          amt: (parseInt(this.state.artistRecordEarnings) * 0.05),
           selected: false
 
       }
@@ -1084,7 +1135,6 @@ class MobileVersion extends React.Component{
       let services = [stemDistribution, advertising, analytics, royaltyAccounting, splitPayments]
       this.setState( {labelServices: services})
   }
-
 }
 
 
