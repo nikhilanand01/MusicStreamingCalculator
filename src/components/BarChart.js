@@ -30,7 +30,11 @@ class BarChart extends React.Component {
         },
         legend: {
           position: 'bottom',
+          showForZeroSeries: true,
           horizontalAlign: 'center',
+          onItemClick: {
+            toggleDataSeries: false
+          },
         },
         fill: {
           opacity: 1
@@ -38,6 +42,7 @@ class BarChart extends React.Component {
       },
     };
   }
+
 
   render() {
     return (
