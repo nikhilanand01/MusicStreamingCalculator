@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import DesktopVersion from './DesktopVersion.js';
 import MobileVersion from './MobileVersion.js';
-import {BrowserView, MobileView} from "react-device-detect";
+import {BrowserView, MobileOnlyView, TabletView} from "react-device-detect";
 import ReactGA from 'react-ga';
 
 function initializeAnalytics(){
@@ -18,9 +18,12 @@ function App() {
       <BrowserView>
         <DesktopVersion/>
       </BrowserView>
-      <MobileView>
+      <MobileOnlyView>
         <MobileVersion/>
-      </MobileView>
+      </MobileOnlyView>
+      <TabletView>
+        <DesktopVersion/>
+      </TabletView>
     </div>
   );
 }
