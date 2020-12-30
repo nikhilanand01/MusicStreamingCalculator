@@ -21,9 +21,6 @@ function App() {
       <MobileOnlyView>
         <MobileVersion/>
       </MobileOnlyView>
-      <TabletView>
-        <DesktopVersion/>
-      </TabletView>
     </div>
   );
 }
