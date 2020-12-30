@@ -364,6 +364,7 @@ class MobileVersion extends React.Component{
                                   <div style={{marginLeft: '2%', width: '46%'}}>
                                     <MarketingDropDown
                                       ref={this.marketingDropDownRef}
+                                      selectedOption={marketingSplitOptions[2]}
                                       options={marketingSplitOptions}
                                       defaultValue={marketingSplitOptions[0]}
                                       onChange={e => this.calcMarketingCosts()}
@@ -544,11 +545,13 @@ class MobileVersion extends React.Component{
     })
   }
 
+
   calcMarketingCosts() {
     if(this.marketingDropDownRef.current.state.selectedOption !== null && this.state.marketingValSelected !== this.marketingDropDownRef.current.state.selectedOption.value) {
       this.setState({marketingValSelected: this.marketingDropDownRef.current.state.selectedOption.value}, () => {this.calcTotalCosts();})
     }
   }
+
 
   changeCheckboxes(whichOne) {
 
