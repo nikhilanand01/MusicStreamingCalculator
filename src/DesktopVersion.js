@@ -217,6 +217,7 @@ class DesktopVersion extends React.Component{
           costsMarketing: 0,
           costsDistribution: 0,
           costsMisc: 0,
+          streamValue: 0,
         };
 
     }
@@ -238,7 +239,7 @@ class DesktopVersion extends React.Component{
           <div className="header">
             <div style={{width: '47%', marginBottom: '2%'}}>
               <TitleText className="title-text" text="What's My Stream?" />
-              <p>What is a stream Worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the Music Industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a></p>
+              <p>What are your streams worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the music industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a></p>
               <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
             </div>
           </div>
@@ -333,6 +334,7 @@ class DesktopVersion extends React.Component{
                   <Accordion
                       title="Which DSPs Are Included?"
                       body={
+                        <div>
                         <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
                           {this.state.providers.map((provider) =>
                           <SelectButton
@@ -340,7 +342,11 @@ class DesktopVersion extends React.Component{
                             key={provider.id}
                             text={provider.name}
                             onChange = {e => this.getButtonClick(provider.id)}/>)}
-                        </div>}/>
+                        </div>
+                          <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
+                        </div>
+
+                      }/>
                 </div>
               </div>
               <div className="costs-container">
@@ -941,6 +947,7 @@ class DesktopVersion extends React.Component{
         artistRecordEarnings: artistRecordShare,
         labelShare: labelShare,
         artistUnrecoupedAmount: artistUnrecoupedAmount,
+        streamValue: this.weightedAverageOfSelected(),
         }, () => {
 
           this.getArtistTotalEarnings();
@@ -949,6 +956,7 @@ class DesktopVersion extends React.Component{
           this.percentRecouped();
           this.autoRecoup();
           this.moneyGoal();
+
         });
 
 
@@ -1022,7 +1030,9 @@ class DesktopVersion extends React.Component{
         }
       }
       if(sumOfWeights <= 0.0) return 0.0
-      return sum/sumOfWeights;
+      let ret = sum/sumOfWeights
+      return ret;
+
   }
 
   getArtistTotalEarnings(){
