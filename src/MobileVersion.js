@@ -239,7 +239,7 @@ class MobileVersion extends React.Component{
               <div style={{textAlign: 'center'}}>
                 <TitleText className="title-text" text="What's My Stream?" />
               </div>
-              <Accordion
+              <Accordion style={{backgroundColor: '#000'}}
                   title="About You"
                   body={
                   <div style={{flexDirection: 'column', backgroundColor: '#fff'}}>
@@ -478,7 +478,7 @@ class MobileVersion extends React.Component{
           for(let i=0; i<e.selectedOption.length; i++) {
             lblCosts += this.state.labelServices[parseInt(e.selectedOption[i].id)].amt;
           }
-          
+
           if(this.state.labelServicesCosts !== lblCosts) {
             this.setState({labelServicesCosts: lblCosts}, () => {this.calcTotalCosts();})
           }

@@ -7,7 +7,7 @@
 #accodion {
 	border-radius: 18px;
 	/* box-shadow: 0 6px 22px 0 rgba(19, 102, 202, 0.1); */
-	background-color: transparent;
+	background-color:  #fff;
 	border: solid 1px #94969c;
 	padding: 15px 25px;
 	cursor: pointer;
@@ -18,7 +18,7 @@
 }
 
 .open{
-	height: auto;
+	/* height: auto; */
 	transition: height 0.25s ease-in;
   padding: 15px 25px;
 	overflow: visible;
