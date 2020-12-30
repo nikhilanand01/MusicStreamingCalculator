@@ -19,7 +19,7 @@
 .open{
 	/* height: auto; */
 	transition: height 0.25s ease-in;
-  padding: 15px 25px;
+  padding: 15px 20px;
 	overflow: visible;
 }
 .close{

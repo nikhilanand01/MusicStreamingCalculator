@@ -218,6 +218,7 @@ class MobileVersion extends React.Component{
           costsMarketing: 0,
           costsDistribution: 0,
           costsMisc: 0,
+          streamValue: 0,
         };
 
     }
@@ -323,6 +324,7 @@ class MobileVersion extends React.Component{
                               <Accordion
                                   title="Which DSPs Are Included?"
                                   body={
+                                    <div>
                                     <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
                                       {this.state.providers.map((provider) =>
                                       <SelectButton
@@ -330,7 +332,10 @@ class MobileVersion extends React.Component{
                                         key={provider.id}
                                         text={provider.name}
                                         onChange = {e => this.getButtonClick(provider.id)}/>)}
-                                    </div>}/>
+                                    </div>
+                                      <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
+                                    </div>
+                                  }/>
                             </div>
                           </div>
                       </div>
@@ -548,13 +553,11 @@ class MobileVersion extends React.Component{
     })
   }
 
-
   calcMarketingCosts() {
     if(this.marketingDropDownRef.current.state.selectedOption !== null && this.state.marketingValSelected !== this.marketingDropDownRef.current.state.selectedOption.value) {
       this.setState({marketingValSelected: this.marketingDropDownRef.current.state.selectedOption.value}, () => {this.calcTotalCosts();})
     }
   }
-
 
   changeCheckboxes(whichOne) {
 
@@ -935,6 +938,7 @@ class MobileVersion extends React.Component{
         artistRecordEarnings: artistRecordShare,
         labelShare: labelShare,
         artistUnrecoupedAmount: artistUnrecoupedAmount,
+        streamValue: this.weightedAverageOfSelected()
         }, () => {
 
           this.getArtistTotalEarnings();
@@ -1016,7 +1020,8 @@ class MobileVersion extends React.Component{
         }
       }
       if(sumOfWeights <= 0.0) return 0.0
-      return sum/sumOfWeights;
+      let ret = sum/sumOfWeights
+      return ret;
   }
 
   getArtistTotalEarnings(){
