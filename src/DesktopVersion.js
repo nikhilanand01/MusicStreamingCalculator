@@ -15,6 +15,7 @@ import StreamSlider from './components/StreamSlider.js';
 import Accordion from './components/Accordion.js';
 import Checkbox from './components/Checkbox.js';
 import ToolTip from './components/ToolTip.js';
+import Popup from './components/PopUp.js';
 
 import './stylesheets/DesktopPage.css';
 
@@ -28,7 +29,7 @@ const labelDealOptions = [
 
 const pubDealOptions = [
   { value: 'Full/Traditional', label: 'Full/Traditional' },
-  { value: 'Co-Publishing', label: 'Co-publising' },
+  { value: 'Co-Publishing', label: 'Co-publishing' },
   { value: 'Admin', label: 'Admin' },
   { value: 'No Deal', label: 'No Deal' }
 ]
@@ -286,7 +287,7 @@ class DesktopVersion extends React.Component{
                           <DealSplitSlider ref={this.dealSliderRef}
                               onChange = {e => this.doSliderStuff(e)}/>
                         </div>
-                        <div style={{}}>
+                        <div>
                           <SmallText text="Record Deal Advance" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
                           <NumberInput ref={this.advanceRef}
                             id= {"numInput"}
@@ -335,15 +336,20 @@ class DesktopVersion extends React.Component{
                       title="Which DSPs Are Included?"
                       body={
                         <div>
-                        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
-                          {this.state.providers.map((provider) =>
-                          <SelectButton
-                            ref={provider.ref}
-                            key={provider.id}
-                            text={provider.name}
-                            onChange = {e => this.getButtonClick(provider.id)}/>)}
-                        </div>
-                          <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
+                          <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
+                            {this.state.providers.map((provider) =>
+                            <SelectButton
+                              ref={provider.ref}
+                              key={provider.id}
+                              text={provider.name}
+                              onChange = {e => this.getButtonClick(provider.id)}/>)}
+                          </div>
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'baseline'}}>
+                            <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
+                            <ToolTip content="Value is a weighted average of DSP payout and their market share" direction="top">
+                              <SmallText text="ⓘ" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0, paddingLeft: '5px' }}/>
+                            </ToolTip>
+                          </div>
                         </div>
 
                       }/>
@@ -477,6 +483,45 @@ class DesktopVersion extends React.Component{
               </div>
             </div>
           </div>
+          <div className="POPUPS">
+            <Popup
+              buttonText="Instructions"
+              title="Best Practices for Using this Tool"
+              body={
+                <div>
+                  <ol>
+                    <li style={{marginBottom: '10px'}}>Enter the information in the "About You." First answer are you the recording artist of the song, the writer, or both. Then you will be prompted to enter informaton about your agreements/deals for each aspect.</li>
+                    <li style={{marginBottom: '10px'}}>Next Enter your estimated streams that you expect to recive from your song(s). You can select which DSPs (aka Streaming Services) your song will be on in this section.</li>
+                    <li style={{marginBottom: '10px'}}>Enter any costs associated with the creation and marketing of this song. You can adjust if this value is recoupable or will be partially paid by you.</li>
+                    <li>Results are shown in the results section, updated automatically</li>
+                    <p>Bonus: In the "advanced calculations" section you can look to see how many streams are needed to pay back your reacoupable values, and earn a certain income.</p>
+                  </ol>
+                  <p>It is important to note that not all deals are the same: A 'bad' deal for you can be an ideal situation for someone else... it's all relative. Additionally, This is only an estimate of what your <strong>streams</strong> are worth. With other revenue sources include (physical albums, synch fees, etc.) your total earnings in reality could vary</p>
+                </div>
+              }/>
+            <Popup
+              buttonText="Glossary"
+              title="Glossary of Terms"
+              body={
+                <div>
+                  <ul id="uglossary">
+                    <li>Admin Deal: A publishing deal where the publishing company administers royalty collection for the artists, and takes a 10% commision of the publishing share of performances royalties for their work</li>
+                    <li>Advance: A lump sum of cash given to an artist (usally by a label) as guarenteed earnings for the work create. Repaid against future royalty income</li>
+                    <li>Co-Publishing Deal: A publishing deal where the publishing company, for their services, splits the publishing share of performance royalties 50/50 with the writer. The writer(s) maintain all of the writer share of the song</li>
+                    <li>Distribution Deal (Fee Based): A record deal where artists receive distribution services from label partner. Revenues are shared with a net profit payout style</li>
+                    <li>Distribution Deal (Percent Based): A recording deal where the artists and their label partner split the profits after paying off any expenses inccured</li>
+                    <li>DSP: Short for Digital Streaming Platform. A fancy was of saying streaming services</li>
+                    <li>Full/Traditional Deal: A publishing deal where the publishing company, for their services, maintains the entire publishing share of performance royalties. The writer(s) maintain all of the writer share of the song</li>
+                    <li>Mechanical Royalties: A royalty paid for the right to copy/produce a song into a per-unit recording such as CD, or on-demand stream</li>
+                    <li>Net Profit Deal: A recording deal where the artists and their label partner split the profits after paying off any expenses inccured</li>
+                    <li>Performance Royalties: A royalty paid for the right to publicly play an artist's music</li>
+                    <li>Recoupment: The act of paying back all of an artists owed expenses. If you have paid off all your expenses you are said to be "recouped"</li>
+                    <li>PRO: Short for Performance Rights Organziation (ASAP, BMI, SESAC, etc.). They collect and distribute performance royalties to publishing companies and writers </li>
+                  </ul>
+                </div>
+              }
+              />
+          </div>
         </div>
       </div>
 
@@ -496,7 +541,7 @@ class DesktopVersion extends React.Component{
           for(let i=0; i<e.selectedOption.length; i++) {
             lblCosts += this.state.labelServices[parseInt(e.selectedOption[i].id)].amt;
           }
-          
+
           if(this.state.labelServicesCosts !== lblCosts) {
             this.setState({labelServicesCosts: lblCosts}, () => {this.calcTotalCosts();})
           }
