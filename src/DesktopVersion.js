@@ -15,6 +15,7 @@ import StreamSlider from './components/StreamSlider.js';
 import Accordion from './components/Accordion.js';
 import Checkbox from './components/Checkbox.js';
 import ToolTip from './components/ToolTip.js';
+import Popup from './components/PopUp.js';
 
 import './stylesheets/DesktopPage.css';
 
@@ -28,7 +29,7 @@ const labelDealOptions = [
 
 const pubDealOptions = [
   { value: 'Full/Traditional', label: 'Full/Traditional' },
-  { value: 'Co-Publishing', label: 'Co-publising' },
+  { value: 'Co-Publishing', label: 'Co-publishing' },
   { value: 'Admin', label: 'Admin' },
   { value: 'No Deal', label: 'No Deal' }
 ]
@@ -218,6 +219,11 @@ class DesktopVersion extends React.Component{
           costsDistribution: 0,
           costsMisc: 0,
           streamValue: 0,
+          proFee: 0,
+          pubDistributionFee: 0,
+          pubArtistWriterShare: 0,
+          pubArtistPubShare: 0,
+          pubArtistMechShare: 0,
         };
 
     }
@@ -236,12 +242,8 @@ class DesktopVersion extends React.Component{
       return (
       <div>
         <div className="main-container">
-          <div className="header">
-            <div style={{width: '47%', marginBottom: '2%'}}>
-              <TitleText className="title-text" text="What's My Stream?" />
-              <p>What are your streams worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the music industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a></p>
-              <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
-            </div>
+          <div style={{marginBottom: '1%', textAlign: 'center'}}>
+            <TitleText className="title-text" text="What's My Stream?" />
           </div>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
             <div className="calc-container">
@@ -286,7 +288,7 @@ class DesktopVersion extends React.Component{
                           <DealSplitSlider ref={this.dealSliderRef}
                               onChange = {e => this.doSliderStuff(e)}/>
                         </div>
-                        <div style={{}}>
+                        <div>
                           <SmallText text="Record Deal Advance" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
                           <NumberInput ref={this.advanceRef}
                             id= {"numInput"}
@@ -335,15 +337,20 @@ class DesktopVersion extends React.Component{
                       title="Which DSPs Are Included?"
                       body={
                         <div>
-                        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
-                          {this.state.providers.map((provider) =>
-                          <SelectButton
-                            ref={provider.ref}
-                            key={provider.id}
-                            text={provider.name}
-                            onChange = {e => this.getButtonClick(provider.id)}/>)}
-                        </div>
-                          <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
+                          <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
+                            {this.state.providers.map((provider) =>
+                            <SelectButton
+                              ref={provider.ref}
+                              key={provider.id}
+                              text={provider.name}
+                              onChange = {e => this.getButtonClick(provider.id)}/>)}
+                          </div>
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'baseline'}}>
+                            <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
+                            <ToolTip content="Value is a weighted average of DSP payouts and their market share" direction="top">
+                              <SmallText text="ⓘ" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0, paddingLeft: '5px' }}/>
+                            </ToolTip>
+                          </div>
                         </div>
 
                       }/>
@@ -418,7 +425,12 @@ class DesktopVersion extends React.Component{
                     <div>
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
-                          <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
+                        <div style={{display: 'flex',flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                          <SmallText text="Auto Recoup " style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
+                          <ToolTip content="The amount of streams needed to pay back all recoupable monies" direction="top">
+                            <SmallText text="ⓘ" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0, paddingLeft: '5px' }}/>
+                          </ToolTip>
+                        </div>
                           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '8%'}}>
                             <SmallText text="Check" style={{fontSize: '14px', marginBottom: 0}}/>
                             <Checkbox onChange={e => this.handleAutoRecoup()}/>
@@ -471,11 +483,96 @@ class DesktopVersion extends React.Component{
                       title="Detailed Earnings Breakdown"
                       body={
                         <div>
-                          COMING SOON...
+                          <NumberFormat value={`${this.state.streamNumber}`} displayType={'text'} thousandSeparator={true} renderText={value => <p style={{marginBottom: '0px'}}>{`Earnings from ${value} streams`}</p>} />
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
+                            <div style={{flexDirection: 'column', borderRight: 'thin solid #f0f0f0', paddingRight: '4px'}}>
+                              <p>Artist(s)</p>
+                              <NumberFormat value={`${this.state.artistRecordEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Recording Earnings: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.pubArtistWriterShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Writer Share: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.pubArtistPubShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Publisher Share: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.pubArtistMechShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Mechanical Revenue: ${value}`}</p>} />
+                            </div>
+                            <div style={{flexDirection: 'column', paddingLeft: '4px'}}>
+                              <p>Partners</p>
+                              <NumberFormat value={`${this.state.labelShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Record Deal Earnings From Recording: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.labelPublishingShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Record Deal Earnings From Publising: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.publisherShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Publisher Earnings: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.proFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`PRO Fee: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.pubDistributionFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Distribution Fee: ${value}`}</p>} />
+                            </div>
+                          </div>
                         </div>}/>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="desktop-footer">
+          <div>
+            <h4 style={{marginBottom: '5px', textAlign: 'center'}}>Created By:</h4>
+            <ul style={{listStyleType: 'none', textAlign: 'left', marginTop: '0'}}>
+              <li style={{marginBottom: '5px'}}><a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand</a></li>
+              <li style={{marginBottom: '5px'}}><a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent</a></li>
+              <li style={{marginBottom: '5px'}}><a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin</a></li>
+              <li><a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></li>
+            </ul>
+          </div>
+          <div style={{width: '45%'}}>
+            <h3 style={{marginBottom: '4px'}}>About This Tool</h3>
+            <p style={{marginTop: '0px', fontSize: '18px'}}>What are your streams worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the music industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}> See our full write-up here.</a></p>
+          </div>
+          <div className="POPUPS">
+            <h4 style={{marginBottom: '5px', textAlign: 'right'}}>Help:</h4>
+            <Popup
+              buttonText="Instructions"
+              title="Best Practices for Using this Tool"
+              body={
+                <div>
+                  <ol>
+                    <li style={{marginBottom: '10px'}}>Enter the information in the "About You." First answer are you the recording artist of the song, the writer, or both. Then you will be prompted to enter informaton about your agreements/deals for each aspect.</li>
+                    <li style={{marginBottom: '10px'}}>Next Enter your estimated streams that you expect to recive from your song(s). You can select which DSPs (aka Streaming Services) your song will be on in this section.</li>
+                    <li style={{marginBottom: '10px'}}>Enter any costs associated with the creation and marketing of this song. You can adjust if this value is recoupable or will be partially paid by you.</li>
+                    <li>Results are shown in the results section, updated automatically</li>
+                    <p>Bonus: In the "advanced calculations" section you can look to see how many streams are needed to pay back your reacoupable values, and earn a certain income.</p>
+                  </ol>
+                  <p>It is important to note that not all deals are the same: A 'bad' deal for you can be an ideal situation for someone else... it's all relative. Additionally, This is only an estimate of what your <strong>streams</strong> are worth. With other revenue sources include (physical albums, synch fees, etc.) your total earnings in reality could vary</p>
+                </div>
+              }/>
+            <Popup
+              buttonText="Glossary"
+              title="Glossary of Terms"
+              body={
+                <div>
+                  <ul id="uglossary">
+                    <li>Admin Deal: A publishing deal where the publishing company administers royalty collection for the artists, and takes a 10% commision of the publishing share of performances royalties for their work</li>
+                    <li>Advance: A lump sum of cash given to an artist (usally by a label) as guarenteed earnings for the work create. Repaid against future royalty income</li>
+                    <li>Co-Publishing Deal: A publishing deal where the publishing company, for their services, splits the publishing share of performance royalties 50/50 with the writer. The writer(s) maintain all of the writer share of the song</li>
+                    <li>Distribution Deal (Fee Based): A record deal where artists receive distribution services from label partner. Revenues are shared with a net profit payout style</li>
+                    <li>Distribution Deal (Percent Based): A recording deal where the artists and their label partner split the profits after paying off any expenses inccured</li>
+                    <li>DSP: Short for Digital Streaming Platform. A fancy was of saying streaming services</li>
+                    <li>Full/Traditional Deal: A publishing deal where the publishing company, for their services, maintains the entire publishing share of performance royalties. The writer(s) maintain all of the writer share of the song</li>
+                    <li>Mechanical Royalties: A royalty paid for the right to copy/produce a song into a per-unit recording such as CD, or on-demand stream</li>
+                    <li>Net Profit Deal: A recording deal where the artists and their label partner split the profits after paying off any expenses inccured</li>
+                    <li>Performance Royalties: A royalty paid for the right to publicly play an artist's music</li>
+                    <li>Recoupment: The act of paying back all of an artists owed expenses. If you have paid off all your expenses you are said to be "recouped"</li>
+                    <li>PRO: Short for Performance Rights Organziation (ASAP, BMI, SESAC, etc.). They collect and distribute performance royalties to publishing companies and writers </li>
+                  </ul>
+                </div>
+            }/>
+            <Popup
+              buttonText="Record Deal Informaton"
+              title="Standard Record Deal Points"
+              body={
+                <div>
+                  <ul id="urecdeals">
+                    <li>Royalty: Artist typically maintains <strong>8-25% of revenue</strong> but first has to pay back any debts to label partner</li>
+                    <li>Net Profit: Artist typically <strong>splits profits 50/50</strong> with label partner</li>
+                    <li>Distribution (Percent Based): Artist typically maintains <strong>60-75% of profits</strong></li>
+                    <li>Distribution (Fee Based): Artist typically maintains <strong>100% of revenue</strong>. Pays distributor flat fees and covers all costs</li>
+                    <li>Label Services: Artist typically maintains <strong>80% of revenue</strong>. Pays distributor 20% split + Additional Service Fees</li>
+                  </ul>
+                </div>
+            }/>
           </div>
         </div>
       </div>
@@ -496,7 +593,7 @@ class DesktopVersion extends React.Component{
           for(let i=0; i<e.selectedOption.length; i++) {
             lblCosts += this.state.labelServices[parseInt(e.selectedOption[i].id)].amt;
           }
-          
+
           if(this.state.labelServicesCosts !== lblCosts) {
             this.setState({labelServicesCosts: lblCosts}, () => {this.calcTotalCosts();})
           }
@@ -986,6 +1083,8 @@ class DesktopVersion extends React.Component{
     let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
     let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
     let publisherPercentage;
+    let artistWriterShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
+    let artistMechShare = (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee));
 
     switch(this.state.publishingDealSelected) {
       case 'Full/Traditional':
@@ -1005,13 +1104,19 @@ class DesktopVersion extends React.Component{
     }
 
     let publisherShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage
+    let artistPubShare = (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage));
     let artistWriterEarnings = ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))
 
     this.setState({
       publisherShare: publisherShare,
       artistWriterEarnings: artistWriterEarnings,
       grossPubRev: pubGrossRevenue,
-      labelPublishingShare: pubMechanicalRecordFee
+      labelPublishingShare: pubMechanicalRecordFee,
+      proFee: pubPROAdminFee,
+      pubDistributionFee: pubMechanicalAdminFee,
+      pubArtistWriterShare: artistWriterShare,
+      pubArtistPubShare: artistPubShare,
+      pubArtistMechShare: artistMechShare,
     });
   }
 
