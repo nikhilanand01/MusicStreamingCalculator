@@ -166,6 +166,8 @@ class DesktopVersion extends React.Component{
         this.streamsSliderRef = React.createRef();
         this.marketingDropDownRef = React.createRef();
         this.labelServicesSelectedRef = React.createRef();
+        this.numbWritersRef = React.createRef();
+        this.writerPercentWrittenRef = React.createRef();
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
@@ -224,6 +226,8 @@ class DesktopVersion extends React.Component{
           pubArtistWriterShare: 0,
           pubArtistPubShare: 0,
           pubArtistMechShare: 0,
+          numbWriters: 1,
+          writerPercentWritten: 100,
         };
 
     }
@@ -290,7 +294,8 @@ class DesktopVersion extends React.Component{
                         </div>
                         <div>
                           <SmallText text="Record Deal Advance" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
-                          <NumberInput ref={this.advanceRef}
+                          <NumberInput
+                            ref={this.advanceRef}
                             id= {"numInput"}
                             label = "Advance on Earnings"
                             locked = {false}
@@ -305,13 +310,39 @@ class DesktopVersion extends React.Component{
                 <div className="pub-deal">
                   {this.state.role !== "artist" &&
                     <div>
-                      <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                      <SingleDropDown
-                          ref={this.pubTypeRef}
-                          options={pubDealOptions}
-                          selectedOption={pubDealOptions[1]}
-                          onChange = {e => this.getStatePubDeal(e)}
-                      />
+                      <div>
+                        <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
+                        <SingleDropDown
+                            ref={this.pubTypeRef}
+                            options={pubDealOptions}
+                            selectedOption={pubDealOptions[1]}
+                            onChange = {e => this.getStatePubDeal(e)}
+                        />
+                      </div>
+                      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '5%'}}>
+                        <div style={{width: '45%'}}>
+                          <NumberInput
+                            id={"numbWriters"}
+                            ref={this.numbWritersRef}
+                            type="number"
+                            label="# of Writers"
+                            max="8"
+                            value="1"
+                            error={this.state.numbWriters > 8 ? 'Should have Max 8 writers' : ''}
+                            />
+                        </div>
+                        <div style={{width: '45%'}}>
+                          <NumberInput
+                            id={"percentwritten"}
+                            ref={this.writerPercentWrittenRef}
+                            type="number"
+                            label="% Written"
+                            value={(100 / this.state.numbWriters).toFixed(0)}
+                            max="100"
+                            error={this.state.writerPercentWritten > 100 ? '**More than 100%**' : ''}
+                            />
+                        </div>
+                      </div>
                     </div>
                   }
                 </div>
@@ -321,12 +352,12 @@ class DesktopVersion extends React.Component{
                 <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
                   <div style={{width: '45%'}}>
-                    <NumberInput ref={this.estStreamsRef}
-                       id={0}
-                       label="Estimated Streams"
-                       locked={false}
-                       active={false}
-                       onChange={e => this.changeStreams(e)}/>
+                    <NumberInput
+                      ref={this.estStreamsRef}
+                      id={0}
+                      type="text"
+                      label="Estimated Streams"
+                      onChange={e => this.changeStreams(e)}/>
                   </div>
                   <div style={{marginLeft: '4%', width: '48%'}}>
                     <StreamSlider ref={this.streamsSliderRef} values={[this.state.streamNumber]} domain={[0, (this.state.streamNumber+1)*2]} onChange={e => this.updateStreamSlider(e)}/>
@@ -362,10 +393,9 @@ class DesktopVersion extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
                         <NumberInput
                           id= {"costsRecording"}
+                          type="text"
                           ref = {this.costsRecordingRef}
                           label="Recording Costs"
-                          locked={false}
-                          active={false}
                           onChange = {e => this.getStateCostsRecording(e)}/>
                         <div>
                           <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
@@ -375,10 +405,9 @@ class DesktopVersion extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
                         <NumberInput
                           id= {"costsMarketing"}
+                          type="text"
                           ref = {this.costsMarketingRef}
                           label="Marketing Costs"
-                          locked={false}
-                          active={false}
                           onChange = {e => this.getStateCostsMarketing(e)}/>
                       <div style={{marginLeft: '2%', width: '30%'}}>
                         <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 0px'}}/>
@@ -393,10 +422,9 @@ class DesktopVersion extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
                         <NumberInput
                           id= {"costsDistribution"}
+                          type="text"
                           ref = {this.costsDistributionRef}
                           label="Distribution Costs"
-                          locked={false}
-                          active={false}
                           onChange = {e => this.getStateCostsDistribution(e)}/>
                         <div>
                           <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
@@ -406,10 +434,9 @@ class DesktopVersion extends React.Component{
                     <div style={{display: 'flex', flexDirection: 'row', width: '50%'}}>
                         <NumberInput
                           id= {"costsMisc"}
+                          type="text"
                           ref = {this.costsMiscRef}
                           label="Misc. Costs"
-                          locked={false}
-                          active={false}
                           onChange = {e => this.getStateCostsMisc(e)}/>
                         <div>
                           <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
@@ -420,7 +447,7 @@ class DesktopVersion extends React.Component{
               </div>
               <div className="advanced-container">
                 <Accordion
-                  title="Advanced Calculations"
+                  title="Advanced Record Deal Calculations"
                   body={
                     <div>
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
@@ -451,9 +478,8 @@ class DesktopVersion extends React.Component{
                           <NumberInput
                             id= {"moneyGoalInput"}
                             ref = {this.moneyGoalInputRef}
+                            type="text"
                             label="I want to Make..."
-                            locked={false}
-                            active={false}
                             onChange = {e => this.getStateMoneyGoalInput(e)}/>
                           <NumberFormat value={`${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '3%'}}>{`Streams Needed: ${value}`}</div>} />
                         </div>
@@ -533,7 +559,7 @@ class DesktopVersion extends React.Component{
                     <li style={{marginBottom: '10px'}}>Next Enter your estimated streams that you expect to recive from your song(s). You can select which DSPs (aka Streaming Services) your song will be on in this section.</li>
                     <li style={{marginBottom: '10px'}}>Enter any costs associated with the creation and marketing of this song. You can adjust if this value is recoupable or will be partially paid by you.</li>
                     <li>Results are shown in the results section, updated automatically</li>
-                    <p>Bonus: In the "advanced calculations" section you can look to see how many streams are needed to pay back your reacoupable values, and earn a certain income.</p>
+                    <p>Bonus: In the "advanced record calculations" section you can look to see how many streams are needed to pay back your reacoupable values, and earn a certain income. (Only for Recording Information)</p>
                   </ol>
                   <p>It is important to note that not all deals are the same: A 'bad' deal for you can be an ideal situation for someone else... it's all relative. Additionally, This is only an estimate of what your <strong>streams</strong> are worth. With other revenue sources include (physical albums, synch fees, etc.) your total earnings in reality could vary</p>
                 </div>
@@ -1083,7 +1109,6 @@ class DesktopVersion extends React.Component{
     let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
     let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
     let publisherPercentage;
-    let artistWriterShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
     let artistMechShare = (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee));
 
     switch(this.state.publishingDealSelected) {
@@ -1104,16 +1129,26 @@ class DesktopVersion extends React.Component{
     }
 
     let publisherShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage
+    let artistWriterShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
     let artistPubShare = (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage));
-    let artistWriterEarnings = ((pubPerformanceRevenue - pubPROAdminFee) * .5) + (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage)) + (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee))
+    let artistWriterEarnings = artistWriterShare + artistPubShare + artistMechShare
+
+    {/*
+      HAVE DEFAULT SET TO 1 writer @ 100% Owneed/written
+
+      let writerXWriterShare = artistWriterShare / <%Owned = this.state.writerPercentWritten>
+      let PubXShare = (publisherShare / <#ofWriters = this.state.numbWriters >) * publisherPercentage
+      let WriterXPubShare = (publisherShare / <#ofWriters = this.state.numbWriters >) * (1 - publisherPercentage)
+      let writerXTotalShare = writerXWriterShare + WriterXPubShare
+    */}
 
     this.setState({
-      publisherShare: publisherShare,
-      artistWriterEarnings: artistWriterEarnings,
       grossPubRev: pubGrossRevenue,
-      labelPublishingShare: pubMechanicalRecordFee,
-      proFee: pubPROAdminFee,
       pubDistributionFee: pubMechanicalAdminFee,
+      proFee: pubPROAdminFee,
+      publisherShare: publisherShare,
+      labelPublishingShare: pubMechanicalRecordFee,
+      artistWriterEarnings: artistWriterEarnings,
       pubArtistWriterShare: artistWriterShare,
       pubArtistPubShare: artistPubShare,
       pubArtistMechShare: artistMechShare,

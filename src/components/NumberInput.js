@@ -43,8 +43,8 @@ class NumberInput extends React.Component {
           value &&
           predicted &&
           predicted.includes(value) && <p className="predicted">{predicted}</p>}
-        <NumberFormat
-          type="text"
+        <input
+          type={this.props.type}
           value={value}
           placeholder={label}
           maxLength={11}
@@ -52,7 +52,8 @@ class NumberInput extends React.Component {
           onKeyPress={this.handleKeyPress.bind(this)}
           onFocus={() => !locked && this.setState({ active: true })}
           onBlur={() => !locked && this.setState({ active: false })}
-          isNumericString={true}
+          min="1"
+          max={this.props.max}
         />
         <label htmlFor={0} className={error && "error"}>
           {error || label}
