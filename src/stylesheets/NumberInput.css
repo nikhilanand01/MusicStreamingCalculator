@@ -7,7 +7,8 @@
   height: 56px;
   border-radius: 4px;
   position: relative;
-  background-color: #edf4ff;
+  background-color: #f7faff;
+  border: thin solid #f0f0f0;
   transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
 }
 
