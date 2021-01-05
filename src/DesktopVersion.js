@@ -176,7 +176,7 @@ class DesktopVersion extends React.Component{
             recordDeal: [],
             publishDeal: [],
             labelServices: [],
-            sliderValue: 50,
+            sliderValue: 25,
             recordDealSelected: null,
             publishingDealSelected: null,
             advance: 0,
@@ -190,7 +190,7 @@ class DesktopVersion extends React.Component{
             grossTotalRev: 0,
             totRecoupe: 0,
             labelShare: 0,
-            labelPublishingShare: 0,
+            // labelPublishingShare: 0,
             publisherShare: 0,
             artistRecordEarnings: 0,
             labelServicesCosts: 0,
@@ -237,7 +237,7 @@ class DesktopVersion extends React.Component{
         this.handleRoleButton();
         this.buildPublishingDealSelect();
         this.buildLabelServicesSelect();
-        this.setSliderValue(50);
+        this.setSliderValue(25);
         this.calculate();
     }
 
@@ -298,8 +298,6 @@ class DesktopVersion extends React.Component{
                             ref={this.advanceRef}
                             id= {"numInput"}
                             label = "Advance on Earnings"
-                            locked = {false}
-                            active = {false}
                             onChange = {e => this.getStateAdvance(e)}/>
                         </div>
                       </div>
@@ -328,17 +326,19 @@ class DesktopVersion extends React.Component{
                             label="# of Writers"
                             max="8"
                             value="1"
+                            onChange = {e => this.getStateNumbWriters(e)}
                             error={this.state.numbWriters > 8 ? 'Should have Max 8 writers' : ''}
-                            />
+                          />
                         </div>
                         <div style={{width: '45%'}}>
                           <NumberInput
                             id={"percentwritten"}
                             ref={this.writerPercentWrittenRef}
                             type="number"
-                            label="% Written"
+                            label="% You Wrote"
                             value={(100 / this.state.numbWriters).toFixed(0)}
                             max="100"
+                            onChange = {e => this.getStatewriterPercentWritten(e)}
                             error={this.state.writerPercentWritten > 100 ? '**More than 100%**' : ''}
                             />
                         </div>
@@ -511,17 +511,16 @@ class DesktopVersion extends React.Component{
                         <div>
                           <NumberFormat value={`${this.state.streamNumber}`} displayType={'text'} thousandSeparator={true} renderText={value => <p style={{marginBottom: '0px'}}>{`Earnings from ${value} streams`}</p>} />
                           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
-                            <div style={{flexDirection: 'column', borderRight: 'thin solid #f0f0f0', paddingRight: '4px'}}>
+                            <div style={{flexDirection: 'column', borderRight: 'thin solid #f0f0f0', paddingRight: '4px', width: '50%'}}>
                               <p>Artist(s)</p>
                               <NumberFormat value={`${this.state.artistRecordEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Recording Earnings: ${value}`}</p>} />
                               <NumberFormat value={`${this.state.pubArtistWriterShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Writer Share: ${value}`}</p>} />
                               <NumberFormat value={`${this.state.pubArtistPubShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Publisher Share: ${value}`}</p>} />
                               <NumberFormat value={`${this.state.pubArtistMechShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Mechanical Revenue: ${value}`}</p>} />
                             </div>
-                            <div style={{flexDirection: 'column', paddingLeft: '4px'}}>
+                            <div style={{flexDirection: 'column', paddingLeft: '4px', width: '50%'}}>
                               <p>Partners</p>
-                              <NumberFormat value={`${this.state.labelShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Record Deal Earnings From Recording: ${value}`}</p>} />
-                              <NumberFormat value={`${this.state.labelPublishingShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Record Deal Earnings From Publising: ${value}`}</p>} />
+                              <NumberFormat value={`${this.state.labelShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Record Company Earnings: ${value}`}</p>} />
                               <NumberFormat value={`${this.state.publisherShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Publisher Earnings: ${value}`}</p>} />
                               <NumberFormat value={`${this.state.proFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`PRO Fee: ${value}`}</p>} />
                               <NumberFormat value={`${this.state.pubDistributionFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Distribution Fee: ${value}`}</p>} />
@@ -555,13 +554,13 @@ class DesktopVersion extends React.Component{
               body={
                 <div>
                   <ol>
-                    <li style={{marginBottom: '10px'}}>Enter the information in the "About You." First answer are you the recording artist of the song, the writer, or both. Then you will be prompted to enter informaton about your agreements/deals for each aspect.</li>
+                    <li style={{marginBottom: '10px'}}>Enter the information in the "About You." First answer are you the recording artist of the song, the writer, or both. Then you will be prompted to enter informaton about your agreements/deals for each side of the song.</li>
                     <li style={{marginBottom: '10px'}}>Next Enter your estimated streams that you expect to recive from your song(s). You can select which DSPs (aka Streaming Services) your song will be on in this section.</li>
                     <li style={{marginBottom: '10px'}}>Enter any costs associated with the creation and marketing of this song. You can adjust if this value is recoupable or will be partially paid by you.</li>
                     <li>Results are shown in the results section, updated automatically</li>
                     <p>Bonus: In the "advanced record calculations" section you can look to see how many streams are needed to pay back your reacoupable values, and earn a certain income. (Only for Recording Information)</p>
                   </ol>
-                  <p>It is important to note that not all deals are the same: A 'bad' deal for you can be an ideal situation for someone else... it's all relative. Additionally, This is only an estimate of what your <strong>streams</strong> are worth. With other revenue sources include (physical albums, synch fees, etc.) your total earnings in reality could vary</p>
+                  <p>It is important to note that not all deals are the same: A 'bad' deal for you can be an ideal situation for someone else... it's all relative. Additionally, This is only an estimate of what your <strong>streams</strong> are worth. With other revenue sources included (physical albums, synch fees, etc.) your total earnings in reality could vary</p>
                 </div>
               }/>
             <Popup
@@ -594,8 +593,8 @@ class DesktopVersion extends React.Component{
                     <li>Royalty: Artist typically maintains <strong>8-25% of revenue</strong> but first has to pay back any debts to label partner</li>
                     <li>Net Profit: Artist typically <strong>splits profits 50/50</strong> with label partner</li>
                     <li>Distribution (Percent Based): Artist typically maintains <strong>60-75% of profits</strong></li>
-                    <li>Distribution (Fee Based): Artist typically maintains <strong>100% of revenue</strong>. Pays distributor flat fees and covers all costs</li>
-                    <li>Label Services: Artist typically maintains <strong>80% of revenue</strong>. Pays distributor 20% split + Additional Service Fees</li>
+                    <li>Distribution (Fee Based): Example: DistroKid. Artist typically maintains <strong>100% of revenue</strong>. Pays distributor flat fees and covers all costs</li>
+                    <li>Label Services: Example: AWAL. Artist typically maintains <strong>80% of revenue</strong>. Pays distributor 20% split + Additional Service Fees</li>
                   </ul>
                 </div>
             }/>
@@ -610,7 +609,7 @@ class DesktopVersion extends React.Component{
 
   changeLabelServicesDropDown(e) {
 
-    if(e.selectedOption !== null && e.selectedOption != this.state.selectedOptions) {
+    if(e.selectedOption !== null && e.selectedOption !== this.state.selectedOptions) {
       this.setState({selectedOptions: e.selectedOption}, () => {
         this.setState({labelServices: this.updateLabelServicesSelect()}, () => {
 
@@ -909,7 +908,37 @@ class DesktopVersion extends React.Component{
       this.setState({advance: e}, () => {
           this.calculate();
       });
-   }
+  }
+
+  getStateNumbWriters(){
+
+     if(this.numbWritersRef.current.state.value !== "" && parseInt(this.numbWritersRef.current.state.value) !== this.state.numbWriters) {
+         const e = parseInt(this.numbWritersRef.current.state.value);
+         this.updateNumbWriters(e);
+     }
+  }
+
+  updateNumbWriters(e){
+
+      this.setState({numbWriters: e}, () => {
+          this.getPublisherShare();
+      });
+  }
+
+  getStatewriterPercentWritten(){
+
+     if(this.writerPercentWrittenRef.current.state.value !== "" && parseInt(this.writerPercentWrittenRef.current.state.value) !== this.state.writerPercentWritten) {
+         const e = parseInt(this.writerPercentWrittenRef.current.state.value);
+         this.updatewriterPercentWritten(e);
+     }
+  }
+
+  updatewriterPercentWritten(e){
+
+      this.setState({writerPercentWritten: e}, () => {
+          this.getPublisherShare();
+      });
+  }
 
   setSliderValue(val){
       this.setState( {sliderValue: val});
@@ -1092,7 +1121,7 @@ class DesktopVersion extends React.Component{
               data: [this.state.artistRecordEarnings.toFixed(0), this.state.labelShare.toFixed(0), 0]
             }, {
               name: 'From Writing',
-              data: [this.state.artistWriterEarnings.toFixed(0), this.state.labelPublishingShare.toFixed(0), this.state.publisherShare.toFixed(0)]
+              data: [this.state.artistWriterEarnings.toFixed(0), 0, this.state.publisherShare.toFixed(0)]
             },{
               name: 'From Advance',
               data: [this.state.advance.toFixed(0), 0, 0]
@@ -1104,55 +1133,66 @@ class DesktopVersion extends React.Component{
   getPublisherShare(){
     let pubGrossRevenue = avgPubPayout * this.state.streamNumber;
     let pubPerformanceRevenue = pubGrossRevenue * .5;
-    let pubMechanicalRevenue = pubGrossRevenue * .5;
     let pubPROAdminFee = pubPerformanceRevenue * .165;
+    let pubMechanicalRevenue = pubGrossRevenue * .5;
     let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
-    let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
-    let publisherPercentage;
-    let artistMechShare = (pubMechanicalRevenue - (pubMechanicalAdminFee + pubMechanicalRecordFee));
+    // let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
+    let pubNetMechanicalRevenue = (pubMechanicalRevenue - pubMechanicalAdminFee);
+    let publisherPerfPercentage;
+    let publisherMechPercentage;
 
     switch(this.state.publishingDealSelected) {
       case 'Full/Traditional':
-        publisherPercentage = 1.0;
+        publisherPerfPercentage = 1.0;
         break;
       case 'Co-Publishing':
-        publisherPercentage = 0.5;
+        publisherPerfPercentage = 0.5;
         break;
       case 'Admin':
-        publisherPercentage = 0.1;
+        publisherPerfPercentage = 0.1;
         break;
       case 'No Deal':
-        publisherPercentage = 0.0;
+        publisherPerfPercentage = 0.0;
         break;
       default:
-        publisherPercentage = 0.0;
+        publisherPerfPercentage = 0.0;
     }
 
-    let publisherShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5) * publisherPercentage
-    let artistWriterShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
-    let artistPubShare = (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPercentage));
-    let artistWriterEarnings = artistWriterShare + artistPubShare + artistMechShare
+    if(this.state.publishingDealSelected === "No Deal"){
+      publisherMechPercentage = 0.0
+    } else {
+      publisherMechPercentage = 0.5
+    }
 
-    {/*
-      HAVE DEFAULT SET TO 1 writer @ 100% Owneed/written
+    let publisherPerfShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
+    let publisherMechShare = pubNetMechanicalRevenue * publisherMechPercentage;
+    let artistWriterPerfShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
+    let artistMechShare = pubNetMechanicalRevenue * (1 - publisherMechPercentage);
+    // let artistPubShare = (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPerfPercentage));
 
-      let writerXWriterShare = artistWriterShare / <%Owned = this.state.writerPercentWritten>
-      let PubXShare = (publisherShare / <#ofWriters = this.state.numbWriters >) * publisherPercentage
-      let WriterXPubShare = (publisherShare / <#ofWriters = this.state.numbWriters >) * (1 - publisherPercentage)
-      let writerXTotalShare = writerXWriterShare + WriterXPubShare
-    */}
+    let writerXWriterShare = artistWriterPerfShare * (this.state.writerPercentWritten/100);
+    let pubXShare = ((publisherPerfShare / this.state.numbWriters) * publisherPerfPercentage) + (publisherMechShare / this.state.numbWriters);
+    let writerXPubShare = (publisherPerfShare / this.state.numbWriters) * (1 - publisherPerfPercentage);
+    let writerXTotalShare = writerXWriterShare + writerXPubShare;
+    let writerXMechShare = artistMechShare * (this.state.writerPercentWritten/100);
+    let artistWriterEarnings = writerXTotalShare + writerXMechShare
+
 
     this.setState({
       grossPubRev: pubGrossRevenue,
       pubDistributionFee: pubMechanicalAdminFee,
       proFee: pubPROAdminFee,
-      publisherShare: publisherShare,
-      labelPublishingShare: pubMechanicalRecordFee,
+      publisherShare: pubXShare,
+      // labelPublishingShare: pubMechanicalRecordFee,
       artistWriterEarnings: artistWriterEarnings,
-      pubArtistWriterShare: artistWriterShare,
-      pubArtistPubShare: artistPubShare,
-      pubArtistMechShare: artistMechShare,
+      pubArtistWriterShare: writerXWriterShare,
+      pubArtistPubShare: writerXPubShare,
+      pubArtistMechShare: writerXMechShare,
+    }, () => {
+      this.getArtistTotalEarnings();
+      this.updateGraphs();
     });
+
   }
 
   weightedAverageOfSelected(){
