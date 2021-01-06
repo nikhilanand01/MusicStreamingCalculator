@@ -67,6 +67,8 @@
 
 .pub-deal{
   width: 50%;
+  padding-left: 5%;
+  border-left: thin solid #f0f0f0;
 }
 
 .stream-container{

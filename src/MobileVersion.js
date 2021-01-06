@@ -413,7 +413,7 @@ class MobileVersion extends React.Component{
 
 
               <Accordion
-                title="Advanced Calculations"
+                title="Advanced Record Deal Calculations"
                 body={
                   <div>
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
