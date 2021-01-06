@@ -330,6 +330,7 @@ class DesktopVersion extends React.Component{
                                 type="number"
                                 label="# of Writers"
                                 max="8"
+                                maxLength="1"
                                 value="1"
                                 onChange = {e => this.getStateNumbWriters(e)}
                                 error={this.state.numbWriters > 8 ? 'Should have Max 8 writers' : ''}
@@ -585,7 +586,7 @@ class DesktopVersion extends React.Component{
                         <li>Net Profit Deal: A recording deal where the artists and their label partner split the profits after paying off any expenses inccured</li>
                         <li>Performance Royalties: A royalty paid for the right to publicly play an artist's music</li>
                         <li>Recoupment: The act of paying back all of an artists owed expenses. If you have paid off all your expenses you are said to be "recouped"</li>
-                        <li>PRO: Short for Performance Rights Organziation (ASAP, BMI, SESAC, etc.). They collect and distribute performance royalties to publishing companies and writers </li>
+                        <li>PRO: Short for Performance Rights Organziation (ASCAP, BMI, SESAC, etc.). They collect and distribute performance royalties to publishing companies and writers </li>
                       </ul>
                     </div>
                 }/>

@@ -10,7 +10,6 @@ class NumberInput extends React.Component {
 
     this.state = {
       active: (props.locked && props.active) || false,
-      // FIX THIS VALUE TO HAVE INPUT BE TRUE... RN "" is so 1 is "" then 12 is "1"
       value: props.value || "",
       error: props.error || "",
       label: props.label || "Label"
@@ -43,7 +42,7 @@ class NumberInput extends React.Component {
           value &&
           predicted &&
           predicted.includes(value) && <p className="predicted">{predicted}</p>}
-        <input
+        <NumberFormat
           type={this.props.type}
           value={value}
           placeholder={label}

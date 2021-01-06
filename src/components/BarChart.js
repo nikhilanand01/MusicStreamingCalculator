@@ -17,7 +17,7 @@ class BarChart extends React.Component {
           }
         },
         responsive: [{
-          breakpoint: 140,
+          breakpoint: undefined,
         }],
         plotOptions: {
           bar: {
