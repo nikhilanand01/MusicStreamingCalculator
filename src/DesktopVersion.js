@@ -1,6 +1,6 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
-import {BrowserView, TabletView, MobileView, MobileOnlyView} from 'react-device-detect';
+import {BrowserView, MobileView, MobileOnlyView} from 'react-device-detect';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TitleText from './components/TitleText.js';
@@ -609,7 +609,7 @@ class DesktopVersion extends React.Component{
           </div>
         </BrowserView>
 
-        <MobileView>
+        <MobileOnlyView>
           <div>
             <div className="mobile-main-container">
                 <div style={{textAlign: 'center'}}>
@@ -870,7 +870,7 @@ class DesktopVersion extends React.Component{
               </div>
             </div>
           </div>
-        </MobileView>
+        </MobileOnlyView>
       </div>
         )
     }
