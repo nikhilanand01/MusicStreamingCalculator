@@ -1342,8 +1342,8 @@ class DesktopVersion extends React.Component{
       let artistRecordShare = 0;
       let labelShare = 0;
       let artistUnrecoupedAmount = 0;
-      let totalCosts = this.state.costsTotal//parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
-      let totalRecordMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
+      let totalCosts = this.state.costsTotal
+      let totalRecordMoneyToRecoupe = this.state.totRecoupe
       let grossRevenue = 0;
       if(!this.state.autoRecoupChecked && !this.state.moneyGoalChecked) grossRevenue = this.state.streamNumber * this.weightedAverageOfSelected();
       if (this.state.autoRecoupChecked) grossRevenue = this.state.recoupStreamsNeeds * this.weightedAverageOfSelected();
@@ -1390,7 +1390,6 @@ class DesktopVersion extends React.Component{
 
       this.setState({
         grossRecordingRev: grossRevenue,
-        totRecoupe: totalRecordMoneyToRecoupe,
         artistRecordEarnings: artistRecordShare,
         labelShare: labelShare,
         artistUnrecoupedAmount: artistUnrecoupedAmount,
