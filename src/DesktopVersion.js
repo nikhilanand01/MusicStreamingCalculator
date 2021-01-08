@@ -1555,7 +1555,7 @@ class DesktopVersion extends React.Component{
     let recoupStreamsNeeds;
 
     if(this.state.recordDealSelected === "royalty" || this.state.recordDealSelected === "labelServices"){
-	     recoupStreamsNeeds = (this.state.totRecoupe/(parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
+	     recoupStreamsNeeds = (parseFloat(this.state.recordRecoup)/(parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
      } else {
        recoupStreamsNeeds = ((this.state.costsTotal + this.state.advance) / (parseFloat(this.state.sliderValue)/100)) / this.weightedAverageOfSelected()
      }
