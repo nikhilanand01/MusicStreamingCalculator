@@ -193,7 +193,9 @@ class DesktopVersion extends React.Component{
             miscCostChecked: true,
             grossPubRev: 0,
             grossTotalRev: 0,
-            totRecoupe: 0,
+            totRecoup: 0,
+            recordRecoup: 0,
+            pubRecoup: 0,
             labelShare: 0,
             // labelPublishingShare: 0,
             publisherShare: 0,
@@ -233,6 +235,7 @@ class DesktopVersion extends React.Component{
           pubArtistMechShare: 0,
           numbWriters: 1,
           writerPercentWritten: 100,
+          writerXUnrecoupedAmount: 0,
         };
 
     }
@@ -323,14 +326,22 @@ class DesktopVersion extends React.Component{
                                 onChange = {e => this.getStatePubDeal(e)}
                             />
                           </div>
+                          {this.state.publishingDealSelected !== 'No Deal'
+                          &&
                           <div>
-                            <SmallText text="Publishing Deal Advance" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+                              <SmallText text="Publishing Deal Advance" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
+                              <ToolTip content="This model shows payback with just streaming revenue. In reality publishing has many revenue other revenue streams" direction="top">
+                                <SmallText text="ⓘ" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0, paddingLeft: '5px' }}/>
+                              </ToolTip>
+                            </div>
                             <NumberInput
                               ref={this.pubAdvanceRef}
                               id= {"pubAdvanceInput"}
                               label = "Advance on Publishing Earnings"
                               onChange = {e => this.getStatePubAdvance(e)}/>
                           </div>
+                          }
                           <SmallText text="Writer Information" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
                           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '2%'}}>
                             <div style={{width: '48%'}}>
@@ -512,7 +523,7 @@ class DesktopVersion extends React.Component{
                       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                           <NumberFormat value={`${this.state.grossTotalRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
-                          <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
+                          <NumberFormat value={`${this.state.totRecoup.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
                         </div>
                         <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
                       </div>
@@ -530,9 +541,12 @@ class DesktopVersion extends React.Component{
                                 <div style={{flexDirection: 'column', borderRight: 'thin solid #f0f0f0', paddingRight: '4px', width: '50%'}}>
                                   <p>Artist(s)</p>
                                   <NumberFormat value={`${this.state.artistRecordEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Recording Earnings: ${value}`}</p>} />
+                                  <NumberFormat value={`${this.state.artistWriterEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings: ${value}`}</p>} />
+
                                   <NumberFormat value={`${this.state.pubArtistWriterShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Writer Share: ${value}`}</p>} />
                                   <NumberFormat value={`${this.state.pubArtistPubShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Publisher Share: ${value}`}</p>} />
                                   <NumberFormat value={`${this.state.pubArtistMechShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Mechanical Revenue: ${value}`}</p>} />
+
                                 </div>
                                 <div style={{flexDirection: 'column', paddingLeft: '4px', width: '50%'}}>
                                   <p>Partners</p>
@@ -859,7 +873,7 @@ class DesktopVersion extends React.Component{
                           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                             <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                               <NumberFormat value={`${this.state.grossTotalRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
-                              <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
+                              <NumberFormat value={`${this.state.totRecoup.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
                             </div>
                             <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
                           </div>
@@ -893,7 +907,7 @@ class DesktopVersion extends React.Component{
       this.setState({selectedOptions: e.selectedOption}, () => {
         this.setState({labelServices: this.updateLabelServicesSelect()}, () => {
 
-          console.log(e)
+          // console.log(e)
           let lblCosts = 0;
           for(let i=0; i<e.selectedOption.length; i++) {
             lblCosts += this.state.labelServices[parseInt(e.selectedOption[i].id)].amt;
@@ -1039,13 +1053,18 @@ class DesktopVersion extends React.Component{
       costsTotal: costsTotal
     },() => {this.updateRecoupable();
     })
-
-
   }
 
   updateRecoupable(){
-    let ret = this.state.costsTotal + this.state.advance;
-    this.setState({totRecoupe: ret}, () => {this.calculate()})
+    let recRecoup = this.state.costsTotal + this.state.advance;
+    let pubRecoup = this.state.pubAdvance;
+    let totRecoup = recRecoup + pubRecoup;
+
+    this.setState({
+      totRecoup: totRecoup,
+      recordRecoup: recRecoup,
+      pubRecoup: pubRecoup
+    }, () => {this.calculate()})
 
   }
 
@@ -1186,7 +1205,7 @@ class DesktopVersion extends React.Component{
   updateAdvance(e){
 
       this.setState({advance: e}, () => {
-          this.calculate();
+          this.updateRecoupable();
       });
   }
 
@@ -1201,7 +1220,7 @@ class DesktopVersion extends React.Component{
   updatePubAdvance(e){
 
       this.setState({pubAdvance: e}, () => {
-          this.getPublisherShare();
+          this.updateRecoupable();
       });
   }
 
@@ -1337,13 +1356,12 @@ class DesktopVersion extends React.Component{
   }
 
   calculate(){
-      //this.calcTotalCosts();
       this.getPublisherShare();
       let artistRecordShare = 0;
       let labelShare = 0;
       let artistUnrecoupedAmount = 0;
       let totalCosts = this.state.costsTotal
-      let totalRecordMoneyToRecoupe = this.state.totRecoupe
+      let totalRecordMoneyToRecoup = this.state.recordRecoup
       let grossRevenue = 0;
       if(!this.state.autoRecoupChecked && !this.state.moneyGoalChecked) grossRevenue = this.state.streamNumber * this.weightedAverageOfSelected();
       if (this.state.autoRecoupChecked) grossRevenue = this.state.recoupStreamsNeeds * this.weightedAverageOfSelected();
@@ -1351,11 +1369,11 @@ class DesktopVersion extends React.Component{
 
       if (this.state.recordDealSelected === "royalty") {
           // Artist Split
-          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoupe){
+          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoup){
             artistRecordShare = 0;
-            artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoupe);
+            artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup);
           } else {
-            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoupe;
+            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup;
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
 
@@ -1380,10 +1398,10 @@ class DesktopVersion extends React.Component{
 
       } else if (this.state.recordDealSelected === "labelServices") {
           // Artist Split
-          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoupe){
+          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoup){
             artistRecordShare = 0;
           } else {
-            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoupe;
+            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup;
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
       }
@@ -1435,6 +1453,7 @@ class DesktopVersion extends React.Component{
     let pubNetMechanicalRevenue = (pubMechanicalRevenue - pubMechanicalAdminFee);
     let publisherPerfPercentage;
     let publisherMechPercentage;
+    let writerXUnrecoupedAmount = 0;
 
     switch(this.state.publishingDealSelected) {
       case 'Full/Traditional':
@@ -1474,7 +1493,8 @@ class DesktopVersion extends React.Component{
     if(writerXAdvanceableMoney > this.state.pubAdvance){
       writerXAdvanceableMoney = writerXAdvanceableMoney - this.state.pubAdvance;
     } else {
-      writerXAdvanceableMoney = 0
+      // writerXAdvanceableMoney = 0;
+      writerXUnrecoupedAmount = Math.abs(writerXAdvanceableMoney - this.state.pubAdvance);
     }
 
     let artistWriterEarnings = writerXWriterShare + writerXAdvanceableMoney
@@ -1490,10 +1510,10 @@ class DesktopVersion extends React.Component{
       pubArtistWriterShare: writerXWriterShare,
       pubArtistPubShare: writerXPubShare,
       pubArtistMechShare: writerXMechShare,
+      writerXUnrecoupedAmount: writerXUnrecoupedAmount
     }, () => {
       this.getArtistTotalEarnings();
       this.updateGraphs();
-      console.log("*** " + writerXAdvanceableMoney)
     });
   }
 
@@ -1576,21 +1596,40 @@ class DesktopVersion extends React.Component{
   }
 
   percentRecouped(){
-    let recoupPercent = 0;
-    if(this.state.totRecoupe > 0) {
-      if ((this.state.artistRecordEarnings / this.state.totRecoupe) > 1){
-        recoupPercent = 100
+    let recoupRecordPercent = 0;
+    let recoupWritingPercent = 0;
+
+    if(this.state.recordRecoup > 0) {
+      if ((this.state.artistRecordEarnings / this.state.recordRecoup) > 1){
+        recoupRecordPercent = 100
       } else {
         if(this.state.grossRecordingRev !== 0) {
-          recoupPercent = (((this.state.totRecoupe - this.state.artistUnrecoupedAmount)/this.state.totRecoupe) * 100).toFixed(0)
+          recoupRecordPercent = (((this.state.recordRecoup - this.state.artistUnrecoupedAmount)/this.state.recordRecoup) * 100).toFixed(0)
         } else {
-          recoupPercent = 0
+          recoupRecordPercent = 0
         }
       }
     }
-    //return recoupPercent;
-    this.setState({seriesRadial: [recoupPercent]},() => {
-    // this.calculate();
+
+    if(this.state.pubRecoup > 0) {
+      if(((this.state.pubArtistPubShare + this.state.pubArtistMechShare) / this.state.pubRecoup) > 1){
+        recoupWritingPercent = 100
+      } else {
+        if(this.state.grossPubRev !== 0){
+          recoupWritingPercent = (((this.state.pubRecoup - this.state.writerXUnrecoupedAmount) / this.state.pubRecoup) * 100).toFixed(0)
+        } else {
+          recoupWritingPercent = 0
+        }
+      }
+    }
+
+    let recoupTotalPercent = ((parseFloat(recoupRecordPercent) + parseFloat(recoupWritingPercent)) /2).toFixed(0)
+    //return recoupRecordPercent;
+    this.setState({seriesRadial: [recoupTotalPercent]},() => {
+      console.log(recoupRecordPercent + " RECORDING%")
+      console.log(recoupWritingPercent + " PUB%")
+      // this.calculate();
+      // this.getPublisherShare();
   });
   }
 

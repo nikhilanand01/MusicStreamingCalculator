@@ -24,6 +24,20 @@ class BarChart extends React.Component {
             horizontal: false,
           },
         },
+        title: {
+            text: 'Earnings Breakdown',
+            align: 'center',
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize:  '20px',
+              fontWeight:  'normal',
+              fontFamily:  'Ubuntu',
+              color:  '#263238',
+            },
+        },
         xaxis: {
           type: 'Who',
           categories: ['Artist(s)', 'Record Label', 'Publiser'],
