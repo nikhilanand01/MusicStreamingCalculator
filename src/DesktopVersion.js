@@ -156,6 +156,7 @@ class DesktopVersion extends React.Component{
         this.tabGroupRef = React.createRef();
         this.pubTypeRef = React.createRef();
         this.advanceRef = React.createRef();
+        this.pubAdvanceRef = React.createRef();
         this.artistButtonRef = React.createRef();
         this.writerButtonRef = React.createRef();
         this.bothButtonRef = React.createRef();
@@ -183,6 +184,7 @@ class DesktopVersion extends React.Component{
             recordDealSelected: null,
             publishingDealSelected: null,
             advance: 0,
+            pubAdvance: 0,
             grossRecordingRev: 0,
             moneyGoalChecked: false,
             autoRecoupChecked: false,
@@ -269,9 +271,8 @@ class DesktopVersion extends React.Component{
                   <div className="deal-container">
                     <div className="record-deal">
                       {this.state.role !== "writer" &&
-
                         <div>
-                          <div style={{}}>
+                          <div>
                             <div>
                               <SmallText text="Recording Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                               <SingleDropDown
@@ -302,7 +303,7 @@ class DesktopVersion extends React.Component{
                               <NumberInput
                                 ref={this.advanceRef}
                                 id= {"numInput"}
-                                label = "Advance on Earnings"
+                                label = "Advance on Record Earnings"
                                 onChange = {e => this.getStateAdvance(e)}/>
                             </div>
                           </div>
@@ -322,8 +323,17 @@ class DesktopVersion extends React.Component{
                                 onChange = {e => this.getStatePubDeal(e)}
                             />
                           </div>
-                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '5%'}}>
-                            <div style={{width: '45%'}}>
+                          <div>
+                            <SmallText text="Publishing Deal Advance" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
+                            <NumberInput
+                              ref={this.pubAdvanceRef}
+                              id= {"pubAdvanceInput"}
+                              label = "Advance on Publishing Earnings"
+                              onChange = {e => this.getStatePubAdvance(e)}/>
+                          </div>
+                          <SmallText text="Writer Information" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '2%'}}>
+                            <div style={{width: '48%'}}>
                               <NumberInput
                                 id={"numbWriters"}
                                 ref={this.numbWritersRef}
@@ -336,7 +346,7 @@ class DesktopVersion extends React.Component{
                                 error={this.state.numbWriters > 8 ? 'Should have Max 8 writers' : ''}
                               />
                             </div>
-                            <div style={{width: '45%'}}>
+                            <div style={{width: '48%'}}>
                               <NumberInput
                                 id={"percentwritten"}
                                 ref={this.writerPercentWrittenRef}
@@ -678,7 +688,7 @@ class DesktopVersion extends React.Component{
                               />
                             </div>
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '4%'}}>
-                              <div style={{width: '45%'}}>
+                              <div style={{width: '44%'}}>
                                 <NumberInput
                                   id={"numbWriters"}
                                   ref={this.numbWritersRef}
@@ -691,7 +701,7 @@ class DesktopVersion extends React.Component{
                                   error={this.state.numbWriters > 8 ? 'Should have Max 8 writers' : ''}
                                 />
                               </div>
-                              <div style={{width: '45%'}}>
+                              <div style={{width: '49%'}}>
                                 <NumberInput
                                   id={"percentwritten"}
                                   ref={this.writerPercentWrittenRef}
@@ -1099,14 +1109,6 @@ class DesktopVersion extends React.Component{
       });
   }
 
-  getStateAdvance(){
-
-    if(this.advanceRef.current.state.value !== "" && parseInt(this.advanceRef.current.state.value) !== this.state.advance) {
-        const e = parseInt(this.advanceRef.current.state.value);
-        this.updateAdvance(e);
-    }
-  }
-
   getStatePubDeal(){
 
     if(this.pubTypeRef.current.state.selectedOption !== null && this.pubTypeRef.current.state.selectedOption.value !== this.state.publishingDealSelected) {
@@ -1173,10 +1175,33 @@ class DesktopVersion extends React.Component{
       });
   }
 
+  getStateAdvance(){
+
+    if(this.advanceRef.current.state.value !== "" && parseInt(this.advanceRef.current.state.value) !== this.state.advance) {
+        const e = parseInt(this.advanceRef.current.state.value);
+        this.updateAdvance(e);
+    }
+  }
+
   updateAdvance(e){
 
       this.setState({advance: e}, () => {
           this.calculate();
+      });
+  }
+
+  getStatePubAdvance(){
+
+    if(this.pubAdvanceRef.current.state.value !== "" && parseInt(this.pubAdvanceRef.current.state.value) !== this.state.pubAdvance) {
+        const e = parseInt(this.pubAdvanceRef.current.state.value);
+        this.updatePubAdvance(e);
+    }
+  }
+
+  updatePubAdvance(e){
+
+      this.setState({pubAdvance: e}, () => {
+          this.getPublisherShare();
       });
   }
 
@@ -1318,7 +1343,7 @@ class DesktopVersion extends React.Component{
       let labelShare = 0;
       let artistUnrecoupedAmount = 0;
       let totalCosts = this.state.costsTotal//parseFloat(this.state.costsRecording) + parseFloat(this.state.costsMarketing) + parseFloat(this.state.costsDistribution) + parseFloat(this.state.costsMisc);
-      let totalMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
+      let totalRecordMoneyToRecoupe = parseFloat(this.state.advance) + totalCosts;
       let grossRevenue = 0;
       if(!this.state.autoRecoupChecked && !this.state.moneyGoalChecked) grossRevenue = this.state.streamNumber * this.weightedAverageOfSelected();
       if (this.state.autoRecoupChecked) grossRevenue = this.state.recoupStreamsNeeds * this.weightedAverageOfSelected();
@@ -1326,11 +1351,11 @@ class DesktopVersion extends React.Component{
 
       if (this.state.recordDealSelected === "royalty") {
           // Artist Split
-          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
+          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoupe){
             artistRecordShare = 0;
-            artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe);
+            artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoupe);
           } else {
-            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
+            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoupe;
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
 
@@ -1355,17 +1380,17 @@ class DesktopVersion extends React.Component{
 
       } else if (this.state.recordDealSelected === "labelServices") {
           // Artist Split
-          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalMoneyToRecoupe){
+          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoupe){
             artistRecordShare = 0;
           } else {
-            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalMoneyToRecoupe;
+            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoupe;
           }
           labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
       }
 
       this.setState({
         grossRecordingRev: grossRevenue,
-        totRecoupe: totalMoneyToRecoupe,
+        totRecoupe: totalRecordMoneyToRecoupe,
         artistRecordEarnings: artistRecordShare,
         labelShare: labelShare,
         artistUnrecoupedAmount: artistUnrecoupedAmount,
@@ -1385,6 +1410,7 @@ class DesktopVersion extends React.Component{
   }
 
   updateGraphs() {
+    let advances = (this.state.advance + this.state.pubAdvance).toFixed(0);
     this.setState({seriesBar:
       [{
               name: 'From Recording',
@@ -1393,8 +1419,8 @@ class DesktopVersion extends React.Component{
               name: 'From Writing',
               data: [this.state.artistWriterEarnings.toFixed(0), 0, this.state.publisherShare.toFixed(0)]
             },{
-              name: 'From Advance',
-              data: [this.state.advance.toFixed(0), 0, 0]
+              name: 'From Advances',
+              data: [advances, 0, 0]
             }
           ]
     })
@@ -1443,9 +1469,16 @@ class DesktopVersion extends React.Component{
     let writerXWriterShare = artistWriterPerfShare * (this.state.writerPercentWritten/100);
     let pubXShare = ((publisherPerfShare / this.state.numbWriters) * publisherPerfPercentage) + (publisherMechShare / this.state.numbWriters);
     let writerXPubShare = (publisherPerfShare / this.state.numbWriters) * (1 - publisherPerfPercentage);
-    let writerXTotalShare = writerXWriterShare + writerXPubShare;
     let writerXMechShare = artistMechShare * (this.state.writerPercentWritten/100);
-    let artistWriterEarnings = writerXTotalShare + writerXMechShare
+    let writerXAdvanceableMoney = writerXPubShare + writerXMechShare
+
+    if(writerXAdvanceableMoney > this.state.pubAdvance){
+      writerXAdvanceableMoney = writerXAdvanceableMoney - this.state.pubAdvance;
+    } else {
+      writerXAdvanceableMoney = 0
+    }
+
+    let artistWriterEarnings = writerXWriterShare + writerXAdvanceableMoney
 
 
     this.setState({
@@ -1461,8 +1494,8 @@ class DesktopVersion extends React.Component{
     }, () => {
       this.getArtistTotalEarnings();
       this.updateGraphs();
+      console.log("*** " + writerXAdvanceableMoney)
     });
-
   }
 
   weightedAverageOfSelected(){
