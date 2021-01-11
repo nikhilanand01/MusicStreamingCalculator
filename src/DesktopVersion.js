@@ -1367,43 +1367,48 @@ class DesktopVersion extends React.Component{
       if (this.state.autoRecoupChecked) grossRevenue = this.state.recoupStreamsNeeds * this.weightedAverageOfSelected();
       if (this.state.moneyGoalChecked) grossRevenue = this.state.moneyGoalStreamsNeeded * this.weightedAverageOfSelected();
 
-      if (this.state.recordDealSelected === "royalty") {
-          // Artist Split
-          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoup){
-            artistRecordShare = 0;
-            artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup);
-          } else {
-            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup;
-          }
-          labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
 
-      } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "distributionFee") {
-          let profit = (grossRevenue - this.state.costsTotal);
-          // Artist Split
-          if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
-            artistRecordShare = 0;
-            artistUnrecoupedAmount = Math.abs(((grossRevenue - this.state.costsTotal)*(parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance));
-          } else {
-            artistRecordShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
-          }
-          // Label Split Net Profit, Distributions
-          if(this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent") {
-              if(profit < 0){
-                  labelShare = 0;
-              } else {
-                  labelShare = (profit * (1-(parseFloat(this.state.sliderValue)/100)));
-              }
-          } else labelShare = grossRevenue - artistRecordShare;
+      if(this.state.role === 'writer'){
+        grossRevenue = 0
+      } else {
+        if (this.state.recordDealSelected === "royalty") {
+            // Artist Split
+            if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoup){
+              artistRecordShare = 0;
+              artistUnrecoupedAmount = Math.abs((grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup);
+            } else {
+              artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup;
+            }
+            labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100));
+
+        } else if (this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent" || this.state.recordDealSelected === "distributionFee") {
+            let profit = (grossRevenue - this.state.costsTotal);
+            // Artist Split
+            if(((profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance)) < 0){
+              artistRecordShare = 0;
+              artistUnrecoupedAmount = Math.abs(((grossRevenue - this.state.costsTotal)*(parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance));
+            } else {
+              artistRecordShare = (profit * (parseFloat(this.state.sliderValue)/100)) - parseFloat(this.state.advance);
+            }
+            // Label Split Net Profit, Distributions
+            if(this.state.recordDealSelected === "netProfit" || this.state.recordDealSelected === "distributionPercent") {
+                if(profit < 0){
+                    labelShare = 0;
+                } else {
+                    labelShare = (profit * (1-(parseFloat(this.state.sliderValue)/100)));
+                }
+            } else labelShare = grossRevenue - artistRecordShare;
 
 
-      } else if (this.state.recordDealSelected === "labelServices") {
-          // Artist Split
-          if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoup){
-            artistRecordShare = 0;
-          } else {
-            artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup;
-          }
-          labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
+        } else if (this.state.recordDealSelected === "labelServices") {
+            // Artist Split
+            if((grossRevenue * (parseFloat(this.state.sliderValue)/100)) <= totalRecordMoneyToRecoup){
+              artistRecordShare = 0;
+            } else {
+              artistRecordShare = (grossRevenue * (parseFloat(this.state.sliderValue)/100)) - totalRecordMoneyToRecoup;
+            }
+            labelShare = grossRevenue * (1-(parseFloat(this.state.sliderValue)/100)) + this.state.costsTotal;//extra menu items would be factored into costs
+        }
       }
 
       this.setState({
@@ -1454,6 +1459,7 @@ class DesktopVersion extends React.Component{
     let publisherPerfPercentage;
     let publisherMechPercentage;
     let writerXUnrecoupedAmount = 0;
+    let artistWriterEarnings = 0;
 
     switch(this.state.publishingDealSelected) {
       case 'Full/Traditional':
@@ -1497,8 +1503,12 @@ class DesktopVersion extends React.Component{
       writerXUnrecoupedAmount = Math.abs(writerXAdvanceableMoney - this.state.pubAdvance);
     }
 
-    let artistWriterEarnings = writerXWriterShare + writerXAdvanceableMoney
-
+    if(this.state.role === 'artist'){
+      artistWriterEarnings = 0;
+      pubXShare = 0;
+    } else {
+      artistWriterEarnings = writerXWriterShare + writerXAdvanceableMoney
+    }
 
     this.setState({
       grossPubRev: pubGrossRevenue,
@@ -1514,6 +1524,7 @@ class DesktopVersion extends React.Component{
     }, () => {
       this.getArtistTotalEarnings();
       this.updateGraphs();
+      this.percentRecouped();
     });
   }
 
@@ -1598,8 +1609,9 @@ class DesktopVersion extends React.Component{
   percentRecouped(){
     let recoupRecordPercent = 0;
     let recoupWritingPercent = 0;
+    let recoupTotalPercent = 0;
 
-    if(this.state.recordRecoup > 0) {
+    if(this.state.recordRecoup >= 0) {
       if ((this.state.artistRecordEarnings / this.state.recordRecoup) > 1){
         recoupRecordPercent = 100
       } else {
@@ -1611,7 +1623,7 @@ class DesktopVersion extends React.Component{
       }
     }
 
-    if(this.state.pubRecoup > 0) {
+    if(this.state.pubRecoup >= 0) {
       if(((this.state.pubArtistPubShare + this.state.pubArtistMechShare) / this.state.pubRecoup) > 1){
         recoupWritingPercent = 100
       } else {
@@ -1623,13 +1635,22 @@ class DesktopVersion extends React.Component{
       }
     }
 
-    let recoupTotalPercent = ((parseFloat(recoupRecordPercent) + parseFloat(recoupWritingPercent)) /2).toFixed(0)
+
+    if(this.state.role === 'artist'){
+      recoupTotalPercent = parseFloat(recoupRecordPercent).toFixed(0)
+    } else if (this.state.role === 'writer'){
+      recoupTotalPercent = recoupWritingPercent
+    } else if (this.state.role === 'both'){
+      recoupTotalPercent = ((parseFloat(recoupRecordPercent) + parseFloat(recoupWritingPercent)) /2).toFixed(0)
+    }
     //return recoupRecordPercent;
+
     this.setState({seriesRadial: [recoupTotalPercent]},() => {
-      console.log(recoupRecordPercent + " RECORDING%")
-      console.log(recoupWritingPercent + " PUB%")
       // this.calculate();
       // this.getPublisherShare();
+      // console.log("RRRRRRR " + recoupRecordPercent)
+      // console.log("PPPPPPP  " + recoupWritingPercent)
+      // console.log("****** " + recoupTotalPercent)
   });
   }
 
