@@ -1235,11 +1235,13 @@ class DesktopVersion extends React.Component{
   updateNumbWriters(e){
 
       this.setState({numbWriters: e}, () => {
+          this.writerPercentWrittenRef.current.setState({value: parseInt(100/this.state.numbWriters)});
           this.getPublisherShare();
       });
   }
 
   getStatewriterPercentWritten(){
+    //console.log(this.writerPercentWrittenRef.current.state.value);
 
      if(this.writerPercentWrittenRef.current.state.value !== "" && parseInt(this.writerPercentWrittenRef.current.state.value) !== this.state.writerPercentWritten) {
          const e = parseInt(this.writerPercentWrittenRef.current.state.value);
