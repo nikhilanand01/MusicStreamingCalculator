@@ -1498,9 +1498,10 @@ class DesktopVersion extends React.Component{
 
     if(writerXAdvanceableMoney > this.state.pubAdvance){
       writerXAdvanceableMoney = writerXAdvanceableMoney - this.state.pubAdvance;
+      // writerXUnrecoupedAmount = 0;
     } else {
-      // writerXAdvanceableMoney = 0;
       writerXUnrecoupedAmount = Math.abs(writerXAdvanceableMoney - this.state.pubAdvance);
+      // writerXAdvanceableMoney = 0;
     }
 
     if(this.state.role === 'artist'){
