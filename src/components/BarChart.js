@@ -40,7 +40,7 @@ class BarChart extends React.Component {
         },
         xaxis: {
           type: 'Who',
-          categories: ['Artist(s)', 'Record Label', 'Publiser'],
+          categories: ['Artist(s)', 'Record Label', 'Publisher'],
         },
         legend: {
           position: 'bottom',
