@@ -733,7 +733,7 @@ class DesktopVersion extends React.Component{
                                   onChange = {e => this.getStatePubDeal(e)}
                               />
                             </div>
-                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '4%'}}>
+                            {/*<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '4%'}}>
                               <div style={{width: '45%'}}>
                                 <NumberInput
                                   id={"numbWriters"}
@@ -760,6 +760,11 @@ class DesktopVersion extends React.Component{
                                   error={this.state.writerPercentWritten > 100 ? '**More than 100%**' : ''}
                                   />
                               </div>
+                            </div>*/}
+                            <div>
+                              <SmallText text="Percent of Song You Wrote / Own" style={{ textAlign: 'left', fontSize: '13px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '-15px'}}/>
+                              <PubDealSplitSlider ref={this.pubDealSliderRef}
+                                  onChange = {e => this.pubDoSliderStuff(e)}/>
                             </div>
                           </div>
                         }
