@@ -99,7 +99,7 @@ export class PubDealSplitSlider extends Component {
 
     return (
       <div>
-        <div style={{ height: 70, width: '100%' }}>
+        <div style={{ height: 55, width: '100%' }}>
           <Slider
           rootStyle={sliderStyle}
           domain={domain}

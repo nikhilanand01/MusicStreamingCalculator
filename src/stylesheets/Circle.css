@@ -1,0 +1,29 @@
+.publisherdot {
+  height: 10px;
+  width: 10px;
+  background-color: #67E09C;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.writerdot {
+  height: 10px;
+  width: 10px;
+  background-color: #3F8CF3;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.otherdot {
+  height: 10px;
+  width: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legendtext{
+  font-size: 10px;
+  margin-top: 0;
+  margin-right: 10px;
+}

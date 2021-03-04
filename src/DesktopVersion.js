@@ -1,6 +1,8 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
 import {BrowserView, MobileView, MobileOnlyView} from 'react-device-detect';
+import { CircularProgressbar, buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TitleText from './components/TitleText.js';
@@ -19,8 +21,8 @@ import Checkbox from './components/Checkbox.js';
 import ToolTip from './components/ToolTip.js';
 import Popup from './components/PopUp.js';
 import SwitchButton from './components/SwitchButton.js';
-import { CircularProgressbar, buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import Circle from './components/circle.js';
+
 
 import './stylesheets/DesktopPage.css';
 import './stylesheets/MobilePage.css';
@@ -368,9 +370,9 @@ class DesktopVersion extends React.Component{
                                 value={this.state.writerownershippercentage}
                                 text={`${this.state.writerownershippercentage} / ${100 - this.state.writerownershippercentage}`}
                                 styles={buildStyles({
-                                  textColor: "blue",
-                                  pathColor: "blue",
-                                  trailColor: "green"
+                                  textColor: "#3F8CF3",
+                                  pathColor: "#3F8CF3",
+                                  trailColor: "#67E09C"
                                 })}
                               />
                             </div>
@@ -381,9 +383,9 @@ class DesktopVersion extends React.Component{
                                 value={this.state.pubSliderValue}
                                 text={`${this.state.pubSliderValue * (this.state.writerownershippercentage/100)}%`}
                                 styles={buildStyles({
-                                  pathColor: "green",
-                                  trailColor: "#eee",
-                                  textColor: "blue",
+                                  pathColor: "#67E09C",
+                                  trailColor: "#bbb",
+                                  textColor: "#3F8CF3",
                                 })}
                               >
                                 {/* Foreground path */}
@@ -391,11 +393,16 @@ class DesktopVersion extends React.Component{
                                   value={this.state.pubSliderValue * (this.state.writerownershippercentage/100)}
                                   styles={buildStyles({
                                     trailColor: "transparent",
-                                    pathColor: "blue",
+                                    pathColor: "#3F8CF3",
                                   })}
                                 />
                               </CircularProgressbarWithChildren>
                             </div>
+                          </div>
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '3%'}}>
+                            <Circle class={'writerdot'} text={'You/Writer'}/>
+                            <Circle class={'publisherdot'} text={'Publisher'}/>
+                            <Circle class={'otherdot'} text={'Other'}/>
                           </div>
 
                         </div>
