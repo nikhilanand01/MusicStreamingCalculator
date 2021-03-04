@@ -1,6 +1,8 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
 import {BrowserView, MobileView, MobileOnlyView} from 'react-device-detect';
+import { CircularProgressbar, buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import './App.css';
 import SmallText from './components/SmallText.js';
 import TitleText from './components/TitleText.js';
@@ -12,12 +14,15 @@ import MultiDropDown from './components/MultiDropDown.js';
 import BarChart from './components/BarChart.js';
 import RadialChart from './components/RadialChart.js';
 import DealSplitSlider from './components/DealSplitSlider.js';
+import PubDealSplitSlider from './components/PubDealSplitSlider.js';
 import StreamSlider from './components/StreamSlider.js';
 import Accordion from './components/Accordion.js';
 import Checkbox from './components/Checkbox.js';
 import ToolTip from './components/ToolTip.js';
 import Popup from './components/PopUp.js';
 import SwitchButton from './components/SwitchButton.js';
+import Circle from './components/circle.js';
+
 
 import './stylesheets/DesktopPage.css';
 import './stylesheets/MobilePage.css';
@@ -165,6 +170,7 @@ class DesktopVersion extends React.Component{
         this.costsDistributionRef = React.createRef();
         this.costsMiscRef = React.createRef();
         this.dealSliderRef = React.createRef();
+        this.pubDealSliderRef = React.createRef();
         this.estStreamsRef = React.createRef();
         this.streamsSliderRef = React.createRef();
         this.marketingDropDownRef = React.createRef();
@@ -180,6 +186,7 @@ class DesktopVersion extends React.Component{
             publishDeal: [],
             labelServices: [],
             sliderValue: 25,
+            pubSliderValue: 100,
             recordDealSelected: null,
             publishingDealSelected: null,
             advance: 0,
@@ -231,6 +238,7 @@ class DesktopVersion extends React.Component{
           pubArtistMechShare: 0,
           numbWriters: 1,
           writerPercentWritten: 100,
+          writerownershippercentage: 0,
         };
 
     }
@@ -241,6 +249,7 @@ class DesktopVersion extends React.Component{
         this.buildPublishingDealSelect();
         this.buildLabelServicesSelect();
         this.setSliderValue(25);
+        this.pubSetSliderValue(100);
         this.calculate();
     }
 
@@ -271,7 +280,7 @@ class DesktopVersion extends React.Component{
                       {this.state.role !== "writer" &&
 
                         <div>
-                          <div style={{}}>
+                          <div>
                             <div>
                               <SmallText text="Recording Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
                               <SingleDropDown
@@ -322,7 +331,7 @@ class DesktopVersion extends React.Component{
                                 onChange = {e => this.getStatePubDeal(e)}
                             />
                           </div>
-                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '5%'}}>
+                          {/*<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '5%'}}>
                             <div style={{width: '45%'}}>
                               <NumberInput
                                 id={"numbWriters"}
@@ -348,7 +357,54 @@ class DesktopVersion extends React.Component{
                                 error={this.state.writerPercentWritten > 100 ? '**More than 100%**' : ''}
                                 />
                             </div>
+                          </div>*/}
+                          <div>
+                            <SmallText text="Percent of Song You Wrote / Own" style={{ textAlign: 'left', fontSize: '13px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '-15px'}}/>
+                            <PubDealSplitSlider ref={this.pubDealSliderRef}
+                                onChange = {e => this.pubDoSliderStuff(e)}/>
                           </div>
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', height: '150px'}}>
+                            <div style={{display: 'flex', flexDirection: 'column', width: '140px'}}>
+                              <SmallText text="Deal Split" style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'5px'}}/>
+                              <CircularProgressbar
+                                value={this.state.writerownershippercentage}
+                                text={`${this.state.writerownershippercentage} / ${100 - this.state.writerownershippercentage}`}
+                                styles={buildStyles({
+                                  textColor: "#3F8CF3",
+                                  pathColor: "#3F8CF3",
+                                  trailColor: "#67E09C"
+                                })}
+                              />
+                            </div>
+
+                            <div style={{display: 'flex', flexDirection: 'column', width: '120px'}}>
+                              <SmallText text="True Ownership" style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'5px'}}/>
+                              <CircularProgressbarWithChildren
+                                value={this.state.pubSliderValue}
+                                text={`${this.state.pubSliderValue * (this.state.writerownershippercentage/100)}%`}
+                                styles={buildStyles({
+                                  pathColor: "#67E09C",
+                                  trailColor: "#bbb",
+                                  textColor: "#3F8CF3",
+                                })}
+                              >
+                                {/* Foreground path */}
+                                <CircularProgressbar
+                                  value={this.state.pubSliderValue * (this.state.writerownershippercentage/100)}
+                                  styles={buildStyles({
+                                    trailColor: "transparent",
+                                    pathColor: "#3F8CF3",
+                                  })}
+                                />
+                              </CircularProgressbarWithChildren>
+                            </div>
+                          </div>
+                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '3%'}}>
+                            <Circle class={'writerdot'} text={'You/Writer'}/>
+                            <Circle class={'publisherdot'} text={'Publisher'}/>
+                            <Circle class={'otherdot'} text={'Other'}/>
+                          </div>
+
                         </div>
                       }
                     </div>
@@ -529,7 +585,7 @@ class DesktopVersion extends React.Component{
                                   <NumberFormat value={`${this.state.labelShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Record Company Earnings: ${value}`}</p>} />
                                   <NumberFormat value={`${this.state.publisherShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Publisher Earnings: ${value}`}</p>} />
                                   <NumberFormat value={`${this.state.proFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`PRO Fee: ${value}`}</p>} />
-                                  <NumberFormat value={`${this.state.pubDistributionFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Distribution Fee: ${value}`}</p>} />
+                                  <NumberFormat value={`${this.state.pubDistributionFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Mechanicals Fee: ${value}`}</p>} />
                                 </div>
                               </div>
                             </div>}/>
@@ -1223,6 +1279,18 @@ class DesktopVersion extends React.Component{
       this.calculate();
   }
 
+  pubSetSliderValue(val){
+      this.setState( {pubSliderValue: val});
+      this.calculate();
+  }
+
+  updatePubSlider(e){
+
+      //val = document.getElementById("splitSlider").value()
+      this.setState( {pubSliderValue: e.target.value})
+      this.calculate();
+  }
+
   buildPublishingDealSelect(){
       let fullTrad = {
           id: 0,
@@ -1283,6 +1351,16 @@ class DesktopVersion extends React.Component{
   doSliderStuff(e){
     if(this.dealSliderRef.current.state.values !== null && this.dealSliderRef.current.state.values[0] !== this.state.sliderValue) {
       this.setState({sliderValue: this.dealSliderRef.current.state.values[0]}, () => {this.calculate();});
+    }
+  }
+
+  pubChangeSliderVal(val){
+      this.pubDealSliderRef.current.setState({values: [val]});
+  }
+
+  pubDoSliderStuff(e){
+    if(this.pubDealSliderRef.current.state.values !== null && this.pubDealSliderRef.current.state.values[0] !== this.state.pubSliderValue) {
+      this.setState({pubSliderValue: this.pubDealSliderRef.current.state.values[0]}, () => {this.calculate();});
     }
   }
 
@@ -1402,13 +1480,15 @@ class DesktopVersion extends React.Component{
   }
 
   getPublisherShare(){
-    let pubGrossRevenue = avgPubPayout * this.state.streamNumber;
-    let pubPerformanceRevenue = pubGrossRevenue * .5;
+    let pubGrossRevenue = (avgPubPayout * this.state.streamNumber);
+    let pubOwnedGrossRevenue = (avgPubPayout * this.state.streamNumber) * (this.state.pubSliderValue/100);
+    let pubPerformanceRevenue = pubOwnedGrossRevenue * .5;
     let pubPROAdminFee = pubPerformanceRevenue * .165;
-    let pubMechanicalRevenue = pubGrossRevenue * .5;
+    let pubMechanicalRevenue = pubOwnedGrossRevenue * .5;
     let pubMechanicalAdminFee = pubMechanicalRevenue * .15;
     // let pubMechanicalRecordFee = (pubMechanicalRevenue - pubMechanicalAdminFee) * .3;
     let pubNetMechanicalRevenue = (pubMechanicalRevenue - pubMechanicalAdminFee);
+    let pubNetPerformanceRevenue = (pubPerformanceRevenue - pubPROAdminFee);
     let publisherPerfPercentage;
     let publisherMechPercentage;
 
@@ -1435,22 +1515,22 @@ class DesktopVersion extends React.Component{
       publisherMechPercentage = 0.5
     }
 
-    let publisherPerfShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
+    let publisherPerfShare = (pubNetPerformanceRevenue * .5);
     let publisherMechShare = pubNetMechanicalRevenue * publisherMechPercentage;
-    let artistWriterPerfShare = ((pubPerformanceRevenue - pubPROAdminFee) * .5);
+    let artistWriterPerfShare = (pubNetPerformanceRevenue * .5);
     let artistMechShare = pubNetMechanicalRevenue * (1 - publisherMechPercentage);
+    let artistTotalShare = artistWriterPerfShare + artistMechShare;
     // let artistPubShare = (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPerfPercentage));
 
     let writerXWriterShare = artistWriterPerfShare * (this.state.writerPercentWritten/100);
-    let pubXShare = ((publisherPerfShare / this.state.numbWriters) * publisherPerfPercentage) + (publisherMechShare / this.state.numbWriters);
-    let writerXPubShare = (publisherPerfShare / this.state.numbWriters) * (1 - publisherPerfPercentage);
+    let pubXShare = (publisherPerfShare * publisherPerfPercentage) + (publisherMechShare * (this.state.writerPercentWritten/100));
+    let writerXPubShare = (publisherPerfShare) * (1 - publisherPerfPercentage);
     let writerXTotalShare = writerXWriterShare + writerXPubShare;
     let writerXMechShare = artistMechShare * (this.state.writerPercentWritten/100);
     let artistWriterEarnings = writerXTotalShare + writerXMechShare
 
-
     this.setState({
-      grossPubRev: pubGrossRevenue,
+      grossPubRev: pubOwnedGrossRevenue,
       pubDistributionFee: pubMechanicalAdminFee,
       proFee: pubPROAdminFee,
       publisherShare: pubXShare,
@@ -1462,6 +1542,7 @@ class DesktopVersion extends React.Component{
     }, () => {
       this.getArtistTotalEarnings();
       this.updateGraphs();
+      this.pubdealsplitinfo();
     });
 
   }
@@ -1607,6 +1688,31 @@ class DesktopVersion extends React.Component{
 
       let services = [stemDistribution, advertising, analytics, royaltyAccounting, splitPayments]
       this.setState( {labelServices: services})
+  }
+
+
+  pubdealsplitinfo(){
+    let writerownershippercentage = 0;
+    switch(this.state.publishingDealSelected) {
+      case 'Full/Traditional':
+        writerownershippercentage = 50;
+        break;
+      case 'Co-Publishing':
+        writerownershippercentage = 75;
+        break;
+      case 'Admin':
+        writerownershippercentage = 90;
+        break;
+      case 'No Deal':
+        writerownershippercentage = 100;
+        break;
+      default:
+        writerownershippercentage = 100;
+    }
+    //return recoupPercent;
+    this.setState({writerownershippercentage: writerownershippercentage},() => {
+    // this.calculate();
+  });
   }
 
 }
