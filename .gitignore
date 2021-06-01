@@ -3,3 +3,4 @@
 .eslintcache
 .cache
 .vercel
+.DS_Store
