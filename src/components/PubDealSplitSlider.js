@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
-import SmallText from './SmallText.js';
+import { Slider, Rail, Handles, Tracks } from 'react-compound-slider';
 
 const sliderStyle = {
   position: 'relative',
@@ -94,7 +93,7 @@ export class PubDealSplitSlider extends Component {
 
   render() {
     const {
-      state: { values, update},
+      state: { values },
     } = this
 
     return (

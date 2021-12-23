@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
+import { Slider, Rail, Handles, Tracks } from 'react-compound-slider';
 import SmallText from './SmallText.js';
 
 const sliderStyle = {
@@ -94,7 +94,7 @@ export class DealSplitSlider extends Component {
 
   render() {
     const {
-      state: { values, update},
+      state: { values },
     } = this
 
     return (

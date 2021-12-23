@@ -1,6 +1,6 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
-import {BrowserView, MobileView, MobileOnlyView} from 'react-device-detect';
+import {BrowserView, MobileOnlyView} from 'react-device-detect';
 import { CircularProgressbar, buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import './App.css';
@@ -646,6 +646,18 @@ class DesktopVersion extends React.Component{
                       </ul>
                     </div>
                 }/>
+                <Popup
+                  buttonText="Additional Resources"
+                  title="Explore Futher Into Music Streaming Economics"
+                  body={
+                    <div>
+                      <ol>
+                        <li style={{marginBottom: '10px'}}><a href="https://thetrichordist.com/2020/03/05/2019-2020-streaming-price-bible-youtube-is-still-the-1-problem-to-solve/" target="_blank" rel="noreferrer">Value of a Stream based according to Trichordist</a></li>
+                        <li style={{marginBottom: '10px'}}><a href="https://loudandclear.byspotify.com" target="_blank" rel="noreferrer">Spotify Loud & Clear: Data on Artist Earnings and Streams on Spotify</a></li>
+                        <li ><a href="http://futureofmusic.org/article/article/music-and-how-money-flows" target="_blank" rel="noreferrer">Music and How the Money Flows</a></li>
+                      </ol>
+                    </div>
+                  }/>
                 <Popup
                   buttonText="Record Deal Informaton"
                   title="Standard Record Deal Points"
@@ -1485,7 +1497,7 @@ class DesktopVersion extends React.Component{
   }
 
   getPublisherShare(){
-    let pubGrossRevenue = (avgPubPayout * this.state.streamNumber);
+    // let pubGrossRevenue = (avgPubPayout * this.state.streamNumber);
     let pubOwnedGrossRevenue = (avgPubPayout * this.state.streamNumber) * (this.state.pubSliderValue/100);
     let pubPerformanceRevenue = pubOwnedGrossRevenue * .5;
     let pubPROAdminFee = pubPerformanceRevenue * .165;
@@ -1524,7 +1536,7 @@ class DesktopVersion extends React.Component{
     let publisherMechShare = pubNetMechanicalRevenue * publisherMechPercentage;
     let artistWriterPerfShare = (pubNetPerformanceRevenue * .5);
     let artistMechShare = pubNetMechanicalRevenue * (1 - publisherMechPercentage);
-    let artistTotalShare = artistWriterPerfShare + artistMechShare;
+    // let artistTotalShare = artistWriterPerfShare + artistMechShare;
     // let artistPubShare = (((pubPerformanceRevenue - pubPROAdminFee) * .5) * (1 - publisherPerfPercentage));
 
     let writerXWriterShare = artistWriterPerfShare * (this.state.writerPercentWritten/100);

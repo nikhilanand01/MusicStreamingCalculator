@@ -21,7 +21,7 @@ class Popup extends React.Component {
     return (
       <div>
         <div onClick={this.togglePopup.bind(this)}>
-          <SmallText text={this.props.buttonText} className='buttonText'/>
+          <SmallText text={this.props.buttonText} className='buttonText' style={{marginBottom: '5px'}}/>
         </div>
         {this.state.showPopup ?
           <div className='popup' onClick={this.togglePopup}>

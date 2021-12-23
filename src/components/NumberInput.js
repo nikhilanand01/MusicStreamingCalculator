@@ -1,6 +1,5 @@
 import React from "react";
-import { render } from "react-dom";
-import {TransitionMotion, spring } from 'react-motion';
+// import { render } from "react-dom";
 import "../stylesheets/NumberInput.css";
 import NumberFormat from 'react-number-format';
 

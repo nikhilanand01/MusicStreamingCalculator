@@ -1,6 +1,5 @@
 import React from 'react';
 import Select from 'react-select';
-import styled from "styled-components";
 
 class MarketingDropDown extends React.Component {
 
