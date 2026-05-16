@@ -598,7 +598,7 @@ class DesktopVersion extends React.Component{
               <div>
                 <h4 style={{marginBottom: '5px', textAlign: 'center'}}>Created By:</h4>
                 <ul style={{listStyleType: 'none', textAlign: 'left', marginTop: '0'}}>
-                  <li style={{marginBottom: '5px'}}><a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand</a></li>
+                  <li style={{marginBottom: '5px'}}><a href={'https://www.linkedin.com/in/nikhilanand0102/'} target={'blank'}>Nikhil Anand</a></li>
                   <li style={{marginBottom: '5px'}}><a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent</a></li>
                   <li style={{marginBottom: '5px'}}><a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin</a></li>
                   <li><a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></li>
@@ -1481,16 +1481,23 @@ class DesktopVersion extends React.Component{
   }
 
   updateGraphs() {
+    const role = this.state.role;
+    const showRecording = role === "artist" || role === "both";
+    const showWriting = role === "writer" || role === "both";
+    const showAdvance = role === "artist" || role === "both";
+    const artistRecording = showRecording ? this.state.artistRecordEarnings.toFixed(0) : 0;
+    const artistWriting = showWriting ? this.state.artistWriterEarnings.toFixed(0) : 0;
+    const artistAdvance = showAdvance ? this.state.advance.toFixed(0) : 0;
     this.setState({seriesBar:
       [{
               name: 'From Recording',
-              data: [this.state.artistRecordEarnings.toFixed(0), this.state.labelShare.toFixed(0), 0]
+              data: [artistRecording, this.state.labelShare.toFixed(0), 0]
             }, {
               name: 'From Writing',
-              data: [this.state.artistWriterEarnings.toFixed(0), 0, this.state.publisherShare.toFixed(0)]
+              data: [artistWriting, 0, this.state.publisherShare.toFixed(0)]
             },{
               name: 'From Advance',
-              data: [this.state.advance.toFixed(0), 0, 0]
+              data: [artistAdvance, 0, 0]
             }
           ]
     })

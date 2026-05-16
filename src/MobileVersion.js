@@ -953,16 +953,23 @@ class MobileVersion extends React.Component{
   }
 
   updateGraphs() {
+    const role = this.state.role;
+    const showRecording = role === "artist" || role === "both";
+    const showWriting = role === "writer" || role === "both";
+    const showAdvance = role === "artist" || role === "both";
+    const artistRecording = showRecording ? this.state.artistRecordEarnings.toFixed(0) : 0;
+    const artistWriting = showWriting ? this.state.artistWriterEarnings.toFixed(0) : 0;
+    const artistAdvance = showAdvance ? this.state.advance.toFixed(0) : 0;
     this.setState({seriesBar:
       [{
               name: 'From Recording',
-              data: [this.state.artistRecordEarnings.toFixed(0), this.state.labelShare.toFixed(0), 0]
+              data: [artistRecording, this.state.labelShare.toFixed(0), 0]
             }, {
               name: 'From Writing',
-              data: [this.state.artistWriterEarnings.toFixed(0), this.state.labelPublishingShare.toFixed(0), this.state.publisherShare.toFixed(0)]
+              data: [artistWriting, this.state.labelPublishingShare.toFixed(0), this.state.publisherShare.toFixed(0)]
             },{
               name: 'From Advance',
-              data: [this.state.advance.toFixed(0), 0, 0]
+              data: [artistAdvance, 0, 0]
             }
           ]
     })

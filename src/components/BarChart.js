@@ -28,6 +28,19 @@ class BarChart extends React.Component {
           type: 'Who',
           categories: ['Artist(s)', 'Record Label', 'Publisher'],
         },
+        yaxis: {
+          labels: {
+            formatter: (val) => Math.round(val).toLocaleString(),
+          },
+        },
+        dataLabels: {
+          formatter: (val) => Math.round(val).toLocaleString(),
+        },
+        tooltip: {
+          y: {
+            formatter: (val) => '$' + Math.round(val).toLocaleString(),
+          },
+        },
         legend: {
           position: 'bottom',
           horizontalAlign: 'center',
