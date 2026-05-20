@@ -821,7 +821,8 @@
   margin: 0;
 }
 
-.v2-footer-help { text-align: left; }
+.v2-footer-help { text-align: right; }
+.v2-footer-help .v2-footer-title { text-align: right; }
 
 .v2-shell a, .v2-mobile-shell a {
   color: var(--v2-accent);
@@ -862,7 +863,7 @@
 #uglossary li, #urecdeals li { padding-bottom: 10px; }
 
 /* Popup spacing */
-.v2-footer-help button { margin: 4px 4px 4px 0; }
+.v2-footer-help button { margin: 4px 0 4px 4px; }
 
 /* Legacy class fallbacks (kept so older paths still render reasonably) --- */
 .main-container { padding: 2%; background: var(--v2-bg); }
