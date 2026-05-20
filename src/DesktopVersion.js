@@ -270,6 +270,7 @@ class DesktopVersion extends React.Component{
 
         this.state = {
             providers: [spotify, apple, youtube, amazon, google, pandora, deezer, amazonDig, tidal],
+            mobileOpen: { 1: true, 2: true, 3: true, 4: false, 5: false },
             streamNumber: 0,
             role: null,
             recordDeal: [],
@@ -888,17 +889,52 @@ class DesktopVersion extends React.Component{
           <div className="v2-mobile-shell">
             <header className="v2-hero v2-hero-mobile">
               <h1 className="v2-hero-title">What's My Stream?</h1>
-              <p className="v2-hero-sub">Estimate your music streaming revenue.</p>
             </header>
-            <Stepper steps={stepsLabels} completed={stepsCompleted} />
-            {renderRoleStep(1)}
-            {renderDealStep(2)}
-            {renderStreamsStep(3)}
-            {renderCostsStep(4)}
-            {renderAdvancedStep(5)}
+
+            {(() => {
+              const renderers = [
+                renderRoleStep, renderDealStep, renderStreamsStep,
+                renderCostsStep, renderAdvancedStep,
+              ];
+              const isOpen = (n) => !!this.state.mobileOpen[n];
+              const toggle = (n) => this.setState({
+                mobileOpen: { ...this.state.mobileOpen, [n]: !this.state.mobileOpen[n] },
+              });
+              return (
+                <div className="v2-mobile-steps">
+                  {stepsLabels.map((label, i) => {
+                    const n = i + 1;
+                    const open = isOpen(n);
+                    return (
+                      <div className={`v2-collapse ${open ? 'is-open' : ''}`} key={label}>
+                        <button type="button" className="v2-collapse-head" onClick={() => toggle(n)}>
+                          <span className={`v2-collapse-num ${stepsCompleted[i] ? 'is-done' : ''}`}>
+                            {stepsCompleted[i] ? '✓' : n}
+                          </span>
+                          <span className="v2-collapse-title">{label}</span>
+                          <span className="v2-collapse-chevron">{open ? '−' : '+'}</span>
+                        </button>
+                        {/* Body stays mounted (hidden via CSS when collapsed) so the
+                            inputs/sliders keep their values when reopened. */}
+                        <div className="v2-collapse-body" hidden={!open}>
+                          {renderers[i](n)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
             <div className="v2-mobile-results">
               {renderResults()}
             </div>
+
+            <div className="v2-mobile-earnbar">
+              <span className="v2-mobile-earnbar-label">You take home</span>
+              <span className="v2-mobile-earnbar-value">${fmtMoney(earned)}</span>
+            </div>
+
             <footer className="v2-footer v2-footer-mobile">
               <h4 className="v2-footer-title">About this tool</h4>
               <p>This Streaming Calculator was made to model music streaming revenue. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>Full write-up</a>.</p>
