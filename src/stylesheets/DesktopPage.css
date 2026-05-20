@@ -38,8 +38,109 @@
   background: var(--v2-bg);
   color: var(--v2-text);
   min-height: 100vh;
-  padding: 16px;
+  padding: 16px 16px 96px;
   text-align: left;
+}
+
+.v2-mobile-shell .v2-hero { text-align: center; margin-bottom: 16px; }
+.v2-mobile-shell .v2-hero-title { font-size: 28px; margin-bottom: 0; text-align: center; }
+
+/* Mobile collapsible steps ------------------------------------------------ */
+.v2-mobile-steps { display: flex; flex-direction: column; gap: 12px; }
+
+.v2-collapse {
+  border: 1px solid var(--v2-border);
+  border-radius: var(--v2-radius-sm);
+  background: #fff;
+  overflow: hidden;
+}
+
+.v2-collapse-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.v2-collapse-num {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--v2-accent-soft);
+  color: var(--v2-accent);
+}
+
+.v2-collapse-num.is-done { background: var(--v2-accent); color: #fff; }
+
+.v2-collapse-title {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--v2-text);
+}
+
+.v2-collapse-chevron {
+  flex: 0 0 auto;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--v2-text-muted);
+}
+
+/* The shared step card already carries its own padding/heading, so when it
+   sits inside a mobile collapse we strip the card chrome and the duplicate
+   header to avoid a double title. Desktop is never wrapped in .v2-collapse. */
+.v2-collapse-body .v2-card {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0 16px 16px;
+}
+
+.v2-collapse-body .v2-card-head { display: none; }
+
+/* Collapsed: hide without unmounting so child input state survives. */
+.v2-collapse-body[hidden] { display: none !important; }
+
+/* Simple sticky live-earnings bar (constant feedback while filling steps) */
+.v2-mobile-earnbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+  background: #fff;
+  border-top: 1px solid var(--v2-border);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.v2-mobile-earnbar-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--v2-text-muted);
+}
+
+.v2-mobile-earnbar-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--v2-text);
 }
 
 /* Hero -------------------------------------------------------------------- */
