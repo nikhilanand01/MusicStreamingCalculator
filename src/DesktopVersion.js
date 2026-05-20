@@ -1,31 +1,121 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
 import {BrowserView, MobileOnlyView} from 'react-device-detect';
-import { CircularProgressbar, buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import './App.css';
-import SmallText from './components/SmallText.js';
-import TitleText from './components/TitleText.js';
 import SelectButton from './components/SelectButton.js';
 import NumberInput from './components/NumberInput.js';
 import SingleDropDown from './components/SingleDropDown.js';
 import MarketingDropDown from './components/MarketingCostDropDown.js';
 import MultiDropDown from './components/MultiDropDown.js';
-import BarChart from './components/BarChart.js';
-import RadialChart from './components/RadialChart.js';
 import DealSplitSlider from './components/DealSplitSlider.js';
 import PubDealSplitSlider from './components/PubDealSplitSlider.js';
 import StreamSlider from './components/StreamSlider.js';
-import Accordion from './components/Accordion.js';
-import Checkbox from './components/Checkbox.js';
 import ToolTip from './components/ToolTip.js';
 import Popup from './components/PopUp.js';
 import SwitchButton from './components/SwitchButton.js';
-import Circle from './components/circle.js';
 
 
 import './stylesheets/DesktopPage.css';
 import './stylesheets/MobilePage.css';
+
+// ---- small visual helpers used in the v2 layout ----
+const COLOR_YOU = '#3F6BFF';
+const COLOR_LABEL = '#22C7B6';
+const COLOR_PUBLISHER = '#9B7BFF';
+const COLOR_FEES = '#FFAA4D';
+
+const fmtMoney = (n) => {
+  const v = Number.isFinite(n) ? n : 0;
+  return v.toLocaleString('en-US', { maximumFractionDigits: 0 });
+};
+
+const fmtPreset = (v) => {
+  if (v >= 1e9) return (v / 1e9) + 'B';
+  if (v >= 1e6) return (v / 1e6) + 'M';
+  if (v >= 1e3) return (v / 1e3) + 'K';
+  return String(v);
+};
+
+const RecoupDonut = ({ percent, size = 196, stroke = 26 }) => {
+  const pct = Math.max(0, Math.min(100, Number(percent) || 0));
+  const radius = (size - stroke) / 2;
+  const c = 2 * Math.PI * radius;
+  const len = (pct / 100) * c;
+  return (
+    <div className="v2-donut-wrap" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#eef2f7" strokeWidth={stroke} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke={COLOR_YOU}
+          strokeWidth={stroke}
+          strokeDasharray={`${len} ${c - len}`}
+          strokeLinecap="round"
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          style={{ transition: 'stroke-dasharray 0.3s ease' }}
+        />
+      </svg>
+      <div className="v2-donut-center">
+        <div className="v2-donut-center-value">{pct.toFixed(0)}%</div>
+        <div className="v2-donut-center-label">Recouped</div>
+      </div>
+    </div>
+  );
+};
+
+const SegmentedBar = ({ segments }) => {
+  const total = segments.reduce((s, seg) => s + Math.max(0, seg.value), 0) || 1;
+  return (
+    <div className="v2-segbar">
+      <div className="v2-segbar-track">
+        {segments.map((seg, i) => {
+          const pct = (Math.max(0, seg.value) / total) * 100;
+          if (pct <= 0) return null;
+          return (
+            <div
+              key={i}
+              className="v2-segbar-piece"
+              style={{ width: `${pct}%`, background: seg.color }}
+              title={`${seg.label}: ${pct.toFixed(0)}%`}
+            >
+              {pct >= 10 && <span className="v2-segbar-piece-label">{Math.round(pct)}%</span>}
+            </div>
+          );
+        })}
+      </div>
+      <div className="v2-segbar-legend">
+        {segments.map((seg, i) => (
+          <div key={i} className="v2-segbar-legend-item">
+            <span className="v2-segbar-dot" style={{ background: seg.color }} />
+            <span className="v2-segbar-legend-text">{seg.label}</span>
+            <span className="v2-segbar-legend-pct">{Math.round((Math.max(0, seg.value) / total) * 100)}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Stepper = ({ steps, completed }) => (
+  <ol className="v2-stepper">
+    {steps.map((s, i) => {
+      const isDone = completed[i];
+      return (
+        <li key={i} className={`v2-step ${isDone ? 'v2-step-done' : ''}`}>
+          <a href={`#v2-step-${i + 1}`} className="v2-step-link">
+            <span className="v2-step-num">{isDone ? '✓' : i + 1}</span>
+            <span className="v2-step-label">{s}</span>
+          </a>
+          {i < steps.length - 1 && <span className="v2-step-bar" />}
+        </li>
+      );
+    })}
+  </ol>
+);
 
 const labelDealOptions = [
   { value: 'royalty', label: 'Royalty' },
@@ -255,361 +345,478 @@ class DesktopVersion extends React.Component{
 
 
     render() {
+      const role = this.state.role;
+      const showRecord = role !== "writer";
+      const showPub = role !== "artist";
+
+      const earned = this.state.artistTotalEarnings || 0;
+      const gross = this.state.grossTotalRev || 0;
+      const recoupable = this.state.totRecoupe || 0;
+      const perThousand = this.state.streamNumber > 0
+        ? (earned / this.state.streamNumber) * 1000
+        : 0;
+
+      const stepsLabels = ['Your role', 'Your deal', 'Streams', 'Costs', 'Advanced'];
+      const stepsCompleted = [
+        role != null,
+        (showRecord ? this.state.recordDealSelected != null : true) &&
+          (showPub ? this.state.publishingDealSelected != null : true),
+        this.state.streamNumber > 0,
+        this.state.costsTotal > 0,
+        this.state.autoRecoupChecked || this.state.moneyGoalChecked,
+      ];
+
+      // Ownership segments for publishing
+      const yourShare = (this.state.writerownershippercentage / 100) * (this.state.pubSliderValue);
+      const pubShare = ((100 - this.state.writerownershippercentage) / 100) * (this.state.pubSliderValue);
+      const otherShare = 100 - this.state.pubSliderValue;
+
+      // Donut segments for results
+      const donutSegments = [
+        { label: 'You', value: earned, color: COLOR_YOU },
+        { label: 'Record label', value: this.state.labelShare || 0, color: COLOR_LABEL },
+        { label: 'Publisher', value: this.state.publisherShare || 0, color: COLOR_PUBLISHER },
+        { label: 'PRO & Mech. fees', value: (this.state.proFee || 0) + (this.state.pubDistributionFee || 0), color: COLOR_FEES },
+      ];
+
+      const streamPresets = [10000, 100000, 1000000, 10000000, 100000000];
+
+      const renderRoleStep = (idx) => (
+        <section className="v2-card" id={`v2-step-${idx}`}>
+          <div className="v2-card-head">
+            <span className="v2-eyebrow">Step {idx}</span>
+            <h2 className="v2-card-title">Your role</h2>
+            <p className="v2-card-help">Are you the recording artist, the writer, or both?</p>
+          </div>
+          <div className="v2-role-row">
+            {this.state.roleTypes.map(type => (
+              <SelectButton ref={type.ref}
+                key={type.id}
+                onChange={e => this.handleMyClick(type.id)}
+                text={type.name}
+              />))}
+          </div>
+        </section>
+      );
+
+      const renderDealStep = (idx) => (
+        <section className="v2-card" id={`v2-step-${idx}`}>
+          <div className="v2-card-head">
+            <span className="v2-eyebrow">Step {idx}</span>
+            <h2 className="v2-card-title">Your deal{role === "both" ? "s" : ""}</h2>
+            <p className="v2-card-help">Tell us how you're working with a label and/or publisher.</p>
+          </div>
+          <div className="v2-deal-grid">
+            {showRecord && (
+              <div className="v2-deal-panel">
+                <h3 className="v2-panel-title">Recording deal</h3>
+                <label className="v2-field-label">Deal type</label>
+                <SingleDropDown
+                  ref={this.dealTypeRef}
+                  options={labelDealOptions}
+                  selectedOption={labelDealOptions[0]}
+                  onChange={e => this.getStateRecDeal(e)}/>
+                {this.state.recordDealSelected === "labelServices" && (
+                  <div style={{ marginTop: 12 }}>
+                    <label className="v2-field-label">Label services</label>
+                    <MultiDropDown
+                      ref={this.labelServicesSelectedRef}
+                      options={this.state.labelServices}
+                      default={this.state.labelServices[0]}
+                      onChange={e => this.changeLabelServicesDropDown(e)}
+                    />
+                  </div>
+                )}
+                <div className="v2-field-block">
+                  <label className="v2-field-label">Deal split</label>
+                  <DealSplitSlider ref={this.dealSliderRef} onChange={e => this.doSliderStuff(e)} />
+                </div>
+                <div className="v2-field-block">
+                  <label className="v2-field-label">Advance on earnings</label>
+                  <NumberInput
+                    ref={this.advanceRef}
+                    id={"numInput"}
+                    label="Advance on Earnings"
+                    onChange={e => this.getStateAdvance(e)}/>
+                </div>
+              </div>
+            )}
+            {showPub && (
+              <div className="v2-deal-panel">
+                <h3 className="v2-panel-title">Publishing deal</h3>
+                <label className="v2-field-label">Deal type</label>
+                <SingleDropDown
+                  ref={this.pubTypeRef}
+                  options={pubDealOptions}
+                  selectedOption={pubDealOptions[1]}
+                  onChange={e => this.getStatePubDeal(e)}
+                />
+                <div className="v2-field-block">
+                  <label className="v2-field-label">How much of this song did you write?</label>
+                  <PubDealSplitSlider ref={this.pubDealSliderRef} onChange={e => this.pubDoSliderStuff(e)}/>
+                </div>
+                <div className="v2-field-block">
+                  <label className="v2-field-label">Who owns the song</label>
+                  <SegmentedBar segments={[
+                    { label: 'You / writer', value: yourShare, color: COLOR_YOU },
+                    { label: 'Publisher', value: pubShare, color: COLOR_PUBLISHER },
+                    { label: 'Other writers', value: otherShare, color: '#cbd5e1' },
+                  ]}/>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      );
+
+      const renderStreamsStep = (idx) => (
+        <section className="v2-card" id={`v2-step-${idx}`}>
+          <div className="v2-card-head">
+            <span className="v2-eyebrow">Step {idx}</span>
+            <h2 className="v2-card-title">Streams</h2>
+            <p className="v2-card-help">Estimate how many streams the song will get across all DSPs.</p>
+          </div>
+          <div className="v2-preset-row">
+            {streamPresets.map(v => (
+              <button
+                type="button"
+                key={v}
+                className={`v2-preset ${this.state.streamNumber === v ? 'v2-preset-active' : ''}`}
+                onClick={() => {
+                  // Sync child refs BEFORE the parent setState so updateStreamSlider's
+                  // guard sees consistent state on the next render and doesn't loop.
+                  this.streamsSliderRef.current.setState({ values: [v] });
+                  this.estStreamsRef.current.setState({ value: v });
+                  this.setState({ streamNumber: v }, () => this.calculate());
+                }}>
+                {fmtPreset(v)}
+              </button>
+            ))}
+          </div>
+          <div className="v2-stream-row">
+            <div className="v2-stream-input">
+              <label className="v2-field-label">Estimated streams</label>
+              <NumberInput
+                ref={this.estStreamsRef}
+                id={0}
+                type="text"
+                label="Estimated Streams"
+                onChange={e => this.changeStreams(e)}/>
+            </div>
+            <div className="v2-stream-slider">
+              <StreamSlider
+                ref={this.streamsSliderRef}
+                values={[this.state.streamNumber]}
+                domain={[0, (this.state.streamNumber + 1) * 2]}
+                onChange={e => this.updateStreamSlider(e)}/>
+            </div>
+          </div>
+
+          <div className="v2-dsp-block">
+            <div className="v2-dsp-head">
+              <h4 className="v2-subtitle">DSPs included</h4>
+              <div className="v2-dsp-rate">
+                Effective rate: <strong>${this.state.streamValue.toFixed(5)}</strong> / stream
+                <ToolTip content="Value is a weighted average of DSP payouts and their market share" direction="top">
+                  <span className="v2-info-icon">ⓘ</span>
+                </ToolTip>
+              </div>
+            </div>
+            <div className="v2-dsp-grid">
+              {this.state.providers.map((provider) => (
+                <div key={provider.id} className="v2-dsp-chip">
+                  <SelectButton
+                    ref={provider.ref}
+                    text={provider.name}
+                    onChange={e => this.getButtonClick(provider.id)}/>
+                  <span className="v2-dsp-chip-rate">${provider.payoutPerStream.toFixed(4)} / stream</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+
+      const renderCostsStep = (idx) => (
+        <section className="v2-card" id={`v2-step-${idx}`}>
+          <div className="v2-card-head">
+            <span className="v2-eyebrow">Step {idx}</span>
+            <h2 className="v2-card-title">Costs</h2>
+            <p className="v2-card-help">Production, marketing, distribution, and other costs incurred.</p>
+          </div>
+          <div className="v2-cost-total-row">
+            <span className="v2-cost-total-label">Total costs</span>
+            <NumberFormat
+              value={`${(this.state.costsTotal || 0).toFixed(0)}`}
+              displayType={'text'}
+              thousandSeparator={true}
+              prefix={'$'}
+              renderText={v => <span className="v2-cost-total-value">{v}</span>}
+            />
+          </div>
+          <div className="v2-cost-rows">
+            <div className="v2-cost-row-header">
+              <span />
+              <span className="v2-cost-col-label">Amount</span>
+              <span className="v2-cost-col-label">Recoupable?</span>
+            </div>
+            <div className="v2-cost-row">
+              <span className="v2-cost-name">Recording</span>
+              <NumberInput
+                id={"costsRecording"}
+                type="text"
+                ref={this.costsRecordingRef}
+                label="Recording Costs"
+                onChange={e => this.getStateCostsRecording(e)}/>
+              <div className="v2-cost-toggle">
+                <SwitchButton onChange={e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked} />
+              </div>
+            </div>
+            <div className="v2-cost-row">
+              <span className="v2-cost-name">Marketing</span>
+              <NumberInput
+                id={"costsMarketing"}
+                type="text"
+                ref={this.costsMarketingRef}
+                label="Marketing Costs"
+                onChange={e => this.getStateCostsMarketing(e)}/>
+              <div className="v2-cost-toggle v2-cost-toggle-dropdown">
+                <MarketingDropDown
+                  ref={this.marketingDropDownRef}
+                  options={marketingSplitOptions}
+                  selectedOption={marketingSplitOptions[2]}
+                  onChange={e => this.calcMarketingCosts()}
+                />
+              </div>
+            </div>
+            <div className="v2-cost-row">
+              <span className="v2-cost-name">Distribution</span>
+              <NumberInput
+                id={"costsDistribution"}
+                type="text"
+                ref={this.costsDistributionRef}
+                label="Distribution Costs"
+                onChange={e => this.getStateCostsDistribution(e)}/>
+              <div className="v2-cost-toggle">
+                <SwitchButton onChange={e => this.changeCheckboxes("distribution")} checked={this.state.distributionCostChecked} />
+              </div>
+            </div>
+            <div className="v2-cost-row">
+              <span className="v2-cost-name">Misc.</span>
+              <NumberInput
+                id={"costsMisc"}
+                type="text"
+                ref={this.costsMiscRef}
+                label="Misc. Costs"
+                onChange={e => this.getStateCostsMisc(e)}/>
+              <div className="v2-cost-toggle">
+                <SwitchButton onChange={e => this.changeCheckboxes("misc")} checked={this.state.miscCostChecked} />
+              </div>
+            </div>
+          </div>
+
+        </section>
+      );
+
+      const renderAdvancedStep = (idx) => (
+        <section className="v2-card" id={`v2-step-${idx}`}>
+          <div className="v2-card-head">
+            <span className="v2-eyebrow">Step {idx} · Optional</span>
+            <h2 className="v2-card-title">How many streams do I need?</h2>
+            <p className="v2-card-help">Flip a toggle to auto-calculate the streams required. The slider and results above will update to match.</p>
+          </div>
+          <div className="v2-advanced-grid">
+            <div className={`v2-advanced-card ${this.state.autoRecoupChecked ? 'v2-advanced-card-on' : ''}`}>
+              <div className="v2-advanced-head">
+                <span className="v2-advanced-title">Auto-recoup</span>
+                <ToolTip content="The amount of streams needed to pay back all recoupable monies" direction="top">
+                  <span className="v2-info-icon">ⓘ</span>
+                </ToolTip>
+                <SwitchButton onChange={e => this.handleAutoRecoup()} checked={this.state.autoRecoupChecked}/>
+              </div>
+              <p className="v2-advanced-help">Streams needed to pay back every recoupable cost and the advance.</p>
+              <NumberFormat
+                value={`${(this.state.recoupStreamsNeeds || 0).toFixed(0)}`}
+                displayType={'text'}
+                thousandSeparator={true}
+                renderText={value => <div className="v2-advanced-streams">{value}<span className="v2-advanced-streams-suffix"> streams needed</span></div>}
+              />
+            </div>
+            <div className={`v2-advanced-card ${this.state.moneyGoalChecked ? 'v2-advanced-card-on' : ''}`}>
+              <div className="v2-advanced-head">
+                <span className="v2-advanced-title">Money goal</span>
+                <ToolTip content="Advance is included in revenue earned" direction="top">
+                  <span className="v2-info-icon">ⓘ</span>
+                </ToolTip>
+                <SwitchButton onChange={e => this.handleMoneyGoalCheckbox()} checked={this.state.moneyGoalChecked}/>
+              </div>
+              <p className="v2-advanced-help">Set a dollar target and we'll show how many streams it takes to get there.</p>
+              <NumberInput
+                id={"moneyGoalInput"}
+                ref={this.moneyGoalInputRef}
+                type="text"
+                label="I want to make..."
+                onChange={e => this.getStateMoneyGoalInput(e)}/>
+              <NumberFormat
+                value={`${(this.state.moneyGoalStreamsNeeded || 0).toFixed(0)}`}
+                displayType={'text'}
+                thousandSeparator={true}
+                renderText={value => <div className="v2-advanced-streams">{value}<span className="v2-advanced-streams-suffix"> streams needed</span></div>}
+              />
+            </div>
+          </div>
+        </section>
+      );
+
+      const renderResults = () => (
+        <div className="v2-results-card">
+          <p className="v2-results-eyebrow">You take home</p>
+          <NumberFormat
+            value={`${earned.toFixed(0)}`}
+            displayType={'text'}
+            thousandSeparator={true}
+            prefix={'$'}
+            renderText={v => <div className="v2-hero-number">{v}</div>}
+          />
+          <p className="v2-hero-context">
+            from <strong>{fmtMoney(this.state.streamNumber)}</strong> streams
+          </p>
+
+          <RecoupDonut percent={Number((this.state.seriesRadial && this.state.seriesRadial[0]) || 0)} />
+
+          <div className="v2-donut-legend">
+            {(() => {
+              const partySum = donutSegments.reduce((sum, s) => sum + Math.max(0, s.value), 0);
+              return donutSegments.map((s, i) => {
+                const pct = partySum > 0 ? (Math.max(0, s.value) / partySum) * 100 : 0;
+                return (
+                  <div key={i} className="v2-legend-row">
+                    <span className="v2-legend-dot" style={{ background: s.color }} />
+                    <span className="v2-legend-label">{s.label} <span className="v2-legend-pct">({pct.toFixed(0)}%)</span></span>
+                    <span className="v2-legend-value">${fmtMoney(s.value)}</span>
+                  </div>
+                );
+              });
+            })()}
+          </div>
+
+          <div className="v2-stat-row">
+            <div className="v2-stat">
+              <span className="v2-stat-label">Gross revenue</span>
+              <span className="v2-stat-value">${fmtMoney(gross)}</span>
+            </div>
+            <div className="v2-stat">
+              <span className="v2-stat-label">Recoupable</span>
+              <span className="v2-stat-value">${fmtMoney(recoupable)}</span>
+            </div>
+            <div className="v2-stat">
+              <span className="v2-stat-label">Per 1k streams</span>
+              <span className="v2-stat-value">${perThousand.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div className="v2-breakdown">
+            <h3 className="v2-breakdown-title">Detailed earnings breakdown</h3>
+            <p className="v2-breakdown-context">Earnings from {fmtMoney(this.state.streamNumber)} streams</p>
+            <table className="v2-breakdown-table">
+              <thead>
+                <tr>
+                  <th colSpan={2}>You / Artist(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Recording earnings</td>
+                  <td>${fmtMoney(this.state.artistRecordEarnings)}</td>
+                </tr>
+                {showRecord && this.state.advance > 0 &&
+                  <tr>
+                    <td>Earnings from advance</td>
+                    <td>${fmtMoney(this.state.advance)}</td>
+                  </tr>
+                }
+                <tr>
+                  <td>Writer earnings — writer share</td>
+                  <td>${fmtMoney(this.state.pubArtistWriterShare)}</td>
+                </tr>
+                <tr>
+                  <td>Writer earnings — publisher share</td>
+                  <td>${fmtMoney(this.state.pubArtistPubShare)}</td>
+                </tr>
+                <tr>
+                  <td>Writer earnings — mechanical</td>
+                  <td>${fmtMoney(this.state.pubArtistMechShare)}</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr>
+                  <th colSpan={2}>Partners</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Record company</td>
+                  <td>${fmtMoney(this.state.labelShare)}</td>
+                </tr>
+                <tr>
+                  <td>Publisher</td>
+                  <td>${fmtMoney(this.state.publisherShare)}</td>
+                </tr>
+                <tr>
+                  <td>PRO fee</td>
+                  <td>${fmtMoney(this.state.proFee)}</td>
+                </tr>
+                <tr>
+                  <td>Mechanicals fee</td>
+                  <td>${fmtMoney(this.state.pubDistributionFee)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+
       return (
       <div>
         <BrowserView>
-          <div>
-            <div className="main-container">
-              <div style={{marginBottom: '1%', textAlign: 'center'}}>
-                <TitleText className="title-text" text="What's My Stream?" />
-              </div>
-              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <div className="calc-container">
-                <SmallText className="subtitle container-title-calc" text="Calculator"/>
-                  <div className="artist-role">
-                    <SmallText text="Your Role: " style={{fontSize: '18px', fontWeight: 'bold', lineHeight: '1.00', color: '#323747'}}/>
-                    {this.state.roleTypes.map(type => (
-                      <SelectButton ref={type.ref}
-                        key={type.id}
-                        onChange={e => this.handleMyClick(type.id)}
-                        text={type.name}
-                      />))}
-                  </div>
-                  <div className="deal-container">
-                    <div className="record-deal">
-                      {this.state.role !== "writer" &&
+          <div className="v2-shell">
+            <header className="v2-hero">
+              <h1 className="v2-hero-title">What's My Stream?</h1>
+              <p className="v2-hero-sub">Estimate your music streaming revenue. Set your deal, plug in your numbers, see what lands in your pocket.</p>
+            </header>
 
-                        <div>
-                          <div>
-                            <div>
-                              <SmallText text="Recording Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                              <SingleDropDown
-                                  ref={this.dealTypeRef}
-                                  options={labelDealOptions}
-                                  selectedOption={labelDealOptions[0]}
-                                  onChange = {e => this.getStateRecDeal(e)}/>
-                              <div>
-                                {this.state.recordDealSelected === "labelServices" &&
-                                  <div>
-                                    <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                                    <MultiDropDown ref={this.labelServicesSelectedRef}
-                                      options={this.state.labelServices}
-                                      default={this.state.labelServices[0]}
-                                      onChange={e => this.changeLabelServicesDropDown(e)}
-                                    />
-                                  </div>
-                                }
-                              </div>
-                            </div>
-                            <div>
-                              <SmallText text="Deal Split" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '-15px'}}/>
-                              <DealSplitSlider ref={this.dealSliderRef}
-                                  onChange = {e => this.doSliderStuff(e)}/>
-                            </div>
-                            <div>
-                              <SmallText text="Record Deal Advance" style={{ textAlign: 'left', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '0'}}/>
-                              <NumberInput
-                                ref={this.advanceRef}
-                                id= {"numInput"}
-                                label = "Advance on Earnings"
-                                onChange = {e => this.getStateAdvance(e)}/>
-                            </div>
-                          </div>
-                        </div>
-                      }
-                    </div>
-
-                    <div className="pub-deal">
-                      {this.state.role !== "artist" &&
-                        <div>
-                          <div>
-                            <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                            <SingleDropDown
-                                ref={this.pubTypeRef}
-                                options={pubDealOptions}
-                                selectedOption={pubDealOptions[1]}
-                                onChange = {e => this.getStatePubDeal(e)}
-                            />
-                          </div>
-                          {/*<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '5%'}}>
-                            <div style={{width: '45%'}}>
-                              <NumberInput
-                                id={"numbWriters"}
-                                ref={this.numbWritersRef}
-                                type="number"
-                                label="# of Writers"
-                                max="8"
-                                maxLength="1"
-                                value="1"
-                                onChange = {e => this.getStateNumbWriters(e)}
-                                error={this.state.numbWriters > 8 ? 'Should have Max 8 writers' : ''}
-                              />
-                            </div>
-                            <div style={{width: '45%'}}>
-                              <NumberInput
-                                id={"percentwritten"}
-                                ref={this.writerPercentWrittenRef}
-                                type="number"
-                                label="% You Wrote"
-                                value={(100 / this.state.numbWriters).toFixed(0)}
-                                max="100"
-                                onChange = {e => this.getStatewriterPercentWritten(e)}
-                                error={this.state.writerPercentWritten > 100 ? '**More than 100%**' : ''}
-                                />
-                            </div>
-                          </div>*/}
-                          <div>
-                            <SmallText text="Percent of Song You Wrote / Own" style={{ textAlign: 'left', fontSize: '13px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '-15px'}}/>
-                            <PubDealSplitSlider ref={this.pubDealSliderRef}
-                                onChange = {e => this.pubDoSliderStuff(e)}/>
-                          </div>
-                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', height: '150px'}}>
-                            <div style={{display: 'flex', flexDirection: 'column', width: '140px'}}>
-                              <SmallText text="Deal Split" style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'5px'}}/>
-                              <CircularProgressbar
-                                value={this.state.writerownershippercentage}
-                                text={`${this.state.writerownershippercentage} / ${100 - this.state.writerownershippercentage}`}
-                                styles={buildStyles({
-                                  textColor: "#3F8CF3",
-                                  pathColor: "#3F8CF3",
-                                  trailColor: "#67E09C"
-                                })}
-                              />
-                            </div>
-
-                            <div style={{display: 'flex', flexDirection: 'column', width: '120px'}}>
-                              <SmallText text="True Ownership" style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747',marginBottom:'5px'}}/>
-                              <CircularProgressbarWithChildren
-                                value={this.state.pubSliderValue}
-                                text={`${this.state.pubSliderValue * (this.state.writerownershippercentage/100)}%`}
-                                styles={buildStyles({
-                                  pathColor: "#67E09C",
-                                  trailColor: "#bbb",
-                                  textColor: "#3F8CF3",
-                                })}
-                              >
-                                {/* Foreground path */}
-                                <CircularProgressbar
-                                  value={this.state.pubSliderValue * (this.state.writerownershippercentage/100)}
-                                  styles={buildStyles({
-                                    trailColor: "transparent",
-                                    pathColor: "#3F8CF3",
-                                  })}
-                                />
-                              </CircularProgressbarWithChildren>
-                            </div>
-                          </div>
-                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '3%'}}>
-                            <Circle class={'writerdot'} text={'You/Writer'}/>
-                            <Circle class={'publisherdot'} text={'Publisher'}/>
-                            <Circle class={'otherdot'} text={'Other'}/>
-                          </div>
-
-                        </div>
-                      }
-                    </div>
-                  </div>
-
-                  <div className="stream-container">
-                    <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
-                      <div style={{width: '45%'}}>
-                        <NumberInput
-                          ref={this.estStreamsRef}
-                          id={0}
-                          type="text"
-                          label="Estimated Streams"
-                          onChange={e => this.changeStreams(e)}/>
-                      </div>
-                      <div style={{marginLeft: '4%', width: '48%'}}>
-                        <StreamSlider ref={this.streamsSliderRef} values={[this.state.streamNumber]} domain={[0, (this.state.streamNumber+1)*2]} onChange={e => this.updateStreamSlider(e)}/>
-                      </div>
-                    </div>
-                    <div>
-                      <Accordion
-                          title="Which DSPs Are Included?"
-                          body={
-                            <div>
-                              <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
-                                {this.state.providers.map((provider) =>
-                                <SelectButton
-                                  ref={provider.ref}
-                                  key={provider.id}
-                                  text={provider.name}
-                                  onChange = {e => this.getButtonClick(provider.id)}/>)}
-                              </div>
-                              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'baseline'}}>
-                                <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
-                                <ToolTip content="Value is a weighted average of DSP payouts and their market share" direction="top">
-                                  <SmallText text="ⓘ" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0, paddingLeft: '5px' }}/>
-                                </ToolTip>
-                              </div>
-                            </div>
-
-                          }/>
-                    </div>
-                  </div>
-                  <div className="costs-container">
-                    <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '3%'}}>{`Costs: ${value}`}</div>} />
-                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center'}}>
-                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
-                            <NumberInput
-                              id= {"costsRecording"}
-                              type="text"
-                              ref = {this.costsRecordingRef}
-                              label="Recording Costs"
-                              onChange = {e => this.getStateCostsRecording(e)}/>
-                            <div>
-                              <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                              <Checkbox onChange={e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked}/>
-                            </div>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
-                            <NumberInput
-                              id= {"costsMarketing"}
-                              type="text"
-                              ref = {this.costsMarketingRef}
-                              label="Marketing Costs"
-                              onChange = {e => this.getStateCostsMarketing(e)}/>
-                          <div style={{marginLeft: '2%', width: '30%'}}>
-                            <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 0px'}}/>
-                            <MarketingDropDown
-                              ref={this.marketingDropDownRef}
-                              options={marketingSplitOptions}
-                              selectedOption={marketingSplitOptions[2]}
-                              onChange={e => this.calcMarketingCosts()}
-                              />
-                          </div>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%', width: '50%'}}>
-                            <NumberInput
-                              id= {"costsDistribution"}
-                              type="text"
-                              ref = {this.costsDistributionRef}
-                              label="Distribution Costs"
-                              onChange = {e => this.getStateCostsDistribution(e)}/>
-                            <div>
-                              <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                              <Checkbox onChange={e => this.changeCheckboxes("distribution")}  checked={this.state.distributionCostChecked}/>
-                            </div>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'row', width: '50%'}}>
-                            <NumberInput
-                              id= {"costsMisc"}
-                              type="text"
-                              ref = {this.costsMiscRef}
-                              label="Misc. Costs"
-                              onChange = {e => this.getStateCostsMisc(e)}/>
-                            <div>
-                              <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                              <Checkbox onChange={e => this.changeCheckboxes("misc")}  checked={this.state.miscCostChecked}/>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-                  <div className="advanced-container">
-                    <Accordion
-                      title="Advanced Record Deal Calculations"
-                      body={
-                        <div>
-                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                            <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
-                            <div style={{display: 'flex',flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                              <SmallText text="Auto Recoup " style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                              <ToolTip content="The amount of streams needed to pay back all recoupable monies" direction="top">
-                                <SmallText text="ⓘ" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0, paddingLeft: '5px' }}/>
-                              </ToolTip>
-                            </div>
-                              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '8%'}}>
-                                <SmallText text="Check" style={{fontSize: '14px', marginBottom: 0}}/>
-                                <Checkbox onChange={e => this.handleAutoRecoup()}/>
-                              </div>
-                              <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747'}}>{`Streams Needed: ${value}`}</div>} />
-                            </div>
-                            <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
-                              <div style={{display: 'flex',flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                <SmallText text="Money Goal " style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                                <ToolTip content="Advance is included in revenue earned" direction="top">
-                                  <SmallText text="ⓘ" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0, paddingLeft: '5px' }}/>
-                                </ToolTip>
-                              </div>
-                              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '8%'}}>
-                                <SmallText text="Check" style={{fontSize: '14px', marginBottom: 0}}/>
-                                <Checkbox onChange={e => this.handleMoneyGoalCheckbox()}/>
-                              </div>
-                              <NumberInput
-                                id= {"moneyGoalInput"}
-                                ref = {this.moneyGoalInputRef}
-                                type="text"
-                                label="I want to Make..."
-                                onChange = {e => this.getStateMoneyGoalInput(e)}/>
-                              <NumberFormat value={`${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '3%'}}>{`Streams Needed: ${value}`}</div>} />
-                            </div>
-                          </div>
-                        </div>
-                    }/>
-                  </div>
+            <div className="v2-layout">
+              <main className="v2-form-column">
+                <Stepper steps={stepsLabels} completed={stepsCompleted} />
+                {renderRoleStep(1)}
+                {renderDealStep(2)}
+                {renderStreamsStep(3)}
+                {renderCostsStep(4)}
+                {renderAdvancedStep(5)}
+              </main>
+              <aside className="v2-results-rail">
+                <div className="v2-results-sticky">
+                  {renderResults()}
                 </div>
-                <div className="results-container">
-                  <div>
-                    <div>
-                      <SmallText className="subtitle container-title" text="Results" />
-                      <NumberFormat value={`${this.state.artistTotalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
-                      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                          <NumberFormat value={`${this.state.grossTotalRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
-                          <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
-                        </div>
-                        <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
-                      </div>
-                    </div>
-                    <div>
-                      <BarChart series={this.state.seriesBar}/>
-                    </div>
-                    <div>
-                      <Accordion
-                          title="Detailed Earnings Breakdown"
-                          body={
-                            <div>
-                              <NumberFormat value={`${this.state.streamNumber}`} displayType={'text'} thousandSeparator={true} renderText={value => <p style={{marginBottom: '0px'}}>{`Earnings from ${value} streams`}</p>} />
-                              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
-                                <div style={{flexDirection: 'column', borderRight: 'thin solid #f0f0f0', paddingRight: '4px', width: '50%'}}>
-                                  <p>Artist(s)</p>
-                                  <NumberFormat value={`${this.state.artistRecordEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Recording Earnings: ${value}`}</p>} />
-                                  <NumberFormat value={`${this.state.pubArtistWriterShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Writer Share: ${value}`}</p>} />
-                                  <NumberFormat value={`${this.state.pubArtistPubShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Publisher Share: ${value}`}</p>} />
-                                  <NumberFormat value={`${this.state.pubArtistMechShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Writer Earnings from Mechanical Revenue: ${value}`}</p>} />
-                                </div>
-                                <div style={{flexDirection: 'column', paddingLeft: '4px', width: '50%'}}>
-                                  <p>Partners</p>
-                                  <NumberFormat value={`${this.state.labelShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Record Company Earnings: ${value}`}</p>} />
-                                  <NumberFormat value={`${this.state.publisherShare.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Publisher Earnings: ${value}`}</p>} />
-                                  <NumberFormat value={`${this.state.proFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`PRO Fee: ${value}`}</p>} />
-                                  <NumberFormat value={`${this.state.pubDistributionFee.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <p>{`Mechanicals Fee: ${value}`}</p>} />
-                                </div>
-                              </div>
-                            </div>}/>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </aside>
             </div>
-            <div className="desktop-footer">
-              <div>
-                <h4 style={{marginBottom: '5px', textAlign: 'center'}}>Created By:</h4>
-                <ul style={{listStyleType: 'none', textAlign: 'left', marginTop: '0'}}>
-                  <li style={{marginBottom: '5px'}}><a href={'https://www.linkedin.com/in/nikhilanand0102/'} target={'blank'}>Nikhil Anand</a></li>
-                  <li style={{marginBottom: '5px'}}><a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent</a></li>
-                  <li style={{marginBottom: '5px'}}><a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin</a></li>
+
+            <footer className="v2-footer">
+              <div className="v2-footer-col">
+                <h4 className="v2-footer-title">Created by</h4>
+                <ul className="v2-footer-list">
+                  <li><a href={'https://www.linkedin.com/in/nikhilanand0102/'} target={'blank'}>Nikhil Anand</a></li>
+                  <li><a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent</a></li>
+                  <li><a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin</a></li>
                   <li><a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></li>
                 </ul>
               </div>
-              <div style={{width: '45%'}}>
-                <h3 style={{marginBottom: '4px'}}>About This Tool</h3>
-                <p style={{marginTop: '0px', fontSize: '18px'}}>What are your streams worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the music industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}> See our full write-up here.</a></p>
+              <div className="v2-footer-col v2-footer-about">
+                <h4 className="v2-footer-title">About this tool</h4>
+                <p>What are your streams worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the music industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See our full write-up here.</a></p>
               </div>
-              <div className="POPUPS">
-                <h4 style={{marginBottom: '5px', textAlign: 'right'}}>Help:</h4>
+              <div className="v2-footer-col v2-footer-help">
+                <h4 className="v2-footer-title">Help</h4>
                 <Popup
                   buttonText="Instructions"
                   title="Best Practices for Using this Tool"
@@ -673,275 +880,30 @@ class DesktopVersion extends React.Component{
                     </div>
                 }/>
               </div>
-            </div>
+            </footer>
           </div>
         </BrowserView>
 
         <MobileOnlyView>
-          <div>
-            <div className="mobile-main-container">
-                <div style={{textAlign: 'center'}}>
-                  <TitleText className="title-text" text="What's My Stream?" />
-                </div>
-                <Accordion style={{backgroundColor: '#000'}}
-                    title="About You"
-                    body={
-                    <div style={{flexDirection: 'column', backgroundColor: '#fff'}}>
-                        <div className="artist-role-mobile">
-                          <SmallText text="Your Role:" style={{textAlign: 'left', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                            {this.state.roleTypes.map(type => (
-                              <SelectButton ref={type.ref}
-                                key={type.id}
-                                onChange={e => this.handleMyClick(type.id)}
-                                text={type.name}
-                              />))}
-                          </div>
-                        </div>
-                      <div>
-                        {this.state.role !== "writer" &&
-                          <div style={{margin: '1% 0% 4% 0%', borderTop: 'thin solid #f0f0f0'}}>
-                            <div>
-                              <SmallText text="Record Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                              <SingleDropDown
-                                  ref={this.dealTypeRef}
-                                  options={labelDealOptions}
-                                  onChange = {e => this.getStateRecDeal(e)}/>
-                            </div>
-                            <div>
-                              {this.state.recordDealSelected === "labelServices" &&
-                                <div>
-                                  <SmallText text="Label Services" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                                  <MultiDropDown ref={this.labelServicesSelectedRef}
-                                    options={this.state.labelServices}
-                                    default={this.state.labelServices[0]}
-                                    onChange={e => this.changeLabelServicesDropDown(e)}
-                                  />
-                                </div>
-                              }
-                            </div>
-                            <SmallText text="Record Deal Split" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747',marginBottom:'3px' }}/>
-                            <DealSplitSlider ref={this.dealSliderRef}
-                                onChange = {e => this.doSliderStuff(e)}/>
-                            <SmallText text="Record Deal Advance" style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                            <div style={{justifyContent: 'center'}}>
-                              <NumberInput ref={this.advanceRef}
-                                id= {"numInput"}
-                                pattern="[0-9]*"
-                                label = "Advance on Earnings"
-                                locked = {false}
-                                active = {false}
-                                onChange = {e => this.getStateAdvance(e)}/>
-                            </div>
-                          </div>
-                        }
-                        {this.state.role !== "artist" &&
-                          <div style={{borderTop: 'thin solid #f0f0f0', marginBottom: '5%'}}>
-                            <div>
-                              <SmallText text="Publishing Deal Type" style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'left', color: '#323747',marginBottom:'5px' }}/>
-                              <SingleDropDown
-                                  ref={this.pubTypeRef}
-                                  options={pubDealOptions}
-                                  onChange = {e => this.getStatePubDeal(e)}
-                              />
-                            </div>
-                            {/*<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '4%'}}>
-                              <div style={{width: '45%'}}>
-                                <NumberInput
-                                  id={"numbWriters"}
-                                  ref={this.numbWritersRef}
-                                  pattern="[0-9]*"
-                                  type="number"
-                                  label="# of Writers"
-                                  max="8"
-                                  value="1"
-                                  onChange = {e => this.getStateNumbWriters(e)}
-                                  error={this.state.numbWriters > 8 ? 'Should have Max 8 writers' : ''}
-                                />
-                              </div>
-                              <div style={{width: '45%'}}>
-                                <NumberInput
-                                  id={"percentwritten"}
-                                  ref={this.writerPercentWrittenRef}
-                                  pattern="[0-9]*"
-                                  type="number"
-                                  label="% You Wrote"
-                                  value={(100 / this.state.numbWriters).toFixed(0)}
-                                  max="100"
-                                  onChange = {e => this.getStatewriterPercentWritten(e)}
-                                  error={this.state.writerPercentWritten > 100 ? '**More than 100%**' : ''}
-                                  />
-                              </div>
-                            </div>*/}
-                            <div>
-                              <SmallText text="Percent of Song You Wrote / Own" style={{ textAlign: 'left', fontSize: '13px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747', marginBottom: '-15px'}}/>
-                              <PubDealSplitSlider ref={this.pubDealSliderRef}
-                                  onChange = {e => this.pubDoSliderStuff(e)}/>
-                            </div>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                    }/>
-                  <Accordion
-                      title="Your Streams"
-                      body={
-                        <div style={{flexDirection: 'column', backgroundColor: '#fff'}}>
-                            <div style={{alignItems: 'center'}}>
-                              <SmallText text="Estimated Streams" style={{textAlign: 'center', fontSize: '18px', fontWeight: 'bold', lineHeight: '1.09', color: '#323747'}}/>
-                              <NumberInput ref={this.estStreamsRef}
-                                 id={0}
-                                 pattern="[0-9]*"
-                                 label="Estimated Streams"
-                                 locked={false}
-                                 active={false}
-                                 onChange={e => this.changeStreams(e)}/>
-                              <StreamSlider ref={this.streamsSliderRef} values={[this.state.streamNumber]} domain={[0, (this.state.streamNumber+1)*2]} onChange={e => this.updateStreamSlider(e)}/>
-                              <div>
-                                <Accordion
-                                    title="Which DSPs Are Included?"
-                                    body={
-                                      <div>
-                                      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row'}}>
-                                        {this.state.providers.map((provider) =>
-                                        <SelectButton
-                                          ref={provider.ref}
-                                          key={provider.id}
-                                          text={provider.name}
-                                          onChange = {e => this.getButtonClick(provider.id)}/>)}
-                                      </div>
-                                        <SmallText text={`You Make $${this.state.streamValue.toFixed(5)} per stream`}/>
-                                      </div>
-                                    }/>
-                              </div>
-                            </div>
-                        </div>
-
-                  }/>
-                <Accordion
-                  title="Your Costs"
-                  body={
-                    <div>
-                      <NumberFormat value={`${this.state.costsTotal.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{fontSize: '24px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '2%', marginBottom: '5%'}}>{`Costs: ${value}`}</div>} />
-                      <div style={{justifyContent:'center'}}>
-                          <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
-                              <NumberInput
-                                id= {"costsRecording"}
-                                pattern="[0-9]*"
-                                ref = {this.costsRecordingRef}
-                                label="Recording Costs"
-                                locked={false}
-                                active={false}
-                                onChange = {e => this.getStateCostsRecording(e)}/>
-                              <div>
-                                <SmallText text="Recoupable" style={{fontSize: '10px', margin: '-8px 0px 2px 2px'}}/>
-                                <SwitchButton onChange={e => this.changeCheckboxes("recording")} checked={this.state.recordingCostChecked} />
-                              </div>
-                          </div>
-                          <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%', paddingRight: '2%'}}>
-                              <NumberInput
-                                id= {"costsMarketing"}
-                                pattern="[0-9]*"
-                                ref = {this.costsMarketingRef}
-                                label="Marketing Costs"
-                                locked={false}
-                                active={false}
-                                onChange = {e => this.getStateCostsMarketing(e)}/>
-                            <div style={{marginLeft: '2%', width: '46%'}}>
-                              <MarketingDropDown
-                                ref={this.marketingDropDownRef}
-                                selectedOption={marketingSplitOptions[2]}
-                                options={marketingSplitOptions}
-                                defaultValue={marketingSplitOptions[0]}
-                                onChange={e => this.calcMarketingCosts()}
-                                />
-                            </div>
-                          </div>
-                          <div style={{display: 'flex', flexDirection: 'row', marginBottom: '3%'}}>
-                              <NumberInput
-                                id= {"costsDistribution"}
-                                pattern="[0-9]*"
-                                ref = {this.costsDistributionRef}
-                                label="Distribution Costs"
-                                locked={false}
-                                active={false}
-                                onChange = {e => this.getStateCostsDistribution(e)}/>
-                              <div>
-                                <SwitchButton onChange={e => this.changeCheckboxes("distribution")}  checked={this.state.distributionCostChecked}/>
-                              </div>
-                          </div>
-                          <div style={{display: 'flex', flexDirection: 'row'}}>
-                              <NumberInput
-                                id= {"costsMisc"}
-                                pattern="[0-9]*"
-                                ref = {this.costsMiscRef}
-                                label="Misc. Costs"
-                                locked={false}
-                                active={false}
-                                onChange = {e => this.getStateCostsMisc(e)}/>
-                              <div>
-                                <SwitchButton onChange={e => this.changeCheckboxes("misc")}  checked={this.state.miscCostChecked}/>
-                              </div>
-                          </div>
-                      </div>
-                    </div>
-                  }/>
-                <Accordion
-                  title="Advanced Record Deal Calculations"
-                  body={
-                    <div>
-                      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                        <div style={{flexDirection: 'column', width: '50%', paddingRight: '3%', borderRight: 'thin solid #252c78'}}>
-                          <SmallText text="Auto Recoup" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                          <SwitchButton onChange={e => this.handleAutoRecoup()} checked={this.state.autoRecoupChecked}/>
-                          <NumberFormat value={`${this.state.recoupStreamsNeeds.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', padding: '5% 0% 5% 0%'}}>{`Streams Needed: ${value}`}</div>} />
-                        </div>
-                        <div style={{flexDirection: 'column', paddingLeft: '3%', justifyContent: 'center', width: '50%'}}>
-                          <ToolTip content="Advance is included in revenue earned" direction="top">
-                            <SmallText text="Money Goal" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: 'auto', marginBottom: 0 }}/>
-                          </ToolTip>
-                          <SwitchButton onChange={e => this.handleMoneyGoalCheckbox()} checked={this.state.moneyGoalChecked}/>
-                          <NumberInput
-                            id= {"moneyGoalInput"}
-                            pattern="[0-9]*"
-                            ref = {this.moneyGoalInputRef}
-                            label="I want to Make..."
-                            locked={false}
-                            active={false}
-                            onChange = {e => this.getStateMoneyGoalInput(e)}/>
-                          <NumberFormat value={`${this.state.moneyGoalStreamsNeeded.toFixed(0)}`} displayType={'text'} thousandSeparator={true} renderText={value => <div style={{ fontSize: '16px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginTop: '3%'}}>{`Streams Needed: ${value}`}</div>} />
-                        </div>
-                      </div>
-                    </div>
-                  }/>
-                    <div className="mobile-results-container">
-                      <div>
-                        <div>
-                          <SmallText className="subtitle" text="Your Results" />
-                          <NumberFormat value={`${this.state.artistTotalEarnings.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: 0, marginTop: '3%' }}>{`You've Earned: ${value}`}</div>} />
-                          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                              <NumberFormat value={`${this.state.grossTotalRev.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '20px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747', marginBottom: '10%'}}>{`Total Revenue Generated: ${value}`}</div>} />
-                              <NumberFormat value={`${this.state.totRecoupe.toFixed(0)}`} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.09', textAlign: 'center', color: '#323747' }}>{`Total Recoupable Money: ${value}`}</div>} />
-                            </div>
-                            <RadialChart series={this.state.seriesRadial} height={200} width={150}/>
-                          </div>
-                        </div>
-                        {/*<div>
-                          <BarChart ref={this.barchartRef} series={this.state.seriesBar}/>
-                        </div>*/}
-                      </div>
-                    </div>
-
+          <div className="v2-mobile-shell">
+            <header className="v2-hero v2-hero-mobile">
+              <h1 className="v2-hero-title">What's My Stream?</h1>
+              <p className="v2-hero-sub">Estimate your music streaming revenue.</p>
+            </header>
+            <Stepper steps={stepsLabels} completed={stepsCompleted} />
+            {renderRoleStep(1)}
+            {renderDealStep(2)}
+            {renderStreamsStep(3)}
+            {renderCostsStep(4)}
+            {renderAdvancedStep(5)}
+            <div className="v2-mobile-results">
+              {renderResults()}
             </div>
-            <div className="footer">
-              <div style={{width: '92%'}}>
-                <SmallText className="subtitle" text="About This Tool:"/>
-                <p>What are your streams worth? This Streaming Calculator was made to model music streaming revenue, and give more clarity on the roles in the music industry that effect streaming revenue. These figures are estimates and can be used as a guide to know your worth.</p>
-                <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>See Our Full Write-up Here</a>
-                <p>Created By: <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand,</a> <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent,</a> <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin,</a> & <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a></p>
-              </div>
-            </div>
+            <footer className="v2-footer v2-footer-mobile">
+              <h4 className="v2-footer-title">About this tool</h4>
+              <p>This Streaming Calculator was made to model music streaming revenue. <a href={'https://nikhilanand3.medium.com/simulating-music-streaming-revenue-59ec1ad1db6'} target={'blank'}>Full write-up</a>.</p>
+              <p>Created by <a href={'https://www.linkedin.com/in/nikhil-anand-/'} target={'blank'}>Nikhil Anand</a>, <a href={'mailto:svincent3@berklee.edu'} target={'blank'}>Sam Vincent</a>, <a href={'https://www.linkedin.com/in/alperrin/'} target={'blank'}>Alexandre Perrin</a>, <a href={'https://www.linkedin.com/in/pete-dyson-70b61b21/'} target={'blank'}>Pete Dyson</a>.</p>
+            </footer>
           </div>
         </MobileOnlyView>
       </div>
@@ -1016,15 +978,43 @@ class DesktopVersion extends React.Component{
       return services;
   }
 
+  // Sync the slider + numeric input + streamNumber state to the value computed
+  // by either the auto-recoup or money-goal toggle. Called after calculate()
+  // has run so recoupStreamsNeeds / moneyGoalStreamsNeeded are fresh in state.
+  syncStreamsToAdvanced() {
+    let target = null;
+    if (this.state.autoRecoupChecked) target = this.state.recoupStreamsNeeds;
+    else if (this.state.moneyGoalChecked) target = this.state.moneyGoalStreamsNeeded;
+    if (target == null || !isFinite(target) || target <= 0) return;
+    const rounded = Math.round(target);
+    if (rounded === this.state.streamNumber) return;
+    // Sync the child refs before the parent setState so StreamSlider's
+    // componentDidUpdate sees consistent state and doesn't loop.
+    if (this.streamsSliderRef.current) this.streamsSliderRef.current.setState({values: [rounded]});
+    if (this.estStreamsRef.current) this.estStreamsRef.current.setState({value: rounded});
+    this.setState({streamNumber: rounded}, () => this.calculate());
+  }
+
   handleMoneyGoalCheckbox() {
-    this.setState({moneyGoalChecked: !this.state.moneyGoalChecked}, () => {
+    const turningOn = !this.state.moneyGoalChecked;
+    // Toggling either advanced option turns the other off so they don't fight.
+    this.setState({
+      moneyGoalChecked: turningOn,
+      autoRecoupChecked: turningOn ? false : this.state.autoRecoupChecked,
+    }, () => {
       this.calculate();
+      if (turningOn) setTimeout(() => this.syncStreamsToAdvanced(), 0);
     })
   }
 
   handleAutoRecoup() {
-    this.setState({autoRecoupChecked: !this.state.autoRecoupChecked}, () => {
+    const turningOn = !this.state.autoRecoupChecked;
+    this.setState({
+      autoRecoupChecked: turningOn,
+      moneyGoalChecked: turningOn ? false : this.state.moneyGoalChecked,
+    }, () => {
       this.calculate();
+      if (turningOn) setTimeout(() => this.syncStreamsToAdvanced(), 0);
     })
   }
 
@@ -1199,34 +1189,32 @@ class DesktopVersion extends React.Component{
   }
 
   handleMyClick(id){
-
-    //this.setState({role: id});
-    if(id==="artist" && this.state.roleTypes[0].selected !== this.state.roleTypes[0].ref.current.state.button) {
-      this.state.roleTypes[0].selected = true;
-      this.state.roleTypes[0].ref.current.setState({button: true});
-      this.state.roleTypes[1].selected = false;
-      this.state.roleTypes[1].ref.current.setState({button: false});
-      this.state.roleTypes[2].selected = false;
-      this.state.roleTypes[2].ref.current.setState({button: false});
+    const types = roleTypes;
+    if(id==="artist" && types[0].selected !== types[0].ref.current.state.button) {
+      types[0].selected = true;
+      types[0].ref.current.setState({button: true});
+      types[1].selected = false;
+      types[1].ref.current.setState({button: false});
+      types[2].selected = false;
+      types[2].ref.current.setState({button: false});
       this.setState({role: "artist"}, () => {this.calculate()});
-
     }
-    if(id==="writer" && this.state.roleTypes[1].selected !== this.state.roleTypes[1].ref.current.state.button) {
-      this.state.roleTypes[0].selected = false;
-      this.state.roleTypes[0].ref.current.setState({button: false});
-      this.state.roleTypes[1].selected = true;
-      this.state.roleTypes[1].ref.current.setState({button: true});
-      this.state.roleTypes[2].selected = false;
-      this.state.roleTypes[2].ref.current.setState({button: false});
+    if(id==="writer" && types[1].selected !== types[1].ref.current.state.button) {
+      types[0].selected = false;
+      types[0].ref.current.setState({button: false});
+      types[1].selected = true;
+      types[1].ref.current.setState({button: true});
+      types[2].selected = false;
+      types[2].ref.current.setState({button: false});
       this.setState({role: "writer"}, () => {this.calculate()});
     }
-    if(id==="both" && this.state.roleTypes[2].selected !== this.state.roleTypes[2].ref.current.state.button) {
-      this.state.roleTypes[0].selected = false;
-      this.state.roleTypes[0].ref.current.setState({button: false});
-      this.state.roleTypes[1].selected = false;
-      this.state.roleTypes[1].ref.current.setState({button: false});
-      this.state.roleTypes[2].selected = true;
-      this.state.roleTypes[2].ref.current.setState({button: true});
+    if(id==="both" && types[2].selected !== types[2].ref.current.state.button) {
+      types[0].selected = false;
+      types[0].ref.current.setState({button: false});
+      types[1].selected = false;
+      types[1].ref.current.setState({button: false});
+      types[2].selected = true;
+      types[2].ref.current.setState({button: true});
       this.setState({role: "both"}, () => {this.calculate()});
     }
   }
@@ -1403,7 +1391,8 @@ class DesktopVersion extends React.Component{
   }
 
   toggleMe(index){
-    this.state.providers[index].includeInCalculations = !this.state.providers[index].includeInCalculations;
+    const providers = this.state.providers;
+    providers[index].includeInCalculations = !providers[index].includeInCalculations;
     this.calculate();
   }
 
@@ -1592,10 +1581,15 @@ class DesktopVersion extends React.Component{
   }
 
   getArtistTotalEarnings(){
+      // The advance is recoupable, but it's guaranteed money the artist keeps —
+      // artistRecordEarnings is computed net of recoupment, so the advance must be
+      // added back to reflect true take-home (recording deals only).
+      const advanceEarnings = (this.state.role === "both" || this.state.role === "artist")
+        ? parseFloat(this.state.advance) : 0;
       if(this.state.role === "both") {
-          this.setState({artistTotalEarnings: this.state.artistRecordEarnings + (this.state.artistWriterEarnings > 0 ? this.state.artistWriterEarnings : 0)});
+          this.setState({artistTotalEarnings: advanceEarnings + this.state.artistRecordEarnings + (this.state.artistWriterEarnings > 0 ? this.state.artistWriterEarnings : 0)});
       } else if(this.state.role === "artist") {
-          this.setState({artistTotalEarnings: this.state.artistRecordEarnings});
+          this.setState({artistTotalEarnings: advanceEarnings + this.state.artistRecordEarnings});
       } else if(this.state.role === "writer") {
           this.setState({artistTotalEarnings: (this.state.artistWriterEarnings > 0 ? this.state.artistWriterEarnings : 0)});
       }
@@ -1650,7 +1644,7 @@ class DesktopVersion extends React.Component{
   }
 
   percentRecouped(){
-    let recoupPercent = 0;
+    let recoupPercent = 100;
     if(this.state.totRecoupe > 0) {
       if ((this.state.artistRecordEarnings / this.state.totRecoupe) > 1){
         recoupPercent = 100
