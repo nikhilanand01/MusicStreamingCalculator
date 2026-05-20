@@ -1,26 +1,40 @@
-button.buttonTrue{
-padding: 10px 15px;
-cursor: pointer;
-opacity: 0.6;
-background: white;
-border: 0;
-outline: 0;
-font-size: 14px;
-font-weight: bold;
-border-bottom: 2px solid transparent;
-transition: ease border-bottom 100ms;
-border-bottom: 2px solid black;
-opacity: 1;
-margin-right: 3px;
+/* SelectButton — v2 styling.
+   Used for role buttons (artist/writer/both) and DSP chips. */
+
+.container {
+  display: inline-flex;
 }
 
-button.buttonFalse{
-padding: 10px 15px;
-cursor: pointer;
-opacity: 0.6;
-background: white;
-border: 0;
-outline: 0;
-font-size: 14px;
-font-weight: 400;
+button.buttonTrue,
+button.buttonFalse {
+  padding: 10px 16px;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  outline: 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  color: #64748B;
+  transition: all 0.15s ease;
+  margin-right: 0;
+  width: 100%;
+}
+
+button.buttonTrue {
+  background: #3F6BFF;
+  color: #fff;
+  border-color: #3F6BFF;
+  box-shadow: 0 1px 3px rgba(63, 107, 255, 0.3);
+}
+
+button.buttonTrue:hover {
+  background: #2A4FD6;
+  border-color: #2A4FD6;
+}
+
+button.buttonFalse:hover {
+  border-color: #3F6BFF;
+  color: #3F6BFF;
 }

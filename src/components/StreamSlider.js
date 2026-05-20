@@ -74,8 +74,14 @@ export class StreamSlider extends Component {
   }
 
 
-  componentDidUpdate() {
-    if (this.props.onChange) {
+  componentDidUpdate(prevProps, prevState) {
+    // Only notify the parent when the slider's value genuinely changed.
+    // Without this guard, every parent re-render triggers onChange and can
+    // cause feedback loops with the parent's own state-sync logic.
+    if (
+      this.props.onChange &&
+      prevState.values[0] !== this.state.values[0]
+    ) {
       this.props.onChange(this.state);
     }
   }
